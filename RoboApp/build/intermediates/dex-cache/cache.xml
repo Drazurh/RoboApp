@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\John\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
+        <dex dex="C:\Users\John\AndroidStudioProjects\RoboApp3\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.1-df9bafb6a0faf70ab58b7ceccc979888f4a675f5.jar" />
+    </item>
+    <item
+        jar="C:\Users\John\AndroidStudioProjects\RoboApp3\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
+        <dex dex="C:\Users\John\AndroidStudioProjects\RoboApp3\app\build\intermediates\pre-dexed\debug\classes-a2b2886ee47022b73b99d4ccc3e9574b6d31e736.jar" />
+    </item>
+    <item
+        jar="C:\Users\John\AndroidStudioProjects\RoboApp3\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="4356e230a981d1bbf047d848b91bc0d9b7c5bacc">
+        <dex dex="C:\Users\John\AndroidStudioProjects\RoboApp3\app\build\intermediates\pre-dexed\debug\classes-69368f0d2f7d9ac71f9e5caccdadd938499a19fc.jar" />
+    </item>
+    <item
+        jar="C:\Users\John\AndroidStudioProjects\RoboApp3\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
+        <dex dex="C:\Users\John\AndroidStudioProjects\RoboApp3\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.1-c270f267d6324bb0c5da7e323f61dd8e9950ee1b.jar" />
+    </item>
+    <item
+        jar="C:\Users\John\AndroidStudioProjects\RoboApp3\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="C:\Users\John\AndroidStudioProjects\RoboApp3\app\build\intermediates\pre-dexed\debug\classes-fca54ff99575fc117b7bbdb288d4eaeb144da365.jar" />
+    </item>
+
+</items>
