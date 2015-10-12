@@ -118,9 +118,13 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     @Override
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 
-
         tempMat = inputFrame.rgba();
         tempMat2 = inputFrame.gray();
+
+
+//        Core.flip(tempMat2.t(),tempMat2,1);
+
+
         Imgproc.GaussianBlur(tempMat2,tempMat2,new Size(9,9),2,2);
 
         Mat circles = new Mat();
@@ -148,10 +152,10 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
         } else {
             Log.i("Circle :", "No");
         }
-//        Rect[] facesArray = faces.toArray();
-//        for (int i = 0; i < facesArray.length; i++)
-//            Imgproc.rectangle(tempMat, facesArray[i].tl(), facesArray[i].br(), FACE_RECT_COLOR, 3);
-
+////        Rect[] facesArray = faces.toArray();
+////        for (int i = 0; i < facesArray.length; i++)
+////            Imgproc.rectangle(tempMat, facesArray[i].tl(), facesArray[i].br(), FACE_RECT_COLOR, 3);
+//
 
 
         return tempMat;

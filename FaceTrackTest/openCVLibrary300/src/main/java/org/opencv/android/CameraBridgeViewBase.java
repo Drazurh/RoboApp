@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.opencv.R;
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.videoio.Videoio;
@@ -56,6 +57,9 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
     public static final int CAMERA_ID_FRONT = 98;
     public static final int RGBA = 1;
     public static final int GRAY = 2;
+
+    Mat Mrgba;
+    Mat Mgray;
 
     public CameraBridgeViewBase(Context context, int cameraId) {
         super(context);
@@ -371,6 +375,8 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
             ad.show();
 
         }
+        Mrgba = new Mat();
+        Mgray = new Mat();
     }
 
     private void onExitStartedState() {
@@ -378,6 +384,8 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
         if (mCacheBitmap != null) {
             mCacheBitmap.recycle();
         }
+        Mrgba.release();
+        Mgray.release();
     }
 
     /**
@@ -386,14 +394,31 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
      * then displayed on the screen.
      * @param frame - the current frame to be delivered
      */
-    protected void deliverAndDrawFrame(CvCameraViewFrame frame) {
+    protected void deliverAndDrawFrame(final CvCameraViewFrame frame) {
         Mat modified;
 
+        CvCameraViewFrame tempFrame = new CvCameraViewFrame() {
+            @Override
+            public Mat rgba() {
+                Core.flip(frame.rgba().t(),Mrgba,0);
+                return Mrgba;
+            }
+
+            @Override
+            public Mat gray() {
+                Core.flip(frame.gray().t(),Mgray,0);
+                return Mgray;
+            }
+        };
+
+
         if (mListener != null) {
-            modified = mListener.onCameraFrame(frame);
+            modified = mListener.onCameraFrame(tempFrame);
         } else {
-            modified = frame.rgba();
+            modified = tempFrame.rgba();
         }
+
+        tempFrame=null;
 
         boolean bmpValid = true;
         if (modified != null) {
@@ -454,7 +479,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
     // NOTE: On Android 4.1.x the function must be called before SurfaceTextre constructor!
     protected void AllocateCache()
     {
-        mCacheBitmap = Bitmap.createBitmap(mFrameWidth, mFrameHeight, Bitmap.Config.ARGB_8888);
+        mCacheBitmap = Bitmap.createBitmap(mFrameHeight, mFrameWidth, Bitmap.Config.ARGB_8888);
     }
 
     public interface ListItemAccessor {
@@ -490,6 +515,6 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
             }
         }
 
-        return new Size(calcWidth, calcHeight);
+        return new Size(calcWidth,calcHeight);
     }
 }

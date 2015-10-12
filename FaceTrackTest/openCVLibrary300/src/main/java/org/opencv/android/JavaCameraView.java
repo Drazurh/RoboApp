@@ -112,21 +112,21 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
                     int localCameraIndex = mCameraIndex;
                     if (mCameraIndex == CAMERA_ID_BACK) {
-                        Log.i(TAG, "Trying to open back camera");
-                        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-                        for (int camIdx = 0; camIdx < Camera.getNumberOfCameras(); ++camIdx) {
-                            Camera.getCameraInfo( camIdx, cameraInfo );
-                            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                                localCameraIndex = camIdx;
-                                break;
-                            }
-                        }
-                    } else if (mCameraIndex == CAMERA_ID_FRONT) {
                         Log.i(TAG, "Trying to open front camera");
                         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
                         for (int camIdx = 0; camIdx < Camera.getNumberOfCameras(); ++camIdx) {
                             Camera.getCameraInfo( camIdx, cameraInfo );
                             if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                                localCameraIndex = camIdx;
+                                break;
+                            }
+                        }
+                    } else if (mCameraIndex == CAMERA_ID_FRONT) {
+                        Log.i(TAG, "Trying to open back camera");
+                        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+                        for (int camIdx = 0; camIdx < Camera.getNumberOfCameras(); ++camIdx) {
+                            Camera.getCameraInfo( camIdx, cameraInfo );
+                            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
                                 localCameraIndex = camIdx;
                                 break;
                             }
@@ -175,11 +175,6 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
 
                     mCamera.setParameters(params);
                     params = mCamera.getParameters();
-                    /////////////////////////////////
-
-
-
-                    //////////////////////
                     mFrameWidth = params.getPreviewSize().width;
                     mFrameHeight = params.getPreviewSize().height;
 
@@ -217,7 +212,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                        mCamera.setPreviewDisplay(null);
 
                     /* Finally we are ready to start the preview */
-                    setDisplayOrientation(mCamera, 90);
+                    //setDisplayOrientation(mCamera, 90);
 //                    try{mCamera.setPreviewDisplay(getHolder());}
 //                    catch(Exception e2)
 //                    {
