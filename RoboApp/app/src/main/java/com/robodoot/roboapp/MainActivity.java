@@ -10,8 +10,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.net.Uri;
+
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerCallbacks {
+        implements NavigationDrawerCallbacks,homeFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -32,13 +36,29 @@ public class MainActivity extends ActionBarActivity
         // Set up the drawer.
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
         // populate the navigation drawer
-        mNavigationDrawerFragment.setUserData("John Doe", "johndoe@doe.com", BitmapFactory.decodeResource(getResources(), R.drawable.avatar));
+        //mNavigationDrawerFragment.setUserData("John Doe", "johndoe@doe.com", BitmapFactory.decodeResource(getResources(), R.drawable.avatar));
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
+        Fragment fragment;
+        FragmentManager fragmentManager = getFragmentManager();
+        switch(position) {
+            default:
+            case 0:
+                fragment = new homeFragment();
+                Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                fragment = new comptestFragment();
+                Toast.makeText(this, "Component Testing", Toast.LENGTH_SHORT).show();
+        }
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
+
     }
 
 
@@ -79,5 +99,7 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-
+    public void onFragmentInteraction(Uri uri){
+        //you can leave it empty
+    }
 }

@@ -37,4 +37,4 @@
         android:layout_height="match_parent" android:background="@color/myDrawerBackground"
         android:layout_below="@+id/separator" />
 
-</RelativeLayout><!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/src/main/res/layout/fragment_navigation_drawer.xml -->
+</RelativeLayout><!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/src/main/res/layout/fragment_navigation_drawer.xml -->

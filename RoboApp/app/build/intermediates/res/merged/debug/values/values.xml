@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
     <eat-comment/>
     <attr format="reference" name="drawerArrowStyle"/>
     <attr format="dimension" name="height"/>
@@ -53,7 +53,7 @@
     <color name="material_grey_800">#ff424242</color>
     <color name="material_grey_850">#ff303030</color>
     <color name="material_grey_900">#ff212121</color>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/src/main/res/values/colors.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/src/main/res/values/colors.xml -->
     <eat-comment/>
     <color name="myAccentColor">#FF4081</color>
     <color name="myDrawerBackground">#FFF</color>
@@ -62,7 +62,7 @@
     <color name="myPrimaryDarkColor">#1976D2</color>
     <color name="myTextPrimaryColor">#212121</color>
     <color name="myWindowBackground">#FFF</color>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
     <eat-comment/>
     <color name="primary_dark_material_dark">@android:color/black</color>
     <color name="primary_dark_material_light">@color/material_grey_600</color>
@@ -170,11 +170,11 @@
     <dimen name="abc_text_size_subtitle_material_toolbar">16dp</dimen>
     <dimen name="abc_text_size_title_material">20sp</dimen>
     <dimen name="abc_text_size_title_material_toolbar">20dp</dimen>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/src/main/res/values/dimens.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
     <eat-comment/>
     <item name="dialog_fixed_height_major" type="dimen">80%</item>
     <item name="dialog_fixed_height_minor" type="dimen">100%</item>
@@ -185,38 +185,38 @@
     <item format="float" name="highlight_alpha_material_colored" type="dimen">0.26</item>
     <item format="float" name="highlight_alpha_material_dark" type="dimen">0.20</item>
     <item format="float" name="highlight_alpha_material_light" type="dimen">0.12</item>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.0.1/res/values/values.xml -->
     <eat-comment/>
     <dimen name="item_touch_helper_max_drag_scroll_per_frame">20dp</dimen>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/src/main/res/values/dimens.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="navigation_drawer_width">320dp</dimen>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
     <eat-comment/>
     <dimen name="notification_large_icon_height">64dp</dimen>
     <dimen name="notification_large_icon_width">64dp</dimen>
     <dimen name="notification_subtext_size">12dp</dimen>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/src/main/res/values/dimens.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="toolbar_elevation">4dp</dimen>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
     <eat-comment/>
     <drawable name="notification_template_icon_bg">#3333B5E5</drawable>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/src/main/res/values/colors.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/src/main/res/values/colors.xml -->
     <eat-comment/>
     <drawable name="pressed_gray">#0c000000</drawable>
     <drawable name="selected_gray">#2c000000</drawable>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
     <eat-comment/>
     <item name="action_bar_activity_content" type="id"/>
     <item name="action_bar_spinner" type="id"/>
     <item name="action_menu_divider" type="id"/>
     <item name="action_menu_presenter" type="id"/>
     <item name="home" type="id"/>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.0.1/res/values/values.xml -->
     <eat-comment/>
     <item name="item_touch_helper_previous_elevation" type="id"/>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
     <eat-comment/>
     <item name="progress_circular" type="id"/>
     <item name="progress_horizontal" type="id"/>
@@ -244,20 +244,22 @@
     <string name="abc_shareactionprovider_share_with">Share with</string>
     <string name="abc_shareactionprovider_share_with_application">Share with %s</string>
     <string name="abc_toolbar_collapse_description">Collapse</string>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="action_settings">Settings</string>
     <string name="app_name">RoboApp</string>
     <string name="drawer_close">Menu closed</string>
     <string name="drawer_open">Menu opened</string>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
+    <string name="hello_comptest_fragment">COMPONENT TESTING FRAGMENT</string>
+    <string name="hello_home_fragment">HOME FRAGMENT</string>
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
     <eat-comment/>
     <string name="status_bar_notification_info_overflow">999+</string>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>
     <style name="AlertDialog.AppCompat.Light" parent="Base.AlertDialog.AppCompat.Light"/>
     <style name="Animation.AppCompat.Dialog" parent="Base.Animation.AppCompat.Dialog"/>
     <style name="Animation.AppCompat.DropDownUp" parent="Base.Animation.AppCompat.DropDownUp"/>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -272,7 +274,7 @@
         <item name="android:windowBackground">@color/myWindowBackground</item>
         <item name="android:windowContentTransitions">true</item>
     </style>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
     <eat-comment/>
     <style name="Base.AlertDialog.AppCompat" parent="android:Widget">
         <item name="android:layout">@layout/abc_alert_dialog_material</item>
@@ -1187,13 +1189,13 @@
         <item name="android:minWidth">56dp</item>
         <item name="android:scaleType">center</item>
     </style>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>
     </style>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
     <eat-comment/>
     <style name="Platform.AppCompat" parent="android:Theme">
         <item name="android:windowNoTitle">true</item>
@@ -1429,14 +1431,14 @@
     <style name="ThemeOverlay.AppCompat.Dark" parent="Base.ThemeOverlay.AppCompat.Dark"/>
     <style name="ThemeOverlay.AppCompat.Dark.ActionBar" parent="Base.ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="ThemeOverlay.AppCompat.Light" parent="Base.ThemeOverlay.AppCompat.Light"/>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="ToolBarStyle" parent="">
         <item name="android:elevation">@dimen/toolbar_elevation</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
-    <!-- From: file:/C:/Users/John/AndroidStudioProjects/RoboApp3/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/values/values.xml -->
     <eat-comment/>
     <style name="Widget.AppCompat.ActionBar" parent="Base.Widget.AppCompat.ActionBar">
     </style>
