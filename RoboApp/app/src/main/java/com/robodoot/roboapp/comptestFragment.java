@@ -7,6 +7,11 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+
+import android.widget.ListView;
 
 
 /**
@@ -58,13 +63,25 @@ public class comptestFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        String[] foods = {"Bacon","Ham","Cheese"};
+        ArrayAdapter<String> list_adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, foods);
+        ListView list_view = (ListView) getActivity().findViewById(R.id.comptest_listview);
+        list_view.setAdapter(list_adapter);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_comptest, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_comptest, container, false);
+
+        String[] foods = {"Bacon","Ham","Cheese"};
+        ListView lv = (ListView)rootView.findViewById(R.id.comptest_listview);
+        ArrayAdapter<String> list_adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, foods);
+        lv.setAdapter(list_adapter);
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
