@@ -63,11 +63,6 @@ public class comptestFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        String[] foods = {"Bacon","Ham","Cheese"};
-        ArrayAdapter<String> list_adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, foods);
-        ListView list_view = (ListView) getActivity().findViewById(R.id.comptest_listview);
-        list_view.setAdapter(list_adapter);
     }
 
     @Override
@@ -78,7 +73,7 @@ public class comptestFragment extends Fragment {
 
         String[] foods = {"Bacon","Ham","Cheese"};
         ListView lv = (ListView)rootView.findViewById(R.id.comptest_listview);
-        ArrayAdapter<String> list_adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, foods);
+        ArrayAdapter<String> list_adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, foods);
         lv.setAdapter(list_adapter);
 
         return rootView;
