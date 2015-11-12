@@ -1,6 +1,5 @@
 package com.robodoot.roboapp;
 
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -11,21 +10,21 @@ import android.widget.Toast;
 
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.net.Uri;
 
 public class MainActivity extends ActionBarActivity
         implements
         NavigationDrawerCallbacks,
-        homeFragment.OnFragmentInteractionListener,
-        comptestFragment.OnFragmentInteractionListener{
+        HomeFragment.OnFragmentInteractionListener,
+        CompTestFragment.OnFragmentInteractionListener{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private Toolbar mToolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +40,8 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
         // populate the navigation drawer
         //mNavigationDrawerFragment.setUserData("John Doe", "johndoe@doe.com", BitmapFactory.decodeResource(getResources(), R.drawable.avatar));
+
+
     }
 
     @Override
@@ -51,11 +52,11 @@ public class MainActivity extends ActionBarActivity
         switch(position) {
             default:
             case 0:
-                fragment = new homeFragment();
+                fragment = new HomeFragment();
                 Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
                 break;
             case 1:
-                fragment = new comptestFragment();
+                fragment = new CompTestFragment();
                 Toast.makeText(this, "Unit Testing", Toast.LENGTH_SHORT).show();
             break;
 

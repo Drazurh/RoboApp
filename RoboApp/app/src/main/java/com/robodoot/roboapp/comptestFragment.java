@@ -7,9 +7,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 
 import android.widget.ListView;
 
@@ -17,12 +15,12 @@ import android.widget.ListView;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link comptestFragment.OnFragmentInteractionListener} interface
+ * {@link CompTestFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link comptestFragment#newInstance} factory method to
+ * Use the {@link CompTestFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class comptestFragment extends Fragment {
+public class CompTestFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -34,17 +32,20 @@ public class comptestFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    CompTestDataSource dataSource;
+
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment comptestFragment.
+     * @return A new instance of fragment CompTestFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static comptestFragment newInstance(String param1, String param2) {
-        comptestFragment fragment = new comptestFragment();
+    public static CompTestFragment newInstance(String param1, String param2) {
+        CompTestFragment fragment = new CompTestFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -52,17 +53,20 @@ public class comptestFragment extends Fragment {
         return fragment;
     }
 
-    public comptestFragment() {
+    public CompTestFragment() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        //instantiate component testing data source;
+        dataSource = new CompTestDataSource(getActivity());
     }
 
     @Override
@@ -118,4 +122,15 @@ public class comptestFragment extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        dataSource.open();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        dataSource.close();
+    }
 }
