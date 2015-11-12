@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import android.widget.Button;
 import android.widget.ListView;
 
 
@@ -21,6 +23,9 @@ import android.widget.ListView;
  * create an instance of this fragment.
  */
 public class CompTestFragment extends Fragment {
+
+    public static final String LOGTAG="RoboApp";
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -34,6 +39,7 @@ public class CompTestFragment extends Fragment {
 
     CompTestDataSource dataSource;
 
+    Button addItemButton;
 
     /**
      * Use this factory method to create a new instance of
@@ -79,6 +85,14 @@ public class CompTestFragment extends Fragment {
         ListView lv = (ListView)rootView.findViewById(R.id.comptest_listview);
         ArrayAdapter<String> list_adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, foods);
         lv.setAdapter(list_adapter);
+
+        addItemButton = (Button) rootView.findViewById(R.id.addItemButton);
+        addItemButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                Log.i(LOGTAG, "Database opened");
+            }
+        });
 
         return rootView;
     }

@@ -2232,6 +2232,7 @@ containing a value of this type.
         public static final int action_mode_close_button=0x7f0c003c;
         public static final int action_settings=0x7f0c008b;
         public static final int activity_chooser_view_content=0x7f0c003d;
+        public static final int addItemButton=0x7f0c0075;
         public static final int alertTitle=0x7f0c0049;
         public static final int always=0x7f0c0032;
         public static final int beginning=0x7f0c0030;
@@ -2292,7 +2293,6 @@ containing a value of this type.
         public static final int middle=0x7f0c0031;
         public static final int mini=0x7f0c002f;
         public static final int multiply=0x7f0c0026;
-        public static final int myFAB=0x7f0c0075;
         public static final int navigationHeader=0x7f0c0078;
         public static final int navigation_header_container=0x7f0c006f;
         public static final int never=0x7f0c0035;
