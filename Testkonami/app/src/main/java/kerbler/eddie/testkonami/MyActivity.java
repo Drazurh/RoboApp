@@ -30,6 +30,7 @@ public class MyActivity extends Activity implements OnGestureListener {
         psswd.add(CHAR.R);
         psswd.add(CHAR.L);
         psswd.add(CHAR.R);
+        ((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.smile);
         gDetector = new GestureDetector(getApplicationContext(), this);
     }
 
@@ -47,19 +48,19 @@ public class MyActivity extends Activity implements OnGestureListener {
     public boolean onSwipe(Direction direction){
         if(direction == Direction.right) {
             entry.add(CHAR.R);
-            //((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.right);
+            ((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.right);
         }
         else if(direction == Direction.left) {
             entry.add(CHAR.L);
-            //((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.left);
+            ((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.left);
         }
         else if(direction == Direction.up) {
             entry.add(CHAR.U);
-            //((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.up);
+            ((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.up);
         }
         else if(direction == Direction.down) {
             entry.add(CHAR.D);
-            //((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.down);
+            ((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.down);
         }
 
         if(entry.equals(psswd)) {
