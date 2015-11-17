@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:2:1-25:12
+ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:2:1-29:12
 	package
 		ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:3:5-35
 		INJECTED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml
@@ -14,7 +14,7 @@ ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xm
 		INJECTED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml
 application
-ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:5:5-23:19
+ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:5:5-27:19
 MERGED from [com.android.support:appcompat-v7:23.1.0] C:\Users\John\gitwork\RoboApp\RoboApp\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.1.0\AndroidManifest.xml:22:5-20
 MERGED from [com.android.support:support-v4:23.1.0] C:\Users\John\gitwork\RoboApp\RoboApp\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.0\AndroidManifest.xml:22:5-20
 MERGED from [com.android.support:support-v4:23.1.0] C:\Users\John\gitwork\RoboApp\RoboApp\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.0\AndroidManifest.xml:22:5-20
@@ -48,12 +48,22 @@ category#android.intent.category.LAUNCHER
 ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:16:17-77
 	android:name
 		ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:16:27-74
-activity#com.robodoot.roboapp.createCompTest
-ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:19:9-22:20
+activity#com.robodoot.roboapp.CreateCompTestActivity
+ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:19:9-26:20
 	android:label
 		ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:21:13-68
 	android:name
-		ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:20:13-43
+		ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:20:13-51
+intent-filter#android.intent.category.DEFAULT+com.robodoot.roboapp.createCompTest
+ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:22:13-25:29
+action#com.robodoot.roboapp.createCompTest
+ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:23:17-78
+	android:name
+		ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:23:25-75
+category#android.intent.category.DEFAULT
+ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:24:17-76
+	android:name
+		ADDED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml:24:27-73
 uses-sdk
 INJECTED from C:\Users\John\gitwork\RoboApp\RoboApp\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 MERGED from [com.android.support:appcompat-v7:23.1.0] C:\Users\John\gitwork\RoboApp\RoboApp\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.1.0\AndroidManifest.xml:20:5-43

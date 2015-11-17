@@ -19,6 +19,10 @@
         <activity
             android:name=".CreateCompTestActivity"
             android:label="@string/title_activity_create_comp_test" >
+            <intent-filter>
+                <action android:name="com.robodoot.roboapp.createCompTest" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
     </application>
 

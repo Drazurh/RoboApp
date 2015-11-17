@@ -81,7 +81,7 @@ public class CompTestFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_comptest, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_comptest, container, false);
 
         String[] foods = {"Bacon","Ham","Cheese"};
         ListView lv = (ListView)rootView.findViewById(R.id.comptest_listview);
@@ -91,8 +91,9 @@ public class CompTestFragment extends Fragment {
         addItemButton = (FloatingActionButton) rootView.findViewById(R.id.addItemButton);
         addItemButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(this, c.class);
-                Log.i(LOGTAG, "Database opened");
+                Intent intent = new Intent("com.robodoot.roboapp.createCompTest");
+                Log.i(LOGTAG, "Creating New Component Test");
+                startActivity(intent);
             }
         });
 
