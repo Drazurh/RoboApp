@@ -1,9 +1,11 @@
 package com.robodoot.roboapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +41,7 @@ public class CompTestFragment extends Fragment {
 
     CompTestDataSource dataSource;
 
-    Button addItemButton;
+    FloatingActionButton addItemButton;
 
     /**
      * Use this factory method to create a new instance of
@@ -86,10 +88,10 @@ public class CompTestFragment extends Fragment {
         ArrayAdapter<String> list_adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, foods);
         lv.setAdapter(list_adapter);
 
-        addItemButton = (Button) rootView.findViewById(R.id.addItemButton);
+        addItemButton = (FloatingActionButton) rootView.findViewById(R.id.addItemButton);
         addItemButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Perform action on click
+                Intent intent = new Intent(this, c.class);
                 Log.i(LOGTAG, "Database opened");
             }
         });

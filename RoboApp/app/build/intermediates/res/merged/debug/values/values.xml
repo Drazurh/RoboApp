@@ -337,9 +337,15 @@
     <string name="drawer_open">Menu opened</string>
     <string name="hello_comptest_fragment">COMPONENT TESTING FRAGMENT</string>
     <string name="hello_home_fragment">HOME FRAGMENT</string>
+    <string name="hello_world">Hello world!</string>
     <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.0/res/values/values.xml -->
     <eat-comment/>
     <string name="status_bar_notification_info_overflow">999+</string>
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="title_activity_create_comp_test">createCompTest</string>
+    <!-- From: file:/C:/Users/John/gitwork/RoboApp/RoboApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.0/res/values/values.xml -->
+    <eat-comment/>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>
     <style name="AlertDialog.AppCompat.Light" parent="Base.AlertDialog.AppCompat.Light"/>
     <style name="Animation.AppCompat.Dialog" parent="Base.Animation.AppCompat.Dialog"/>
