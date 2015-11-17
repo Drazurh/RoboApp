@@ -411,6 +411,9 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
             }
         };
 
+//        Core.flip(frame.rgba().t(),Mrgba,0);
+//        Core.flip(frame.gray().t(),Mgray,0);
+
 
         if (mListener != null) {
             modified = mListener.onCameraFrame(tempFrame);
@@ -418,7 +421,6 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
             modified = tempFrame.rgba();
         }
 
-        tempFrame=null;
 
         boolean bmpValid = true;
         if (modified != null) {

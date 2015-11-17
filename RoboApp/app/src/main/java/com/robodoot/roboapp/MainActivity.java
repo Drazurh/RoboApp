@@ -1,6 +1,5 @@
 package com.robodoot.roboapp;
 
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -10,14 +9,22 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.net.Uri;
+
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerCallbacks {
+        implements
+        NavigationDrawerCallbacks,
+        HomeFragment.OnFragmentInteractionListener,
+        CompTestFragment.OnFragmentInteractionListener{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private Toolbar mToolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +39,33 @@ public class MainActivity extends ActionBarActivity
         // Set up the drawer.
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
         // populate the navigation drawer
-        mNavigationDrawerFragment.setUserData("John Doe", "johndoe@doe.com", BitmapFactory.decodeResource(getResources(), R.drawable.avatar));
+        //mNavigationDrawerFragment.setUserData("John Doe", "johndoe@doe.com", BitmapFactory.decodeResource(getResources(), R.drawable.avatar));
+
+
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
+        Fragment fragment;
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        switch(position) {
+            default:
+            case 0:
+                fragment = new HomeFragment();
+                Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                fragment = new CompTestFragment();
+                Toast.makeText(this, "Unit Testing", Toast.LENGTH_SHORT).show();
+            break;
+
+        }
+
+        transaction.replace(R.id.container, fragment);
+        //transaction.addToBackStack(null);
+        transaction.commit();
+
     }
 
 
@@ -79,5 +106,7 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-
+    public void onFragmentInteraction(Uri uri){
+        //you can leave it empty
+    }
 }

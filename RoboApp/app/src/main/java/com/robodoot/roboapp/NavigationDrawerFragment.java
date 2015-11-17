@@ -114,13 +114,15 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         selectItem(position);
+
     }
 
     public List<NavigationItem> getMenu() {
         List<NavigationItem> items = new ArrayList<NavigationItem>();
-        items.add(new NavigationItem("item 1", getResources().getDrawable(R.drawable.ic_menu_check)));
-        items.add(new NavigationItem("item 2", getResources().getDrawable(R.drawable.ic_menu_check)));
-        items.add(new NavigationItem("item 3", getResources().getDrawable(R.drawable.ic_menu_check)));
+        items.add(new NavigationItem("Home/console", getResources().getDrawable(R.drawable.ic_menu_check)));
+        items.add(new NavigationItem("Unit Testing", getResources().getDrawable(R.drawable.ic_menu_check)));
+        items.add(new NavigationItem("Feature Testing", getResources().getDrawable(R.drawable.ic_menu_check)));
+        items.add(new NavigationItem("Behavior Mode", getResources().getDrawable(R.drawable.ic_menu_check)));
         return items;
     }
 
@@ -186,6 +188,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
         ((NavigationDrawerAdapter) mDrawerList.getAdapter()).selectPosition(position);
+
     }
 
     public void openDrawer() {
