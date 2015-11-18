@@ -1,52 +1,65 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     xmlns:opencv="http://schemas.android.com/apk/res-auto">
- 
+
     <org.opencv.android.JavaCameraView
         android:id="@+id/fd_activity_surface_view"
+        android:layout_width="500px"
+        android:layout_height="700px"
+        opencv:camera_id = "back"
+        android:layout_below="@+id/image_place_holder"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        opencv:camera_id = "back"/>
- 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:id="@+id/image_place_holder"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:onClick="onRecreateClick"
-        android:text="Recreate" />
- 
-    <TextView
-        android:id="@+id/method"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/seekbars"
-        android:layout_alignParentLeft="true"
-        android:layout_margin="5dp"
-        android:text="method"
-        android:textColor="@android:color/white"
-        android:textSize="10sp" />
- 
-    <LinearLayout
-        android:id="@+id/seekbars"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:id="@+id/arrow_up"
+        android:src="@drawable/up"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:id="@+id/arrow_down"
+        android:src="@drawable/down"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        >
- 
-        <SeekBar
-            android:id="@+id/methodSeekBar"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:max="5"
-            android:paddingLeft="5dip"
-            android:paddingRight="10dip"
-            android:progress="500" >
-        </SeekBar>
- 
-    </LinearLayout>
- 
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:id="@+id/arrow_right"
+        android:src="@drawable/right"
+        android:layout_alignTop="@+id/arrow_left"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:id="@+id/arrow_left"
+        android:src="@drawable/left"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="invisible" />
+
 </RelativeLayout>

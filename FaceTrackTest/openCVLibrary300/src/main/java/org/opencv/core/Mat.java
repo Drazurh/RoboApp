@@ -200,8 +200,14 @@ public class Mat {
     // javadoc: Mat::clone()
     public Mat clone()
     {
-
-        Mat retVal = new Mat(n_clone(nativeObj));
+        Mat retVal;
+        try {
+            retVal = new Mat(n_clone(nativeObj));
+        }
+        catch( Exception e)
+        {
+            retVal = clone();
+        }
 
         return retVal;
     }
@@ -336,8 +342,13 @@ public class Mat {
     // javadoc: Mat::create(rows, cols, type)
     public void create(int rows, int cols, int type)
     {
-
-        n_create(nativeObj, rows, cols, type);
+        try {
+            n_create(nativeObj, rows, cols, type);
+        }
+        catch(Exception e){
+            System.gc();
+            create(rows, cols, type);
+            }
 
         return;
     }
@@ -349,8 +360,13 @@ public class Mat {
     // javadoc: Mat::create(size, type)
     public void create(Size size, int type)
     {
-
-        n_create(nativeObj, size.width, size.height, type);
+        try {
+            n_create(nativeObj, size.width, size.height, type);
+        }
+        catch(Exception e) {
+            System.gc();
+            create(size, type);
+        }
 
         return;
     }
@@ -848,8 +864,15 @@ public class Mat {
     // javadoc: Mat::t()
     public Mat t()
     {
-
-        Mat retVal = new Mat(n_t(nativeObj));
+        Mat retVal;
+        try{
+            retVal = new Mat(n_t(nativeObj));
+        }
+        catch(Exception e)
+        {
+            System.gc();
+            retVal = t();
+        }
 
         return retVal;
     }
