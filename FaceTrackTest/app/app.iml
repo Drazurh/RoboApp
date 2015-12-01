@@ -90,10 +90,21 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="artoolkitplus" level="project" />
     <orderEntry type="library" exported="" name="javacpp" level="project" />
+    <orderEntry type="library" exported="" name="libdc1394" level="project" />
+    <orderEntry type="library" exported="" name="flycapture" level="project" />
+    <orderEntry type="library" exported="" name="artoolkitplus-android-arm" level="project" />
+    <orderEntry type="library" exported="" name="flandmark-android-arm" level="project" />
+    <orderEntry type="library" exported="" name="videoinput" level="project" />
+    <orderEntry type="library" exported="" name="flandmark" level="project" />
+    <orderEntry type="library" exported="" name="opencv-android-arm" level="project" />
     <orderEntry type="library" exported="" name="javacv" level="project" />
+    <orderEntry type="library" exported="" name="ffmpeg" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.0.1" level="project" />
+    <orderEntry type="library" exported="" name="ffmpeg-android-arm" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-23.0.1" level="project" />
+    <orderEntry type="library" exported="" name="libfreenect" level="project" />
     <orderEntry type="library" exported="" name="opencv" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.0.1" level="project" />
     <orderEntry type="module" module-name="openCVLibrary300" exported="" />

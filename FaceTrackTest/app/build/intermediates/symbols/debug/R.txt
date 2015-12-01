@@ -460,10 +460,10 @@ int id activity_chooser_view_content 0x7f0d0027
 int id alertTitle 0x7f0d0031
 int id always 0x7f0d001e
 int id any 0x7f0d0013
-int id arrow_down 0x7f0d0053
-int id arrow_left 0x7f0d0055
-int id arrow_right 0x7f0d0054
-int id arrow_up 0x7f0d0052
+int id arrow_down 0x7f0d0052
+int id arrow_left 0x7f0d0053
+int id arrow_right 0x7f0d0055
+int id arrow_up 0x7f0d0054
 int id back 0x7f0d0014
 int id beginning 0x7f0d001b
 int id buttonPanel 0x7f0d0037
@@ -611,10 +611,8 @@ int string abc_shareactionprovider_share_with_application 0x7f07000f
 int string abc_toolbar_collapse_description 0x7f070010
 int string action_settings 0x7f070012
 int string app_name 0x7f070013
-int string hello_world 0x7f070014
 int string status_bar_notification_info_overflow 0x7f070011
-int string title_activity_fd 0x7f070015
-int string title_activity_main 0x7f070016
+int string title_activity_fd 0x7f070014
 int style AlertDialog_AppCompat 0x7f09007a
 int style AlertDialog_AppCompat_Light 0x7f09007b
 int style Animation_AppCompat_Dialog 0x7f09007c
