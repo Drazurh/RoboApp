@@ -3,12 +3,10 @@ package com.robodoot.dr.RoboApp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -17,10 +15,14 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.robodoot.dr.facetracktest.R;
+import com.robodoot.roboapp.MainActivity;
 
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_face;
@@ -57,6 +59,8 @@ import java.util.Vector;
 
 public class FdActivity extends Activity implements GestureDetector.OnGestureListener, CvCameraViewListener2 {
 
+    private boolean cameraIsChecked = false;
+
     private GestureDetector gDetector;
     public enum CHAR {U, D, L, R}
     public static Vector<CHAR> psswd = new Vector<>();
@@ -65,7 +69,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     private static final String TAG = "OCVSample::Activity";
     public static final int JAVA_DETECTOR = 0;
 
-    private int learn_frames = 0;
+
 
     private CatEmotion kitty;
     public enum Directions {UP, DOWN, LEFT, RIGHT, CENTER}
@@ -79,7 +83,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     private Bitmap bmp;
     private Directions dir;
 
-
+    private Rect[] FavFaceLocationBuffer;
     private Rect[] FaceLocationBuffer;
     private Mat[]  FaceMatBuffer;
     private Mat[]  EigenMats;
@@ -87,6 +91,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     private ArrayList<Scalar> UserColors;
     private ArrayList<ArrayList<Mat>> TrainingSets;
     private FaceRecognizer faceRecognizer;
+
+    private ArrayList<Person> peopleLastCameraFrame;
+    private ArrayList<Person> peopleThisCameraFrame;
+    private ArrayList<ArrayList<Integer>> SimilarID;
 
     private int refreshRecognizer;
 
@@ -106,6 +114,21 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     double xCenter = -1;
     double yCenter = -1;
+
+    boolean debugging = false;
+
+    private EditText ServoText;
+    private EditText SpeedText;
+    private Button GoButton;
+
+    PololuHandler pololu;
+
+    TextView debug1;
+    TextView debug2;
+    TextView debug3;
+    TextView tempTextView;
+
+    String tempText;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -183,6 +206,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     public FdActivity() {
         mDetectorName = new String[2];
         mDetectorName[JAVA_DETECTOR] = "Java";
+        peopleThisCameraFrame = new ArrayList<Person>();
+        peopleLastCameraFrame = new ArrayList<Person>();
+        SimilarID = new ArrayList<ArrayList<Integer>>();
+        pololu = new PololuHandler();
 
         Log.i(TAG, "Instantiated new " + this.getClass());
     }
@@ -220,10 +247,50 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         kitty = new CatEmotion(this);
         kitty.pic=(ImageView)findViewById(R.id.image_place_holder);
 
+        debug1 = (TextView)findViewById(R.id.debugText1);
+        debug2 = (TextView)findViewById(R.id.debugText2);
+        debug3 = (TextView)findViewById(R.id.debugText3);
+
+        debug1.setAlpha(0f);
+        debug2.setAlpha(0f);
+        debug3.setAlpha(0f);
+
+        mOpenCvCameraView.setAlpha(0f);
+        mOpenCvCameraView.bringToFront();
+
+        ServoText = (EditText)findViewById(R.id.servoField);
+        SpeedText = (EditText)findViewById(R.id.speedField);
+        final Button button = (Button)findViewById(R.id.goButton);
+        button.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                pololu.maestro.setTarget(Integer.parseInt(ServoText.getText().toString()),(int)Float.parseFloat(SpeedText.getText().toString()));
+
+            }
+
+
+
+        });
+
+
+
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent me) {
+//        if(me.getAction()==MotionEvent.ACTION_BUTTON_PRESS&&!cameraIsChecked)
+//        {
+//            cameraIsChecked = !cameraIsChecked;
+//            mOpenCvCameraView.setAlpha(0.8f);
+//            mOpenCvCameraView.bringToFront();
+//        }
+//        else if(me.getAction()==MotionEvent.ACTION_BUTTON_RELEASE&&cameraIsChecked)
+//        {
+//            cameraIsChecked = !cameraIsChecked;
+//            mOpenCvCameraView.setAlpha(0f);
+//
+//
+//        }
+
         return gDetector.onTouchEvent(me);
     }
 
@@ -242,6 +309,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     @Override
     public void onResume() {
+        pololu.onResume(getIntent(),this);
         super.onResume();
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
     }
@@ -252,11 +320,15 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     }
 
     public void onCameraViewStarted(int width, int height) {
+        TextView loading = (TextView)findViewById(R.id.LoadingText);
+        loading.setAlpha(1.0f);
         mGray = new Mat();
         mRgba = new Mat();
         tempMat1 = new Mat();
         faces = new MatOfRect();
         smiles = new MatOfRect();
+        FavFaceLocationBuffer = new Rect[5];
+        for(int i = 0;i<5;i++)FavFaceLocationBuffer[i]=new Rect(new Point(0,0),new Size(1,1));
         FaceLocationBuffer = new Rect[15];
         for(int i = 0;i<15;i++)FaceLocationBuffer[i]=new Rect(new Point(0,0),new Size(1,1));
         FaceMatBuffer  = new Mat[15];
@@ -266,14 +338,18 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         IDcount = 1;
         UserColors = new ArrayList<Scalar>();
         UserColors.add(0, new Scalar(0, 0, 0));
-        //mOpenCvCameraView.setAlpha(0f);
-        mOpenCvCameraView.bringToFront();
         TrainingSets = new ArrayList<ArrayList<Mat>>();
         TrainingSets.add(0,new ArrayList<Mat>());
         faceRecognizer = opencv_face.createFisherFaceRecognizer();
         //kitty.pic.setVisibility(View.GONE);
         loadTestFaces();
         refreshRecognizer=0;
+        entry.clear();
+
+
+
+
+        loading.setAlpha(0f);
 
 
     }
@@ -288,51 +364,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         for(int i = 0;i<12;i++)FaceMatBuffer[i].release();
     }
 
-    private void addToRecognizer(int ID, Mat m)
-    {
-        opencv_core.MatVector TrainingMats = new opencv_core.MatVector(1);
-        opencv_core.Mat labels = new opencv_core.Mat(1,1,opencv_core.CV_32SC1);
-        IntBuffer labelsBuf = labels.getIntBuffer();
-        opencv_core.Mat temp = convert(m);
-        TrainingMats.put(0, temp);
-        labelsBuf.put(0,ID);
-        faceRecognizer.train(TrainingMats, labels);
-
-    }
-
-    private void resetRecognizer()
-    {
-        int count = 0;
-        int k = 0;
-
-        for(int i=1;i<TrainingSets.size();i++)
-        {
-            for(int j=0;j<TrainingSets.get(i).size();j++)
-            {
-                count++;
-            }
-        }
-
-        opencv_core.MatVector TrainingMats = new opencv_core.MatVector(count);
-        opencv_core.Mat labels = new opencv_core.Mat(count,1,opencv_core.CV_32SC1);
-        IntBuffer labelsBuf = labels.getIntBuffer();
-        for(int i=1;i<TrainingSets.size();i++)
-        {
-            for(int j=0;j<TrainingSets.get(i).size();j++)
-            {
-                Imgproc.resize(TrainingSets.get(i).get(j),TrainingSets.get(i).get(j),stds);
-                opencv_core.Mat temp = convert(TrainingSets.get(i).get(j));
-                TrainingMats.put(k,temp);
-                labelsBuf.put(k,i);
-                k++;
-            }
-        }
-
-        faceRecognizer.train(TrainingMats, labels);
-
-
-
-    }
 
     public int checkForRecognition(Mat face)
     {
@@ -356,6 +387,38 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         }
         return 0;
 
+    }
+
+    public void trackFavFace(Rect faceRect) {
+
+
+        int sumX = faceRect.x + faceRect.width / 2;
+        int sumY = faceRect.y + faceRect.height / 2;
+        int sumA = (int) faceRect.size().area();
+        for (int i = FavFaceLocationBuffer.length - 1; i > 0; i--) {
+
+            FaceMatBuffer[i - 1].copyTo(FaceMatBuffer[i]);
+            FavFaceLocationBuffer[i] = FavFaceLocationBuffer[i - 1];
+            sumX = sumX + FavFaceLocationBuffer[i].x + FavFaceLocationBuffer[i].width / 2;
+            sumY = sumY + FavFaceLocationBuffer[i].y + FavFaceLocationBuffer[i].height / 2;
+            sumA = sumA + (int) FavFaceLocationBuffer[i].size().area();
+
+        }
+
+        FavFaceLocationBuffer[0] = faceRect;
+
+        if (FavFaceLocationBuffer[FavFaceLocationBuffer.length - 1].size().area() < 2) return;
+        int AvgX = sumX / FavFaceLocationBuffer.length;
+        int AvgY = sumY / FavFaceLocationBuffer.length;
+
+        double pX = (double) AvgX / (double) mRgba.width();
+        double pY = (double) AvgY / (double) mRgba.height();
+
+        if (pX < 0.42) turnCamera(Directions.RIGHT);
+        else if (pY < 0.42) turnCamera(Directions.UP);
+        else if (pX > 0.58) turnCamera(Directions.LEFT);
+        else if (pY > 0.58) turnCamera(Directions.DOWN);
+        else turnCamera(Directions.CENTER);
     }
 
     public boolean adjustFaceBuffer(Rect faceRect)
@@ -384,16 +447,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         int AvgX = sumX/ FaceLocationBuffer.length;
         int AvgY = sumY/ FaceLocationBuffer.length;
         int AvgA = sumA/ FaceLocationBuffer.length;
-
-        double pX = (double)AvgX/(double)mRgba.width();
-        double pY = (double)AvgY/(double)mRgba.height();
-
-        if(pX<0.35) turnCamera(Directions.RIGHT);
-        else if(pY<0.35) turnCamera(Directions.DOWN);
-        else if(pX>0.65) turnCamera(Directions.LEFT);
-        else if(pY>0.65) turnCamera(Directions.UP);
-        else turnCamera(Directions.CENTER);
-
 
         int count = 0;
         for(int i=0;i< FaceLocationBuffer.length;i++)
@@ -434,6 +487,8 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
 
 
+        peopleThisCameraFrame.clear();
+
         try {
             inputFrame.rgba().copyTo(mRgba);
             inputFrame.gray().copyTo(mGray);
@@ -458,6 +513,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
             Rect[] facesArray = faces.toArray();
 
+            if(faces.toArray().length==0)
+            {
+                trackFavFace(new Rect(0,0,mGray.width(),mGray.height()));
+            }
 
             for (int i = 0; i < facesArray.length; i++) {
 
@@ -475,7 +534,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
                 int recoID = checkForRecognition(tempMat1);
 
-                Scalar color = UserColors.get(recoID);
+
 
                 Imgproc.cvtColor(tempMat1, tempMat1, Imgproc.COLOR_GRAY2RGBA);
 
@@ -486,7 +545,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     if(r.size().area()>biggestFace.size().area())biggestFace=r;
                 }
                 else {
-                    Imgproc.rectangle(mRgba, r.br(), r.tl(), color, 8);
+
 
                     Point mouthPt1 = new Point(r.x + r.width / 10, r.y + r.height / 2 + r.height / 10);
                     Point mouthPt2 = new Point(r.x + r.width - r.width / 10, r.y + r.height - r.height / 10);
@@ -496,18 +555,29 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     //Imgproc.rectangle(mRgba, mouthRect.br(), mouthRect.tl(), new Scalar(0, 255, 0), 4);
 
                     if (mJavaDetectorSmile != null)
-                        mJavaDetectorSmile.detectMultiScale(mGray.submat(mouthRect), smiles, 1.4, 3, 0, new Size(mouthRect.width * 0.6, mouthRect.height * 0.4), new Size());
-
+                        mJavaDetectorSmile.detectMultiScale(mGray.submat(mouthRect), smiles, 1.1, 6, 0, new Size(mouthRect.width * 0.6, mouthRect.height * 0.6), new Size());
                     Rect [] smileArray = smiles.toArray();
-                    if(smileArray.length>0)kitty.smiledAt();
+                    boolean smiling = false;
+                    if(smileArray.length>0)smiling = true;
 
-                    if(recoID == 22) kitty.neutral();
+
+
+                    Core.flip(mGray.submat(mouthRect),mGray.submat(mouthRect),-1);
+                    if (mJavaDetectorSmile != null)
+                        mJavaDetectorSmile.detectMultiScale(mGray.submat(mouthRect), smiles, 1.05, 4, 0, new Size(mouthRect.width * 0.4, mouthRect.height * 0.4), new Size());
+                    Rect [] frownArray = smiles.toArray();
+                    boolean frowning = false;
+                    if(frownArray.length>0){
+
+                        if(smiling == false)frowning=true;
+                        else smiling = false;
+                    }
+
+                    peopleThisCameraFrame.add(new Person(recoID, r, smiling, frowning));
+                    setTextFieldText(Integer.toString(recoID),debug1);
 
 
                 }
-                //try to detect frowns
-
-
             }
 
             if (biggestFace.size().area()!=1)
@@ -524,19 +594,51 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     mJavaDetectorSmile.detectMultiScale(mGray.submat(mouthRect), smiles, 1.4, 3, 0, new Size(mouthRect.width * 0.6, mouthRect.height * 0.4), new Size());
 
                 Rect [] smileArray = smiles.toArray();
+
                 if(smileArray.length>0)kitty.smiledAt();
-
-
-
                 if(adjustFaceBuffer(biggestFace)) {
 
                     addNewUser();
                 }
+
+                if(peopleThisCameraFrame.size()==0)trackFavFace(biggestFace);
             }
 
+            if(peopleThisCameraFrame.size()>0) {
 
 
 
+                ArrayList<Integer> IDsToCheck = new ArrayList<Integer>();
+
+                for (int i = 0; i < peopleThisCameraFrame.size(); i++) {
+                    for (int j = 0; j < peopleLastCameraFrame.size(); j++) {
+                        peopleThisCameraFrame.get(i).checkID();
+                        peopleThisCameraFrame.get(i).checkSimilar(peopleLastCameraFrame.get(j));
+                    }
+                    IDsToCheck.add(peopleThisCameraFrame.get(i).ID);
+                }
+
+                int favID = kitty.getFavPerson(IDsToCheck);
+                Person favPerson = peopleThisCameraFrame.get(0);
+
+                if (favID > 20) {
+                    for (int i = 0; i < peopleThisCameraFrame.size(); i++) {
+                        if (peopleThisCameraFrame.get(i).ID == favID) {
+                            favPerson = peopleThisCameraFrame.get(i);
+                            trackFavFace(favPerson.face);
+                        }
+                    }
+                }
+
+                peopleLastCameraFrame.clear();
+                peopleLastCameraFrame.addAll(peopleThisCameraFrame);
+                setTextFieldText(Integer.toString(kitty.lookedAt(favPerson.ID, favPerson.smiling, favPerson.frowning)), debug2);
+                Scalar color = UserColors.get(favPerson.ID);
+                Imgproc.rectangle(mRgba, favPerson.face.br(), favPerson.face.tl(), color, 8);
+
+
+
+            }
 
 
 
@@ -547,6 +649,169 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             return null;}
 
         return mRgba;
+    }
+
+    private class Person {
+
+        public Rect face;
+        public int ID;
+        public boolean smiling;
+        public boolean frowning;
+
+        public Person(int _ID, Rect _face, boolean _smiling, boolean _frowning){
+            ID = _ID;
+            face = _face;
+            smiling = _smiling;
+            frowning = _frowning;
+        }
+
+        public void checkID()
+        {
+            if(this.ID>=SimilarID.size())
+            {
+                for(int i=SimilarID.size()-1; i<=this.ID;i++)
+                {
+                    SimilarID.add(new ArrayList<Integer>());
+
+                }
+            }
+            if(SimilarID.get(this.ID).size()>0) {
+                int minID = SimilarID.get(this.ID).get(0);
+                for (int i = 0; i < SimilarID.get(this.ID).size(); i++) {
+
+                    if(SimilarID.get(this.ID).get(i)<minID)
+                    {
+                        minID = SimilarID.get(this.ID).get(i);
+                    }
+
+                }
+                if(this.ID!=minID) {
+                    if(!UserColors.get(this.ID).equals(UserColors.get(minID)))
+                    {
+                        UserColors.get(this.ID).set(UserColors.get(minID).val);
+                    }
+                    this.ID = minID;
+                }
+            }
+
+
+        }
+
+        public boolean checkSimilar(Person other){
+
+            if(other.ID==this.ID)return true;
+
+            if(Math.max(other.ID, this.ID)>=SimilarID.size())
+            {
+                for(int i=SimilarID.size()-1; i<=Math.max(other.ID, this.ID);i++)
+                {
+                    SimilarID.add(new ArrayList<Integer>());
+
+                }
+            }
+            if(SimilarID.get(this.ID).size()>0) {
+                for (int i = 0; i < SimilarID.get(this.ID).size(); i++) {
+                    if(SimilarID.get(this.ID).get(i)==other.ID)
+                    {
+                        this.ID = Math.min(this.ID, other.ID);
+                        other.ID = this.ID;
+                        return true;
+                    }
+
+                }
+            }
+            if(checkSimilarRect(this.face, other.face))
+            {
+                String temp = "combined IDs " + this.ID + " and " + other.ID;
+                setTextFieldText(temp, debug3);
+
+                UserColors.get(Math.max(this.ID, other.ID)).set(UserColors.get(Math.min(this.ID, other.ID)).val);
+                SimilarID.get(this.ID).add(other.ID);
+                if(!SimilarID.get(other.ID).contains(this.ID))SimilarID.get(other.ID).add(this.ID);
+
+                this.ID = Math.min(this.ID, other.ID);
+                other.ID = this.ID;
+
+                return true;
+            }
+
+            return false;
+
+        }
+
+
+    }
+
+    private void setTextFieldText(String message, TextView field)
+    {
+        tempTextView = field;
+        tempText = message;
+        if(!debugging)return;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tempTextView.setAlpha(1f);
+                tempTextView.setText(tempText);
+                tempTextView.bringToFront();
+
+            }
+        });
+
+    }
+
+    private boolean checkSimilarRect(Rect r1, Rect r2)
+    {
+        double maxRange = (r1.width+r2.width)/20;
+
+
+        int xCenter1 = (r1.x + r1.width + r1.x) / 2;
+        int yCenter1 = (r1.y + r1.y + r1.height) / 2;
+
+        int xCenter2 = (r2.x + r2.width + r2.x) / 2;
+        int yCenter2 = (r2.y + r2.y + r2.height) / 2;
+
+        double avgArea = (r1.area()+r2.area())/2;
+        double maxSizeDiff = 0.15*avgArea;
+
+        double range = Math.sqrt(Math.pow(xCenter1-xCenter2,2)+Math.pow(yCenter1-yCenter2,2));
+        double sizeDiff = Math.abs(r1.area()-r2.area());
+
+        if(range<maxRange&&sizeDiff<maxSizeDiff) return true;
+        return false;
+    }
+
+    private void showVideoFeed()
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                mOpenCvCameraView.setAlpha(1.0f);
+                debugging = true;
+
+
+            }
+        });
+
+
+
+    }
+
+    private void hideVideoFeed()
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                mOpenCvCameraView.setAlpha(0.0f);
+
+
+            }
+        });
+
+
+
     }
 
     private opencv_core.Mat convert(Mat m)
@@ -649,13 +914,12 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                arrows[2].setVisibility(View.VISIBLE);
 
                 for (int i = 1; i <= 20; i++) {
 
                     TrainingSets.add(i, new ArrayList<Mat>());
                     Log.d(TAG, "Processing person "+i);
-                    for(int j=0;j<=4;j++) {
+                    for(int j=0;j<=1;j++) {
 
                         Bitmap load = getBitmapFromAssets("FaceCases/" + i +"-"+j+ ".jpg");
 
@@ -697,12 +961,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                         catch (CvException e){Log.d("Exception", e.getMessage());}
 
 
-                        arrows[2].setImageBitmap(bmp);
-
-                        arrows[2].forceLayout();
-                        arrows[2].postInvalidate();
-
-
 
                     }
                     UserColors.add(IDcount, new Scalar(0, 0, 0));
@@ -736,12 +994,12 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
 
         return true;
     }
@@ -769,12 +1027,22 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             //Code to switch activities to open Menu.
             //Intent intent = new Intent(this, MenuActivity.class);
             entry.clear();
-            kitty.feedTreat();
+            showVideoFeed();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
+
         }
 
         else if(entry.lastElement() != psswd.elementAt(entry.size()-1)) {
             entry.clear();
-            kitty.beat();
+
+
+        }
+
+        if(entry.size()>psswd.size()+2)
+        {
+            entry.clear();
 
         }
         return true;
@@ -894,7 +1162,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     @Override
     public void onLongPress(MotionEvent arg0) {
-        // TODO Auto-generated method stub
+        if(mOpenCvCameraView.getAlpha()>0.5f)
+            mOpenCvCameraView.setAlpha(0.0f);
+        else
+            mOpenCvCameraView.setAlpha(0.80f);
     }
 
     @Override
@@ -910,10 +1181,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     @Override
     public boolean onSingleTapUp(MotionEvent arg0) {
-        // TODO Auto-generated method stub
+
+
         return false;
     }
-
 
 
 
@@ -929,17 +1200,22 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 switch (dir) {
                     case UP:
                         arrows[0].setVisibility(View.VISIBLE);
+                        pololu.cameraPitchSpeed(0.05f);
                         break;
                     case RIGHT:
+                        pololu.cameraYawSpeed(-0.05f);
                         arrows[1].setVisibility(View.VISIBLE);
                         break;
                     case DOWN:
+                        pololu.cameraPitchSpeed(-0.05f);
                         arrows[2].setVisibility(View.VISIBLE);
                         break;
                     case LEFT:
+                        pololu.cameraYawSpeed(0.05f);
                         arrows[3].setVisibility(View.VISIBLE);
                         break;
                     default:
+                        pololu.stopNeckMotors();
                 }
 
             }

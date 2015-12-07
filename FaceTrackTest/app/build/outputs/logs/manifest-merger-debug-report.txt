@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:2:1-21:12
+ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:2:1-32:12
 	package
 		ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:3:5-44
 		INJECTED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml
@@ -14,9 +14,16 @@ ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml
 		INJECTED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml
 		INJECTED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml
 application
-ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:5:5-20:19
-MERGED from [com.android.support:appcompat-v7:23.0.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\AndroidManifest.xml:22:5-20
-MERGED from [com.android.support:support-v4:23.0.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\AndroidManifest.xml:22:5-20
+ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:5:5-31:19
+MERGED from [com.android.support:appcompat-v7:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.1.1\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:design:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\design\23.1.1\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:appcompat-v7:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.1.1\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\AndroidManifest.xml:22:5-20
 	android:label
 		ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:8:9-41
 	android:allowBackup
@@ -43,11 +50,34 @@ category#android.intent.category.LAUNCHER
 ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:17:17-76
 	android:name
 		ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:17:27-74
+activity#com.robodoot.roboapp.MainActivity
+ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:20:9-27:20
+	android:label
+		ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:22:13-37
+	android:parentActivityName
+		ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:23:13-76
+	android:name
+		ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:21:13-61
+meta-data#android.support.PARENT_ACTIVITY
+ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:24:13-26:70
+	android:value
+		ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:26:17-67
+	android:name
+		ADDED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml:25:17-63
 uses-sdk
 INJECTED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
-MERGED from [com.android.support:appcompat-v7:23.0.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\AndroidManifest.xml:20:5-43
-MERGED from [com.android.support:support-v4:23.0.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:appcompat-v7:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.1.1\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\AndroidManifest.xml:20:5-43
 MERGED from [FaceTrackTest:openCVLibrary300:unspecified] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\FaceTrackTest\openCVLibrary300\unspecified\AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:design:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\design\23.1.1\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:appcompat-v7:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.1.1\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:recyclerview-v7:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.1.1\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:recyclerview-v7:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.1.1\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.1.1] B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\AndroidManifest.xml:20:5-43
 	android:targetSdkVersion
 		INJECTED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml
 		INJECTED from B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\src\main\AndroidManifest.xml

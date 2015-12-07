@@ -39,6 +39,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.robodoot.roboapp.MainActivity"
+            android:label="Settings"
+            android:parentActivityName="com.robodoot.dr.RoboApp.FdActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.robodoot.dr.RoboApp.FdActivity" />
+        </activity>
     </application>
 
 </manifest>

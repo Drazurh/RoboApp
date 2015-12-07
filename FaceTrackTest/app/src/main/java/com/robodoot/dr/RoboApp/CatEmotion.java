@@ -3,6 +3,8 @@ package com.robodoot.dr.RoboApp;
 import android.widget.ImageView;
 import com.robodoot.dr.facetracktest.R;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -17,8 +19,10 @@ public class CatEmotion {
     private TimerTask calc;
     public  ImageView pic;
     protected FdActivity context;
+    private ArrayList<Opinion> opinions;
 
     public CatEmotion(FdActivity c) {
+        opinions = new ArrayList<Opinion>();
         state = EMOTION.Neutral;
         context = c;
         scale = 0;
@@ -27,7 +31,7 @@ public class CatEmotion {
             @Override
             public void run() {
                 if(scale > 0) {
-                    scale-=4;
+                    scale-=2;
                 }
                 else if(scale < 0) {
                     scale++;
@@ -36,10 +40,14 @@ public class CatEmotion {
                 return;
             }
         };
-        tm.schedule(calc,100,300);
+        tm.schedule(calc, 100, 300);
     }
 
     public void reCalcFace() {
+
+        if(scale>120)scale=120;
+        if(scale<-120)scale=-120;
+
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -88,6 +96,90 @@ public class CatEmotion {
             }
         });
     }
+
+    public int lookedAt(int ID, boolean smiling, boolean frowning){
+
+        Opinion catsOpinion = getOpinionFromList(ID,opinions);
+
+        if(smiling){
+            catsOpinion.addHappiness(3);
+
+        }
+        else if (frowning){
+            catsOpinion.addHappiness(-3);
+        }
+
+        scale+=catsOpinion.happiness/10;
+
+        if(catsOpinion.happiness<0&&scale<catsOpinion.happiness)scale = catsOpinion.happiness;
+        if(catsOpinion.happiness>0&&scale>catsOpinion.happiness)scale = catsOpinion.happiness;
+        reCalcFace();
+
+        return catsOpinion.happiness;
+
+    }
+
+    public void addNewID(int newID)
+    {
+        opinions.add(new Opinion(newID));
+
+    }
+
+    public int getFavPerson(ArrayList<Integer> IDs)
+    {
+        int Fav = -1;
+        int maxOpinion = -100;
+        for(int i=0; i<IDs.size();i++)
+        {
+            Opinion iOpinion = getOpinionFromList(IDs.get(i),opinions);
+            if(iOpinion.happiness>maxOpinion)
+            {
+                maxOpinion = iOpinion.happiness;
+                Fav = iOpinion.ID;
+
+            }
+        }
+
+        return Fav;
+
+
+    }
+
+    private Opinion getOpinionFromList(int oID, ArrayList<Opinion> oList)
+    {
+        for(int i=0; i<oList.size();i++)
+        {
+            if(oList.get(i).ID==oID)return oList.get(i);
+
+        }
+        Opinion newO = new Opinion(oID);
+        oList.add(newO);
+        return newO;
+    }
+
+    private class Opinion {
+
+        public Opinion(int id)
+        {
+            ID = id;
+            happiness = 0;
+        }
+
+        public int ID;
+        public int happiness;
+
+        public void addHappiness(int toAdd)
+        {
+            happiness+=toAdd;
+            if(happiness>120)happiness=120;
+            if(happiness<-120)happiness=-120;
+
+        }
+
+
+    }
+
+
     public void startle()
     {
 
@@ -110,7 +202,7 @@ public class CatEmotion {
     public void smiledAt()
     {
 
-        scale+=3;
+        scale+=5;
         reCalcFace();
     }
 
