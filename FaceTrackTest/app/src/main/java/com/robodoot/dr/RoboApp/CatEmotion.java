@@ -4,7 +4,6 @@ import android.widget.ImageView;
 import com.robodoot.dr.facetracktest.R;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -12,7 +11,7 @@ import java.util.TimerTask;
  * Created by stopn_000 on 11/16/2015.
  */
 public class CatEmotion {
-    public enum EMOTION {Neutral, SlightlyHappy, Happy, VeryHappy, SlightlyMad, Mad, VeryMad};
+    public enum EMOTION {HAPPY, HAPPY_TONGUE, HAPPIER, HEARTS, ANNOYED, SAD, SADDER, CONCERNED, CRYING, DISGUSTED, HEARTS_TONGUE, KAWAII_EYES_CLOSED, KAWAII_EYES_OPEN, LOOK_RIGHT, LOOK_LEFT, YAWNING};
     private EMOTION state;
     private int scale;
     private Timer tm;
@@ -21,9 +20,11 @@ public class CatEmotion {
     protected FdActivity context;
     private ArrayList<Opinion> opinions;
 
+    private boolean default_display = true;
+
     public CatEmotion(FdActivity c) {
         opinions = new ArrayList<Opinion>();
-        state = EMOTION.Neutral;
+        state = EMOTION.HAPPY;
         context = c;
         scale = 0;
         tm = new Timer("tm");
@@ -40,6 +41,10 @@ public class CatEmotion {
                 return;
             }
         };
+
+
+
+
         tm.schedule(calc, 100, 300);
     }
 
@@ -51,50 +56,129 @@ public class CatEmotion {
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (scale <= -100) {
-                    state = EMOTION.VeryMad;
-                } else if (scale <= -66) {
-                    state = EMOTION.Mad;
-                } else if (scale <= -33) {
-                    state = EMOTION.SlightlyMad;
-                } else if (scale <= 33) {
-                    state = EMOTION.Neutral;
-                } else if (scale <= 66) {
-                    state = EMOTION.SlightlyHappy;
-                } else if (scale <= 100) {
-                    state = EMOTION.Happy;
-                } else {
-                    state = EMOTION.VeryHappy;
+
+                if(default_display) {
+                    if (scale <= -100) {
+                        state = EMOTION.SADDER;
+                    } else if (scale <= -66) {
+                        state = EMOTION.SAD;
+                    } else if (scale <= -33) {
+                        state = EMOTION.ANNOYED;
+                    } else if (scale <= 33) {
+                        state = EMOTION.HAPPY;
+                    } else if (scale <= 66) {
+                        state = EMOTION.HAPPY_TONGUE;
+                    } else if (scale <= 100) {
+                        state = EMOTION.HAPPIER;
+                    } else {
+                        state = EMOTION.HEARTS;
+                    }
                 }
 
                 switch (state) {
-                    case VeryHappy:
-                        pic.setImageResource(R.drawable.supersmile);
+                    case HEARTS:
+                        pic.setImageResource(R.drawable.face_hearts);
                         break;
-                    case Happy:
-                        pic.setImageResource(R.drawable.smile);
+                    case HAPPIER:
+                        pic.setImageResource(R.drawable.face_happier);
                         break;
-                    case SlightlyHappy:
-                        pic.setImageResource(R.drawable.lesssmile);
+                    case HAPPY_TONGUE:
+                        pic.setImageResource(R.drawable.face_happytongue);
                         break;
-                    case Neutral:
-                        pic.setImageResource(R.drawable.neutral);
+                    case HAPPY:
+                        pic.setImageResource(R.drawable.face_happy);
                         break;
-                    case SlightlyMad:
-                        pic.setImageResource(R.drawable.sadface);
+                    case ANNOYED:
+                        pic.setImageResource(R.drawable.face_annoyed);
                         break;
-                    case Mad:
-                        pic.setImageResource(R.drawable.angryface);
+                    case SAD:
+                        pic.setImageResource(R.drawable.face_sad);
                         break;
-                    case VeryMad:
-                        pic.setImageResource(R.drawable.superanger);
+                    case SADDER:
+                        pic.setImageResource(R.drawable.face_sadder);
+                        break;
+                    case CONCERNED:
+                        pic.setImageResource(R.drawable.face_concerned);
+                        break;
+                    case CRYING:
+                        pic.setImageResource(R.drawable.face_crying);
+                        break;
+                    case DISGUSTED:
+                        pic.setImageResource(R.drawable.face_disgusted);
+                        break;
+                    case HEARTS_TONGUE:
+                        pic.setImageResource(R.drawable.face_heartstongue);
+                        break;
+                    case KAWAII_EYES_CLOSED:
+                        pic.setImageResource(R.drawable.face_kawaiieyesclosed);
+                        break;
+                    case KAWAII_EYES_OPEN:
+                        pic.setImageResource(R.drawable.face_kawaiieyesopen);
+                        break;
+                    case LOOK_LEFT:
+                        pic.setImageResource(R.drawable.face_lookleft);
+                        break;
+                    case LOOK_RIGHT:
+                        pic.setImageResource(R.drawable.face_lookright);
+                        break;
+                    case YAWNING:
+                        pic.setImageResource(R.drawable.face_yawning);
                         break;
                     default:
-                        pic.setImageResource(R.drawable.neutral);
+                        pic.setImageResource(R.drawable.face_happy);
                         break;
                 }
             }
         });
+    }
+
+    private class faceAnimator{
+
+        private ArrayList<EMOTION> emotionStack;
+        private ArrayList<Integer> timeStack;
+        private Timer cf;
+        private TimerTask changeFace;
+
+        public faceAnimator()
+        {
+            emotionStack = new ArrayList<EMOTION>();
+            timeStack = new ArrayList<Integer>();
+
+            cf = new Timer("tm");
+            changeFace = new TimerTask() {
+                @Override
+                public void run() {
+                    nextFrame();
+
+                }
+            };
+        }
+
+        public void addFrame(EMOTION e, int time)
+        {
+            emotionStack.add(e);
+            timeStack.add(time);
+            if(default_display)
+            {
+                default_display=false;
+                cf.schedule(changeFace,10);
+            }
+        }
+
+        private void nextFrame()
+        {
+            if(emotionStack.size()==0){
+                default_display=true;
+                return;
+            }
+
+            emotionStack.
+
+        }
+
+
+
+
     }
 
     public int lookedAt(int ID, boolean smiling, boolean frowning){

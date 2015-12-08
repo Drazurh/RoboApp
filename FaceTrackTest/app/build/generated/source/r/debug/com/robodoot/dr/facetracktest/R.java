@@ -2252,6 +2252,8 @@ containing a value of this type.
         public static final int up=0x7f020059;
         public static final int wallpaper=0x7f02005a;
     }
+
+
     public static final class id {
         public static final int LoadingText=0x7f0e0075;
         public static final int action0=0x7f0e008e;
