@@ -108,12 +108,17 @@ public class CatEmotion {
         else if (frowning){
             catsOpinion.addHappiness(-3);
         }
+        else{
+            catsOpinion.addHappiness(-1);
+
+
+        }
+
 
         scale+=catsOpinion.happiness/10;
 
         if(catsOpinion.happiness<0&&scale<catsOpinion.happiness)scale = catsOpinion.happiness;
         if(catsOpinion.happiness>0&&scale>catsOpinion.happiness)scale = catsOpinion.happiness;
-        reCalcFace();
 
         return catsOpinion.happiness;
 
@@ -128,7 +133,7 @@ public class CatEmotion {
     public int getFavPerson(ArrayList<Integer> IDs)
     {
         int Fav = -1;
-        int maxOpinion = -100;
+        int maxOpinion = -20000;
         for(int i=0; i<IDs.size();i++)
         {
             Opinion iOpinion = getOpinionFromList(IDs.get(i),opinions);

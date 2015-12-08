@@ -15,8 +15,13 @@ public class PololuHandler {
 
     MaestroSSC maestro;
 
-    public static final int NECK_YAW_SERVO = 1;
-    public static final int NECK_PITCH_SERVO = 1;
+    public static final int NECK_YAW_SERVO = 10;
+    public static final int NECK_PITCH_SERVO = 9;
+
+    public float speedConst = 90f;
+
+    public int yaw=1600;
+    public int pitch=2200;
 
     public PololuHandler()
     {
@@ -27,6 +32,23 @@ public class PololuHandler {
 
 
 
+    }
+
+    public void home()
+    {
+        maestro.setTarget(9,2200);
+        maestro.setTarget(10,1600);
+        yaw = 1600;
+        pitch = 2200;
+
+
+
+    }
+
+    public void setSpeedConst(float newConst)
+    {
+
+        speedConst=newConst;
     }
 
     public void onResume(Intent intent,Activity parent ){
@@ -49,19 +71,23 @@ public class PololuHandler {
 
     public void stopNeckMotors()
     {
-        maestro.setSpeed(NECK_YAW_SERVO,0);
-        maestro.setSpeed(NECK_PITCH_SERVO,0);
+//        maestro.setSpeed(NECK_YAW_SERVO,0);
+//        maestro.setSpeed(NECK_PITCH_SERVO,0);
     }
 
     public void cameraYawSpeed(float speedPercent)
     {
-        maestro.setSpeed(NECK_YAW_SERVO,(int)(3200*speedPercent));
+        int addToYaw = (int)(speedPercent*speedConst);
+        yaw+=addToYaw;
+        maestro.setTarget(NECK_YAW_SERVO, yaw);
 
     }
 
     public void cameraPitchSpeed(float speedPercent)
     {
-        maestro.setSpeed(NECK_PITCH_SERVO,(int)(3200*speedPercent));
+        int addToPitch = (int)(speedPercent*speedConst);
+        pitch+=addToPitch;
+        maestro.setTarget(NECK_PITCH_SERVO, pitch);
     }
 
 
