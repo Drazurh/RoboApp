@@ -1,37 +1,46 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="wrap_content"
-    android:layout_height="match_parent" tools:context="com.robodoot.roboapp.HomeFragment">
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="com.robodoot.roboapp.HomeFragment"
+    android:background="@android:color/black">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="60dp"
-        android:weightSum="1">
-
-        <LinearLayout
-            android:orientation="horizontal"
+        android:background="#000000">
+        <TextView
+            android:id="@+id/place"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:weightSum="1">
-
-            <Spinner
-                android:layout_width="146dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner" />
-
+            android:text="> Message from Arduino: 'Hello'"
+            android:textColor="#00FF00"/>
+        <TextView
+            android:id="@+id/sendtext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/place"
+            android:textColor="#00FF00"
+            android:text="..."/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
             <EditText
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:ems="10"
-                android:id="@+id/editText" />
+                android:id="@+id/message"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:background="#FFFFFF"
+                android:hint="Type Message to Arduino Here" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Send"
+                android:layout_alignParentRight="@+id/message"
+                android:onClick="AddMessage" />
         </LinearLayout>
-    </LinearLayout>
+
+
+    </RelativeLayout>
+
 </RelativeLayout>

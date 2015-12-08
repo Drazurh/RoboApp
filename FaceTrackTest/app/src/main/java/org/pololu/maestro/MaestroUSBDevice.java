@@ -7,6 +7,8 @@ import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.util.Log;
 
+import java.io.Serializable;
+
 /**
  * Primary class for controlling servos via USB.
  *
@@ -19,7 +21,7 @@ import android.util.Log;
  * @author Patrick H. Ryan
  *
  */
-public class MaestroUSBDevice {
+public class MaestroUSBDevice implements Serializable {
     private static final String TAG = "MaestroUSBDevice";
     private UsbDevice device;
     private UsbDeviceConnection controlConnection;

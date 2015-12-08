@@ -1,25 +1,30 @@
 package com.robodoot.roboapp;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.robodoot.dr.RoboApp.PololuHandler;
 import com.robodoot.dr.facetracktest.R;
 
-public class MainActivity extends ActionBarActivity
-        implements
+public class MainActivity extends FragmentActivity implements
         NavigationDrawerCallbacks,
-        HomeFragment.OnFragmentInteractionListener,
-        CompTestFragment.OnFragmentInteractionListener{
+        ServoControlFragment.OnFragmentInteractionListener,
+        CompTestFragment.OnFragmentInteractionListener,
+        HomeFragment.OnFragmentInteractionListener{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -50,18 +55,26 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        Fragment fragment;
+        Fragment fragment = null;
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         switch(position) {
-            default:
             case 0:
-                fragment = new HomeFragment();
-                Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
+                fragment = new ServoControlFragment();
+                Toast.makeText(this, "Servo Control", Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 fragment = new CompTestFragment();
                 Toast.makeText(this, "Unit Testing", Toast.LENGTH_SHORT).show();
-            break;
+                break;
+            case 2:
+                fragment = new HomeFragment();
+                Toast.makeText(this, "Console", Toast.LENGTH_SHORT).show();
+                break;
+            case 3:
+                finish();
+                break;
+            default:
+                break;
 
         }
 
@@ -111,5 +124,34 @@ public class MainActivity extends ActionBarActivity
 
     public void onFragmentInteraction(Uri uri){
         //you can leave it empty
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                String stredittext = data.getStringExtra("edittextvalue");
+                Bundle bndle = new Bundle();
+                bndle.putString("txt", stredittext);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                Log.d("TAG", "Creating New Component Test: " + stredittext);
+                CompTestFragment cn = new CompTestFragment();
+                cn.setArguments(bndle);
+                transaction.replace(R.id.container, cn);
+                //transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        }
+    }
+
+    public void AddMessage(View view) {
+        TextView disp = (TextView)findViewById(R.id.sendtext);
+        CharSequence curr = disp.getText();
+        CharSequence msg = ((EditText)findViewById(R.id.message)).getText();
+        String newText = curr.toString() + "\n" + msg.toString();
+        char[] newT = newText.toCharArray();
+        disp.setText(newT, 0, newT.length);
+        ((EditText)findViewById(R.id.message)).setText("");
+        return;
     }
 }

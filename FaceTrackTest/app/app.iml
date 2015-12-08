@@ -94,8 +94,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="artoolkitplus" level="project" />
     <orderEntry type="library" exported="" name="javacpp" level="project" />
-    <orderEntry type="library" exported="" name="libdc1394" level="project" />
     <orderEntry type="library" exported="" name="usb-serial-for-android-v010" level="project" />
+    <orderEntry type="library" exported="" name="libdc1394" level="project" />
     <orderEntry type="library" exported="" name="flycapture" level="project" />
     <orderEntry type="library" exported="" name="artoolkitplus-android-arm" level="project" />
     <orderEntry type="library" exported="" name="flandmark-android-arm" level="project" />

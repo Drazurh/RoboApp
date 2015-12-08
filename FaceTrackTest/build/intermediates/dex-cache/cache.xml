@@ -2,130 +2,130 @@
 <items version="2" >
 
     <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\libs\flycapture.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="edfb32efdb932836f1fc9e297a934f7585c15ba7">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\flycapture-b8085d86bd4d9cdd1d5768f237d6a25bb24fe338.jar" />
-    </item>
-    <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\libs\usb-serial-for-android-v010.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="c49e65ea5d8d4c1311d0c1189adb07b2c01be29a">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\usb-serial-for-android-v010-e8d0c3f2e2d7c34fc61e19f3594bf97e443095c0.jar" />
-    </item>
-    <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\libs\internal_impl-23.1.1.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="a4de9c81ae239414e1ed0f86441b02abaf29bca9">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\internal_impl-23.1.1-b9a52e02da1a3de855c1cb743c4a5429c8cc0706.jar" />
-    </item>
-    <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\libs\artoolkitplus.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="7c2e2c018056b14b44c1a129412b4f660053d845">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\artoolkitplus-3efa74be93e46e738dbd3ac880e33892767cdc6e.jar" />
-    </item>
-    <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\design\23.1.1\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="379471b2bd17d9737c050345c08e8c7d16589784">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\classes-c3435451ac270c1fab2be0dab48afdba7f6d4076.jar" />
-    </item>
-    <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\libs\ffmpeg.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="e887e3cf952e0aa10212467c399d94a4daa78e2e">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\ffmpeg-bb264625af2517f0724825f4d36d5c2e0a05597e.jar" />
-    </item>
-    <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\libs\libfreenect.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="113cc95b2408698cf22588e60ac5e25734d8a260">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\libfreenect-7ff2cbc234411f29fecf1caf44f88b611fd2f156.jar" />
-    </item>
-    <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.1.1\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="5c5699834e9722f1c288fea2de82725d078ba127">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\classes-49de16f1dc2fe9cf9578f21f1ff855817c1480ba.jar" />
-    </item>
-    <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\classes-a2296c5f1ad4eb46e0c70952536e02d355582430.jar" />
-    </item>
-    <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\libs\javacv.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="8b045838ae7e1fc31f0d407c6ab76933e7bddadb">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\javacv-667bb6d7085da75f6bb2d283f32c6d1ead105ef8.jar" />
-    </item>
-    <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\libs\videoinput.jar"
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\libs\videoinput.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="dc9e5a91c5c5bbe202c040a05e205919e7e506e2">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\videoinput-7cb2d8fb829dd3d2312969513875342b8174f363.jar" />
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\videoinput-78ca4bcc2ac430cdc8bf453f31022d8ca0cc27b3.jar" />
     </item>
     <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\libs\javacpp.jar"
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\FaceTrackTest\openCVLibrary300\unspecified\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="1cc4b5dd88edd3dd3d6f4cdbd3c23c7273ebf0ea">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\javacpp-2d218c14b79d7270cfa2ec842da7f4ab32e5626a.jar" />
+        sha1="392eb5df653290ac7d7e7737cb708c55b9e59e33">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\classes-55a077149254b8fabd51c3d0953f5d4f218667e1.jar" />
     </item>
     <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\libs\opencv.jar"
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\libs\flycapture.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="902947d7faea1294a98e7c1aea76a581fe558a76">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\opencv-a7c7f720f8cf09e9ed29c2d3613df8590607883d.jar" />
+        sha1="edfb32efdb932836f1fc9e297a934f7585c15ba7">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\flycapture-58c6af76b41ea333057a5d0d0ce75746c7620479.jar" />
     </item>
     <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.1.1\jars\classes.jar"
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="09c5e804bc67fc0580360043dff067df574a60d4">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\classes-a3a2709fe28c93d38ad631d8c739916de73f4792.jar" />
+        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\classes-80191f81c2502320139061e5c1a1eedc9505620d.jar" />
     </item>
     <item
-        jar="D:\Users\Joel\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.1.1\support-annotations-23.1.1.jar"
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\libs\ffmpeg.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\support-annotations-23.1.1-1dc20bfbfd901aa6cf3bf764f23c0e1c8747dc57.jar" />
+        sha1="e887e3cf952e0aa10212467c399d94a4daa78e2e">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\ffmpeg-91e0221d3e3c21a89a35c5054bdbc812b87e9996.jar" />
     </item>
     <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\FaceTrackTest\openCVLibrary300\unspecified\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="0b08eb3cba3b4433e2ee2c180b2d68ef0ea7baa7">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\classes-405bef09f5c9e2cb14c19326929b160675b29fcf.jar" />
-    </item>
-    <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\libs\flandmark.jar"
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\libs\flandmark.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="1119273894b2f9aa27d02f8d4a9a0737894e54f5">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\flandmark-c1109009faba0d57e123d90755266eab3d9f9689.jar" />
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\flandmark-3a4ba18715fd8a3e611fa44e42dde30e0c8d41ee.jar" />
     </item>
     <item
-        jar="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\libs\libdc1394.jar"
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="09c5e804bc67fc0580360043dff067df574a60d4">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\classes-866cd79887bfe6108073d156a8f5734903a72d2e.jar" />
+    </item>
+    <item
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\design\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="379471b2bd17d9737c050345c08e8c7d16589784">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\classes-85123c82d17b33972c47b7b00f30f10b37d8ef0a.jar" />
+    </item>
+    <item
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\libs\libfreenect.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="113cc95b2408698cf22588e60ac5e25734d8a260">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\libfreenect-a66e737b854a5bbb82eca2f0d36fd7ec4e4b67ef.jar" />
+    </item>
+    <item
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\libs\javacv.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="8b045838ae7e1fc31f0d407c6ab76933e7bddadb">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\javacv-86b8207f5cd98c97561ecf3e6a3ed5bffc412b97.jar" />
+    </item>
+    <item
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\libs\libdc1394.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="cc4729d31a845dac338b851ff980fa4b3a6f50c9">
-        <dex dex="D:\Dev\RoboDoot\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\libdc1394-a90e44d4d62dfaf9bec8440f67db704926373671.jar" />
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\libdc1394-c64f45b3782df5571da721d59879f31346702f5c.jar" />
+    </item>
+    <item
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="5c5699834e9722f1c288fea2de82725d078ba127">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\classes-9fa4a5336cb3ecbeadb424d89f01cdedf99b5b26.jar" />
+    </item>
+    <item
+        jar="B:\Users\Joel\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.1.1\support-annotations-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\support-annotations-23.1.1-0c738cf68563c915d56319e4e17bf61a74fbfa65.jar" />
+    </item>
+    <item
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\libs\opencv.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="902947d7faea1294a98e7c1aea76a581fe558a76">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\opencv-3740b33d55fbfc62cd8b45d148d81ccdf77da169.jar" />
+    </item>
+    <item
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\libs\javacpp.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="1cc4b5dd88edd3dd3d6f4cdbd3c23c7273ebf0ea">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\javacpp-87efda5c5d0f624beb85da43ba0c128124fd5560.jar" />
+    </item>
+    <item
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\libs\internal_impl-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="a4de9c81ae239414e1ed0f86441b02abaf29bca9">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\internal_impl-23.1.1-c603d0fd837c5d16769d28724bc8442d42b03d08.jar" />
+    </item>
+    <item
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\libs\usb-serial-for-android-v010.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="c49e65ea5d8d4c1311d0c1189adb07b2c01be29a">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\usb-serial-for-android-v010-2d0ea4c6817e14d468527a030d07d31f65fdb3a9.jar" />
+    </item>
+    <item
+        jar="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\libs\artoolkitplus.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="7c2e2c018056b14b44c1a129412b4f660053d845">
+        <dex dex="B:\Dev\RoboCat\RoboApp\FaceTrackTest\app\build\intermediates\pre-dexed\debug\artoolkitplus-7ca2e1884f0688bc2968f932b98168b1fed2fa5e.jar" />
     </item>
 
 </items>

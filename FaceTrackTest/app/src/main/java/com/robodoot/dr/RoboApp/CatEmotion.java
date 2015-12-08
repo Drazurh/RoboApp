@@ -30,7 +30,7 @@ public class CatEmotion {
         context = c;
         scale = 0;
         tm = new Timer("tm");
-        faceAnimator.setAutoAnimate(true);
+        //faceAnimator.setAutoAnimate(true);
         calc = new TimerTask() {
             @Override
             public void run() {
@@ -44,11 +44,8 @@ public class CatEmotion {
                 return;
             }
         };
-
-
-
-
         tm.schedule(calc, 100, 300);
+
     }
 
     public void reCalcFace() {
@@ -139,8 +136,6 @@ public class CatEmotion {
 
         private ArrayList<EMOTION> emotionQueue;
         private ArrayList<Integer> timeQueue;
-        private Timer cf;
-        private TimerTask changeFace;
         private Timer aa;
         private TimerTask autoAnim;
         private final Random rand = new Random();
@@ -151,24 +146,19 @@ public class CatEmotion {
             emotionQueue = new ArrayList<EMOTION>();
             timeQueue = new ArrayList<Integer>();
 
-            cf = new Timer("cf");
-            changeFace = new TimerTask() {
-                @Override
-                public void run() {
-                    nextFrame();
 
-                }
-            };
+
 
             aa = new Timer("aa");
             autoAnim = new TimerTask() {
                 @Override
                 public void run() {
 
-                    autoAnimateUpdate();
+                    if(isAutoAnimating)autoAnimateUpdate();
 
                 }
             };
+            aa.schedule(autoAnim, 10,1000);
         }
 
         public void addFrame(EMOTION e, int time)
@@ -180,6 +170,14 @@ public class CatEmotion {
             if(default_display)
             {
                 default_display=false;
+                Timer cf = new Timer("cf");
+                TimerTask changeFace = new TimerTask() {
+                    @Override
+                    public void run() {
+                        nextFrame();
+
+                    }
+                };
                 cf.schedule(changeFace,10);
             }
         }
@@ -193,6 +191,14 @@ public class CatEmotion {
 
             state = emotionQueue.remove(0);
             reCalcFace();
+            Timer cf = new Timer("cf");
+            TimerTask changeFace = new TimerTask() {
+                @Override
+                public void run() {
+                    nextFrame();
+
+                }
+            };
             cf.schedule(changeFace, timeQueue.remove(0));
 
         }
@@ -228,7 +234,7 @@ public class CatEmotion {
             this.addFrame(EMOTION.KAWAII_EYES_OPEN,2000);
             this.addFrame(EMOTION.KAWAII_EYES_CLOSED,100);
             this.addFrame(EMOTION.KAWAII_EYES_OPEN,300);
-            this.addFrame(EMOTION.KAWAII_EYES_CLOSED,100);
+            this.addFrame(EMOTION.KAWAII_EYES_CLOSED, 100);
             this.addFrame(EMOTION.KAWAII_EYES_OPEN, 2000);
 
         }
@@ -243,19 +249,18 @@ public class CatEmotion {
 
         public void setAutoAnimate(boolean state)
         {
-            if(!isAutoAnimating&&state)
-            {
-
-                aa.schedule(autoAnim, 10);
-
-            }
             isAutoAnimating=state;
 
         }
 
         private void autoAnimateUpdate()
         {
-            if(!isAutoAnimating)return;
+            if(!isAutoAnimating)
+            {
+
+                aa.cancel();
+                return;
+            }
 
             if(rand.nextInt(10)==9)
             {
@@ -273,7 +278,6 @@ public class CatEmotion {
 
             }
 
-            aa.schedule(autoAnim,1200);
 
         }
 
