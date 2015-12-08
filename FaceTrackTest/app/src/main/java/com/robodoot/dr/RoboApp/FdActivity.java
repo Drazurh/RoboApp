@@ -931,7 +931,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
                     TrainingSets.add(i, new ArrayList<Mat>());
                     Log.d(TAG, "Processing person "+i);
-                    for(int j=0;j<=1;j++) {
+                    for(int j=0;j<=4;j++) {
 
                         Bitmap load = getBitmapFromAssets("FaceCases/" + i +"-"+j+ ".jpg");
 
