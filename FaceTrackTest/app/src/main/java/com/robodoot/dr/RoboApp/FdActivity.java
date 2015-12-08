@@ -52,6 +52,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Random;
@@ -258,24 +260,24 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         mOpenCvCameraView.setAlpha(0f);
         mOpenCvCameraView.bringToFront();
 
-        ServoText = (EditText)findViewById(R.id.servoField);
-        SpeedText = (EditText)findViewById(R.id.speedField);
-        final Button button = (Button)findViewById(R.id.goButton);
-        button.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                Random rand = new Random();
-                //int target = Integer.parseInt(SpeedText.getText().toString());
-                int motor  = Integer.parseInt(ServoText.getText().toString());
-                //pololu.maestro.setTarget(motor,target);
-                pololu.setSpeedConst((float)motor);
+//        ServoText = (EditText)findViewById(R.id.servoField);
+//        SpeedText = (EditText)findViewById(R.id.speedField);
+//        final Button button = (Button)findViewById(R.id.goButton);
+//        button.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View v){
+//                Random rand = new Random();
+//                int target = Integer.parseInt(SpeedText.getText().toString());
+//                int motor  = Integer.parseInt(ServoText.getText().toString());
+//                pololu.maestro.setTarget(motor,target);
+//                pololu.setSpeedConst((float)motor);
 //                String tempS = motor+""+target;
 //                setTextFieldText(tempS, debug3);
-
-            }
-
-
-
-        });
+//
+//            }
+//
+//
+//
+//        });
 
 
 
@@ -1039,6 +1041,9 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             entry.clear();
             showVideoFeed();
             Intent intent = new Intent(this, MainActivity.class);
+
+            intent.putExtra("pololu", pololu);
+
             startActivity(intent);
 
 

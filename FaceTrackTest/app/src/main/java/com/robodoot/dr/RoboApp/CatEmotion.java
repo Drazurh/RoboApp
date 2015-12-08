@@ -4,6 +4,7 @@ import android.widget.ImageView;
 import com.robodoot.dr.facetracktest.R;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,6 +20,7 @@ public class CatEmotion {
     public  ImageView pic;
     protected FdActivity context;
     private ArrayList<Opinion> opinions;
+    public final FaceAnimator faceAnimator = new FaceAnimator();
 
     private boolean default_display = true;
 
@@ -28,6 +30,7 @@ public class CatEmotion {
         context = c;
         scale = 0;
         tm = new Timer("tm");
+        faceAnimator.setAutoAnimate(true);
         calc = new TimerTask() {
             @Override
             public void run() {
@@ -57,7 +60,7 @@ public class CatEmotion {
             @Override
             public void run() {
 
-                if(default_display) {
+                if (default_display) {
                     if (scale <= -100) {
                         state = EMOTION.SADDER;
                     } else if (scale <= -66) {
@@ -132,19 +135,23 @@ public class CatEmotion {
         });
     }
 
-    private class faceAnimator{
+    private class FaceAnimator{
 
-        private ArrayList<EMOTION> emotionStack;
-        private ArrayList<Integer> timeStack;
+        private ArrayList<EMOTION> emotionQueue;
+        private ArrayList<Integer> timeQueue;
         private Timer cf;
         private TimerTask changeFace;
+        private Timer aa;
+        private TimerTask autoAnim;
+        private final Random rand = new Random();
+        private boolean isAutoAnimating = false;
 
-        public faceAnimator()
+        public FaceAnimator()
         {
-            emotionStack = new ArrayList<EMOTION>();
-            timeStack = new ArrayList<Integer>();
+            emotionQueue = new ArrayList<EMOTION>();
+            timeQueue = new ArrayList<Integer>();
 
-            cf = new Timer("tm");
+            cf = new Timer("cf");
             changeFace = new TimerTask() {
                 @Override
                 public void run() {
@@ -152,12 +159,24 @@ public class CatEmotion {
 
                 }
             };
+
+            aa = new Timer("aa");
+            autoAnim = new TimerTask() {
+                @Override
+                public void run() {
+
+                    autoAnimateUpdate();
+
+                }
+            };
         }
 
         public void addFrame(EMOTION e, int time)
         {
-            emotionStack.add(e);
-            timeStack.add(time);
+            if(emotionQueue.size()>8)return;
+
+            emotionQueue.add(e);
+            timeQueue.add(time);
             if(default_display)
             {
                 default_display=false;
@@ -167,15 +186,96 @@ public class CatEmotion {
 
         private void nextFrame()
         {
-            if(emotionStack.size()==0){
+            if(emotionQueue.size()==0){
                 default_display=true;
                 return;
             }
 
-            emotionStack.
+            state = emotionQueue.remove(0);
+            reCalcFace();
+            cf.schedule(changeFace, timeQueue.remove(0));
 
         }
 
+        public void shrug()
+        {
+            this.addFrame(EMOTION.LOOK_LEFT,400);
+            this.addFrame(EMOTION.LOOK_RIGHT,400);
+            this.addFrame(EMOTION.LOOK_LEFT, 400);
+            this.addFrame(EMOTION.CONCERNED, 1000);
+
+        }
+
+        public void glanceLeft()
+        {
+            this.addFrame(EMOTION.LOOK_LEFT,1000);
+        }
+
+        public void glanceRight()
+        {
+            this.addFrame(EMOTION.LOOK_RIGHT,1000);
+        }
+
+        public void yawn()
+        {
+            this.addFrame(EMOTION.YAWNING,1000);
+            this.addFrame(EMOTION.ANNOYED,200);
+            this.addFrame(EMOTION.YAWNING,600);
+        }
+
+        public void lookAllCute()
+        {
+            this.addFrame(EMOTION.KAWAII_EYES_OPEN,2000);
+            this.addFrame(EMOTION.KAWAII_EYES_CLOSED,100);
+            this.addFrame(EMOTION.KAWAII_EYES_OPEN,300);
+            this.addFrame(EMOTION.KAWAII_EYES_CLOSED,100);
+            this.addFrame(EMOTION.KAWAII_EYES_OPEN, 2000);
+
+        }
+
+        public void cry()
+        {
+            this.addFrame(EMOTION.CRYING,1000);
+            this.addFrame(EMOTION.CONCERNED,400);
+            this.addFrame(EMOTION.CRYING,1000);
+
+        }
+
+        public void setAutoAnimate(boolean state)
+        {
+            if(!isAutoAnimating&&state)
+            {
+
+                aa.schedule(autoAnim, 10);
+
+            }
+            isAutoAnimating=state;
+
+        }
+
+        private void autoAnimateUpdate()
+        {
+            if(!isAutoAnimating)return;
+
+            if(rand.nextInt(10)==9)
+            {
+                if(scale<-30)
+                {
+                    cry();
+                }
+
+                else if(scale>50)
+                {
+                    lookAllCute();
+
+                }
+                else yawn();
+
+            }
+
+            aa.schedule(autoAnim,1200);
+
+        }
 
 
 
@@ -269,24 +369,6 @@ public class CatEmotion {
     }
 
 
-    public void startle()
-    {
-
-
-    }
-
-    public void feedTreat()
-    {
-        scale+=200;
-
-
-    }
-
-    public void beat()
-    {
-        scale-=200;
-
-    }
 
     public void smiledAt()
     {
@@ -295,17 +377,6 @@ public class CatEmotion {
         reCalcFace();
     }
 
-    public void smile()
-    {
-        scale = 100;
-        reCalcFace();
-    }
 
-    public void neutral()
-    {
-        scale = 0;
-        reCalcFace();
-
-    }
 
 }

@@ -8,10 +8,12 @@ import android.hardware.usb.UsbManager;
 
 import org.pololu.maestro.*;
 
+import java.io.Serializable;
+
 /**
  * Created by Joel on 12/7/2015.
  */
-public class PololuHandler {
+public class PololuHandler implements Serializable {
 
     MaestroSSC maestro;
 
