@@ -568,12 +568,11 @@ int drawable ic_add_black_24dp 0x7f02004c
 int drawable ic_clear_black_24dp 0x7f02004d
 int drawable ic_menu_check 0x7f02004e
 int drawable na 0x7f02004f
-int drawable no_sign 0x7f020050
-int drawable notification_template_icon_bg 0x7f020053
-int drawable pressed_gray 0x7f020054
-int drawable row_selector 0x7f020051
-int drawable selected_gray 0x7f020055
-int drawable wallpaper 0x7f020052
+int drawable notification_template_icon_bg 0x7f020052
+int drawable pressed_gray 0x7f020053
+int drawable row_selector 0x7f020050
+int drawable selected_gray 0x7f020054
+int drawable wallpaper 0x7f020051
 int id action0 0x7f0c0082
 int id action_bar 0x7f0c005a
 int id action_bar_activity_content 0x7f0c0000
@@ -594,7 +593,7 @@ int id activity_chooser_view_content 0x7f0c003d
 int id addItemButton 0x7f0c0078
 int id alertTitle 0x7f0c0049
 int id always 0x7f0c0032
-int id batteryView1 0x7f0c007a
+int id batteryView 0x7f0c007a
 int id beginning 0x7f0c0030
 int id bottom 0x7f0c001c
 int id button 0x7f0c006c

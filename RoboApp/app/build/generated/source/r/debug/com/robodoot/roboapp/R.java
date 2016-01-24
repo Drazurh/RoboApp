@@ -2219,12 +2219,11 @@ containing a value of this type.
         public static final int ic_clear_black_24dp=0x7f02004d;
         public static final int ic_menu_check=0x7f02004e;
         public static final int na=0x7f02004f;
-        public static final int no_sign=0x7f020050;
-        public static final int notification_template_icon_bg=0x7f020053;
-        public static final int pressed_gray=0x7f020054;
-        public static final int row_selector=0x7f020051;
-        public static final int selected_gray=0x7f020055;
-        public static final int wallpaper=0x7f020052;
+        public static final int notification_template_icon_bg=0x7f020052;
+        public static final int pressed_gray=0x7f020053;
+        public static final int row_selector=0x7f020050;
+        public static final int selected_gray=0x7f020054;
+        public static final int wallpaper=0x7f020051;
     }
     public static final class id {
         public static final int action0=0x7f0c0082;
@@ -2247,7 +2246,7 @@ containing a value of this type.
         public static final int addItemButton=0x7f0c0078;
         public static final int alertTitle=0x7f0c0049;
         public static final int always=0x7f0c0032;
-        public static final int batteryView1=0x7f0c007a;
+        public static final int batteryView=0x7f0c007a;
         public static final int beginning=0x7f0c0030;
         public static final int bottom=0x7f0c001c;
         public static final int button=0x7f0c006c;

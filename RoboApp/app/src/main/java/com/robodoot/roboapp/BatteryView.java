@@ -19,12 +19,14 @@ import android.view.View;
  */
 public class BatteryView extends View {
     private float mCharge = 1.0f;
-    private boolean mShowPercent;
+    private boolean mShowPercent = true;
     private float mTextHeight = 0.0f;
     private float mWidth = 0.0f;
     private float mHeight = 0.0f;
     private int mHighColor = Color.GREEN;
+    private int mMidColor = 0xFFFFE600; // "yolk" yellow
     private int mLowColor = Color.RED;
+    private int mBackColor = Color.WHITE;
     private boolean mConnected = false;
 
     // http://freevector.co/vector-icons/interface/empty-battery-2.html
@@ -40,12 +42,15 @@ public class BatteryView extends View {
         mListener = eventListener;
     }
 
-    // canvas objects
-
     // paint objects
     Paint mBitmapPaint;
     Paint mChargeBarPaint;
-    Paint mPercentPaint;
+    Paint mBackBarPaint;
+    Paint mTextPaint;
+
+    // RectF objects for drawing
+    private RectF mNotConnectedRectF = new RectF(0, 0, 0, 0);
+    private RectF mBatteryOutlineRectF = new RectF(0, 0, 0, 0);
 
     public BatteryView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -68,20 +73,23 @@ public class BatteryView extends View {
         mBitmapPaint.setColor(Color.WHITE);
 
         mChargeBarPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mChargeBarPaint.setColor((int)new ArgbEvaluator().evaluate(mCharge, mLowColor, mHighColor));
         mChargeBarPaint.setStyle(Paint.Style.FILL);
 
-        mPercentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPercentPaint.setColor(Color.BLACK);
-        mPercentPaint.setTypeface(Typeface.DEFAULT);
-        mPercentPaint.setTextSize(mTextHeight);
-        //mPercentPaint.setTextScaleX(1.0f);
-        mPercentPaint.setStyle(Paint.Style.FILL);
-        mPercentPaint.setTextAlign(Paint.Align.CENTER);
+        mBackBarPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mBackBarPaint.setColor(mBackColor);
+        mBackBarPaint.setStyle(Paint.Style.FILL);
+
+        mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTextPaint.setColor(Color.BLACK);
+        mTextPaint.setTextSize(mTextHeight);
+        mTextPaint.setStyle(Paint.Style.FILL);
+        mTextPaint.setTextAlign(Paint.Align.CENTER);
 
         mBatteryOutlineBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.battery_outline);
 
         mNotConnectedBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.na);
+
+        setCharge(mCharge);
     }
 
     @Override
@@ -96,27 +104,16 @@ public class BatteryView extends View {
         mWidth = ww;
         mHeight = hh;
         mTextHeight = hh / 2.0f;
-        mPercentPaint.setTextSize(mTextHeight);
+        mTextPaint.setTextSize(mTextHeight);
+
+        float mNotConnectedLeftPos = mWidth * 0.25f;
+        float mNotConnectedTopPos = mHeight * 0.25f;
+        mNotConnectedRectF = new RectF(mNotConnectedLeftPos, mNotConnectedTopPos, mWidth * 0.7f, mHeight * 0.75f);
+        mBatteryOutlineRectF = new RectF(0, 0, mWidth, mHeight);
 
         invalidate();
         requestLayout();
     }
-
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        // Try for a width based on our minimum
-//        int minw = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();
-//        int w = resolveSizeAndState(minw, widthMeasureSpec, 1);
-//
-//        // Whatever the width ends up being, ask for a height that would let the battery
-//        // get as big as it can
-//        int minh = MeasureSpec.getSize(w) - (int)mWidth + getPaddingBottom() + getPaddingTop();
-//        int h = resolveSizeAndState(MeasureSpec.getSize(w) - (int)mWidth, heightMeasureSpec, 0);
-//
-//        setMeasuredDimension(w, h);
-//        mWidth = w;
-//        mHeight = h;
-//    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -125,23 +122,22 @@ public class BatteryView extends View {
         if (mConnected) {
             float left = mWidth * 0.06f;
             float top = mHeight * 0.05f;
+
+            canvas.drawRect(left, top, left + mWidth * 0.82f, top + mHeight * 0.85f, mBackBarPaint);
+
             canvas.drawRect(left, top, left + mWidth * mCharge * 0.82f, top + mHeight * 0.85f, mChargeBarPaint);
 
             if (mShowPercent) {
-                Paint.FontMetrics metric = mPercentPaint.getFontMetrics();
+                Paint.FontMetrics metric = mTextPaint.getFontMetrics();
                 int textHeight = (int) Math.ceil(metric.descent - metric.ascent);
-                canvas.drawText((int) (mCharge * 100.0f) + "%", mWidth / 2.0f, mHeight / 2.0f + textHeight / 3, mPercentPaint);
+                canvas.drawText((int) (mCharge * 100.0f) + "%", mWidth / 2.0f, mHeight / 2.0f + textHeight / 3, mTextPaint);
             }
         }
         else {
-            float left = mWidth * 0.25f;
-            float top = mHeight * 0.25f;
-            canvas.drawBitmap(mNotConnectedBitmap, null, new RectF(left, top, mWidth * 0.7f, mHeight * 0.75f), mBitmapPaint);
-//            float left = mWidth * 0.31f;
-//            canvas.drawBitmap(mNotConnectedBitmap, null, new RectF(left, top, mWidth * 0.63f, mHeight * 0.8f), mBitmapPaint);
+            canvas.drawBitmap(mNotConnectedBitmap, null, mNotConnectedRectF, mBitmapPaint);
         }
 
-        canvas.drawBitmap(mBatteryOutlineBitmap, null, new RectF(0, 0, mWidth, mHeight), mBitmapPaint);
+        canvas.drawBitmap(mBatteryOutlineBitmap, null, mBatteryOutlineRectF, mBitmapPaint);
     }
 
     public float getCharge() {
@@ -150,7 +146,12 @@ public class BatteryView extends View {
     public void setCharge(float charge) {
         mCharge = Math.max(0.0f, Math.min(1.0f, charge));
 
-        mChargeBarPaint.setColor((int) new ArgbEvaluator().evaluate(mCharge, mLowColor, mHighColor));
+        if (mCharge < 0.5f) {
+            mChargeBarPaint.setColor((int) new ArgbEvaluator().evaluate(mCharge * 2.0f, mLowColor, mMidColor));
+        }
+        else {
+            mChargeBarPaint.setColor((int) new ArgbEvaluator().evaluate(mCharge * 2.0f - 1.0f, mMidColor, mHighColor));
+        }
 
         invalidate();
         requestLayout();
@@ -178,11 +179,30 @@ public class BatteryView extends View {
         requestLayout();
     }
 
+    public int getMidColor() {
+        return mMidColor;
+    }
+    public void setMidColor(int midColor) {
+        mMidColor = midColor;
+        invalidate();
+        requestLayout();
+    }
+
     public int getLowColor() {
         return mLowColor;
     }
     public void setLowColor(int lowColor) {
         mLowColor = lowColor;
+        invalidate();
+        requestLayout();
+    }
+
+    public int getBackColor() {
+        return mBackColor;
+    }
+    public void setBackColor(int backColor) {
+        mBackColor = backColor;
+        mChargeBarPaint.setColor(mBackColor);
         invalidate();
         requestLayout();
     }
