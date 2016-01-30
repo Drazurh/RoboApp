@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private BatteryView mBatteryView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -60,12 +63,36 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    private void initBatteryView(View view) {
+        mBatteryView = (BatteryView)view.findViewById(R.id.batteryView);
+        mBatteryView.setCharge(1.0f);
+        mBatteryView.setConnected(true);
+
+        handler.postDelayed(runnable, 100);
+    }
+
+    // temporary code for testing the battery view
+    private Handler handler = new Handler();
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            mBatteryView.setCharge((mBatteryView.getCharge() + 0.01f) % 1.0f);
+            handler.postDelayed(this, 100);
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        initBatteryView(view);
+
+        return view;
     }
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
