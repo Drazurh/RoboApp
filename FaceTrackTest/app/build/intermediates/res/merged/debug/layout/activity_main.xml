@@ -25,4 +25,4 @@
             tools:layout="@layout/fragment_navigation_drawer" />
     </android.support.v4.widget.DrawerLayout>
 </RelativeLayout>
-<!-- From: file:/C:/Users/Alex/Documents/GitHub/RoboApp/FaceTrackTest/app/src/main/res/layout/activity_main.xml -->
+<!-- From: file:/home/john/Documents/RoboApp/FaceTrackTest/app/src/main/res/layout/activity_main.xml -->

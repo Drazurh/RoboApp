@@ -4,4 +4,4 @@
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
 </menu>
-<!-- From: file:/C:/Users/Alex/Documents/GitHub/RoboApp/FaceTrackTest/app/src/main/res/menu/menu_my.xml -->
+<!-- From: file:/home/john/Documents/RoboApp/FaceTrackTest/app/src/main/res/menu/menu_my.xml -->

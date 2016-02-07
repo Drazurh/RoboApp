@@ -47,9 +47,30 @@ public class CatEmotion {
         tm.schedule(calc, 100, 300);
 
     }
+    //************************************
+    // Listen takes an integer that corresponds to the
+    // sound level (in decibels) and adjusts the cat's
+    // emotion accordingly.
+    //*************************************
+    public void Listen(int SoundLevel){
+        if(SoundLevel<0)
+            return;
+        else if(SoundLevel<=30)
+            scale += 25;
+        else if(SoundLevel<=55)
+            scale += 15;
+        else if(SoundLevel>=70&&SoundLevel<=85)
+            scale -= 15;
+        else if(SoundLevel<=95)
+            scale -= 30;
+        else if(SoundLevel<=110)
+            scale -= 50;
+        else
+            scale -= 70;
+    }
 
     public void reCalcFace() {
-
+        //Call Listen here
         if(scale>120)scale=120;
         if(scale<-120)scale=-120;
 
