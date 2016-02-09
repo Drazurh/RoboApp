@@ -142,6 +142,11 @@ public class BatteryView extends View {
         canvas.drawBitmap(mBatteryOutlineBitmap, null, mBatteryOutlineRectF, mBitmapPaint);
     }
 
+    private void refresh() {
+        invalidate();
+        requestLayout();
+    }
+
     public float getCharge() {
         return mCharge;
     }
@@ -155,8 +160,7 @@ public class BatteryView extends View {
             mChargeBarPaint.setColor((int) new ArgbEvaluator().evaluate(mCharge * 2.0f - 1.0f, mMidColor, mHighColor));
         }
 
-        invalidate();
-        requestLayout();
+        refresh();
 
         // invoke onEvent() of the charge event listener
         if (mListener != null)
@@ -168,8 +172,7 @@ public class BatteryView extends View {
     }
     public void setShowPercent(boolean showPercent) {
         mShowPercent = showPercent;
-        invalidate();
-        requestLayout();
+        refresh();
     }
 
     public int getHighColor() {
@@ -177,8 +180,7 @@ public class BatteryView extends View {
     }
     public void setHighColor(int highColor) {
         mHighColor = highColor;
-        invalidate();
-        requestLayout();
+        refresh();
     }
 
     public int getMidColor() {
@@ -186,8 +188,7 @@ public class BatteryView extends View {
     }
     public void setMidColor(int midColor) {
         mMidColor = midColor;
-        invalidate();
-        requestLayout();
+        refresh();
     }
 
     public int getLowColor() {
@@ -195,8 +196,7 @@ public class BatteryView extends View {
     }
     public void setLowColor(int lowColor) {
         mLowColor = lowColor;
-        invalidate();
-        requestLayout();
+        refresh();
     }
 
     public int getBackColor() {
@@ -205,8 +205,7 @@ public class BatteryView extends View {
     public void setBackColor(int backColor) {
         mBackColor = backColor;
         mChargeBarPaint.setColor(mBackColor);
-        invalidate();
-        requestLayout();
+        refresh();
     }
 
     public boolean isConnected() {
@@ -214,7 +213,6 @@ public class BatteryView extends View {
     }
     public void setConnected(boolean connected) {
         mConnected = connected;
-        invalidate();
-        requestLayout();
+        refresh();
     }
 }
