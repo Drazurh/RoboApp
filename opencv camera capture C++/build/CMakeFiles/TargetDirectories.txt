@@ -1,1 +1,0 @@
-/home/alex/Desktop/opencvtest/build/CMakeFiles/opencvtest.dir

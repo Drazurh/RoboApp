@@ -1,16 +1,25 @@
 #include "opencv2/highgui/highgui.hpp"
 #include <iostream>
+#include <exception>
 
 using namespace cv;
 using namespace std;
 
 int main(int argc, const char** argv)
 {
-	VideoCapture cap(0); // open the video camera no. 0
+	try
+	{
+		VideoCapture cap(0); // open the video camera no. 0
+	}
+	catch (exception& e)
+	{
+		cerr << e.what();
+		return -1;
+	}
 
 	if (!cap.isOpened())  // if not success, exit program
 	{
-		cout << "Cannot open the video cam" << endl;
+		cerr << "Cannot open the video cam" << endl;
 		return -1;
 	}
 
@@ -29,7 +38,7 @@ int main(int argc, const char** argv)
 
 		if (!bSuccess) //if not success, break loop
 		{
-			cout << "Cannot read a frame from video stream" << endl;
+			cerr << "Cannot read a frame from video stream" << endl;
 			break;
 		}
 		
