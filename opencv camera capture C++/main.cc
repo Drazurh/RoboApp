@@ -8,17 +8,18 @@ using namespace std;
 
 int main( int argc, char** argv )
 {
+	VideoCapture *cap;
 	try
 	{
-		VideoCapture cap(0); // open the video camera no. 0
+		cap = new VideoCapture(0); // open the video camera no. 0
 	}
 	catch (exception& e)
 	{
-		cerr << e.what();
+		cerr << e.what() << "\n ending program\n";
 		return -1;
 	}
 
-	if ( !cap.isOpened() )  // if not success, exit program
+	if ( !cap->isOpened() )  // if not success, exit program
 	{
 		cout << "Cannot open the web cam" << endl;
 		return -1;
@@ -50,7 +51,7 @@ int main( int argc, char** argv )
 
 	//Capture a temporary image from the camera
 	Mat imgTmp;
-	cap.read(imgTmp); 
+	cap->read(imgTmp); 
 
 	//Create a black image with the size as the camera output
 	Mat imgLines = Mat::zeros( imgTmp.size(), CV_8UC3 );;
@@ -59,7 +60,7 @@ int main( int argc, char** argv )
 	{
 		Mat imgOriginal;
 
-		bool bSuccess = cap.read(imgOriginal); // read a new frame from video
+		bool bSuccess = cap->read(imgOriginal); // read a new frame from video
 
 		if (!bSuccess) //if not success, break loop
 		{
@@ -105,6 +106,13 @@ int main( int argc, char** argv )
 
 			iLastX = posX;
 			iLastY = posY;
+			
+			float centerX = imgLines.size().width / 2.0f;
+			float centerY = imgLines.size().height / 2.0f;
+			float relativeX = posX - centerX;
+			float relativeY = posY - centerY;
+			
+			std::cout << "x = " << relativeX << ", y = " << relativeY << std::endl;
 		}
 
 		imshow("Thresholded Image", imgThresholded); //show the thresholded image
@@ -112,12 +120,19 @@ int main( int argc, char** argv )
 		imgOriginal = imgOriginal + imgLines;
 		imshow("Original", imgOriginal); //show the original image
 
-		if (waitKey(30) == 27) //wait for 'esc' key press for 30ms. If 'esc' key is pressed, break loop
+		char c = waitKey(30);
+		if (c == 27) //wait for 'esc' key press for 30ms. If 'esc' key is pressed, break loop
 		{
 			cout << "esc key is pressed by user" << endl;
 			break; 
 		}
+		if (c == 'r')
+		{
+			imgLines = Mat::zeros( imgTmp.size(), CV_8UC3 );
+		}
 	}
+	
+	delete cap;
 
 	return 0;
 }
