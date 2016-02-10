@@ -112,7 +112,7 @@ int main( int argc, char** argv )
 			float relativeX = posX - centerX;
 			float relativeY = posY - centerY;
 			
-			std::cout << "x = " << relativeX << ", y = " << relativeY << std::endl;
+			cout << "x = " << relativeX << ", y = " << relativeY << endl;
 		}
 
 		imshow("Thresholded Image", imgThresholded); //show the thresholded image
