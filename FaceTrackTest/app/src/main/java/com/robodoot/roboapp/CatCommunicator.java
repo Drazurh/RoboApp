@@ -6,7 +6,7 @@ package com.robodoot.roboapp;
 public interface CatCommunicator {
     // interface for anyone who wants battery level updates
     interface CatBatteryListener {
-        void updateBatteryLevel(float level);
+        void UpdateBatteryLevel(float level);
     }
 
 

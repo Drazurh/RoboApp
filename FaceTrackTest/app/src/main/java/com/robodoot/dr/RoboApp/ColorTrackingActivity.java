@@ -126,7 +126,7 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
     }
 
     @Override
-    public void updateBatteryLevel(float level) {
+    public void UpdateBatteryLevel(float level) {
         // cool
     }
 }

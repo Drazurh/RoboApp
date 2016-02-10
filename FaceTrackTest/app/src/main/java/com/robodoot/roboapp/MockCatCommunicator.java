@@ -30,7 +30,7 @@ public class MockCatCommunicator implements CatCommunicator {
             batteryLevel = (batteryLevel + 0.01f) % 1.0f;
 
             for (CatBatteryListener listener : batteryListeners) {
-                listener.updateBatteryLevel(batteryLevel);
+                listener.UpdateBatteryLevel(batteryLevel);
             }
 
             /* and here comes the "trick" */
