@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.robodoot.dr.facetracktest.R;
+import com.robodoot.roboapp.CatCommunicator;
+import com.robodoot.roboapp.MockCatCommunicator;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -31,13 +33,17 @@ import java.util.ArrayList;
 /**
  * Created by alex on 2/10/16.
  */
-public class ColorTrackingActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
+public class ColorTrackingActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2, CatCommunicator.CatBatteryListener {
     private static final String TAG = "ColorTrackingActivity";
     private JavaCameraView mOpenCvCameraView;
     private Mat mRgba;
     private Mat mGray;
 
-    /** Called when the activity is first created. */
+    CatCommunicator catCommunicator = new MockCatCommunicator();
+
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_color_tracking);
@@ -49,6 +55,8 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
 
         // mOpenCvCameraView.setAlpha(0f);
         mOpenCvCameraView.bringToFront();
+
+        catCommunicator.addListener(this);
     }
 
     @Override
@@ -99,8 +107,7 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
             //inputFrame.gray().copyTo(mGray);
 
             // do stuff
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             Log.i(TAG, "Exception " + e.getMessage());
             return null;
         }
@@ -116,5 +123,10 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         // i believe the opencv library handles releasing each frame
         mGray.release();
         mRgba.release();
+    }
+
+    @Override
+    public void updateBatteryLevel(float level) {
+        // cool
     }
 }
