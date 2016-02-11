@@ -56,7 +56,7 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         // mOpenCvCameraView.setAlpha(0f);
         mOpenCvCameraView.bringToFront();
 
-        catCommunicator.addListener(this);
+        catCommunicator.AddListener(this);
     }
 
     @Override

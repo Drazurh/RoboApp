@@ -10,5 +10,5 @@ public interface CatCommunicator {
     }
 
 
-    public void addListener(CatBatteryListener listener);
+    public void AddListener(CatBatteryListener listener);
 }

@@ -39,7 +39,7 @@ public class MockCatCommunicator implements CatCommunicator {
     };
 
     @Override
-    public void addListener(CatBatteryListener listener) {
+    public void AddListener(CatBatteryListener listener) {
         batteryListeners.add(listener);
     }
 
