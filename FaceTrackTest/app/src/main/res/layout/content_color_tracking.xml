@@ -13,11 +13,11 @@
     tools:context="com.robodoot.dr.RoboApp.ColorTrackingActivity"
     tools:showIn="@layout/activity_color_tracking">
 
-    <org.opencv.android.JavaCameraView
-        android:id="@+id/color_tracking_camera_view"
-        opencv:camera_id = "back"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+    <!--<org.opencv.android.JavaCameraView-->
+        <!--android:id="@+id/color_tracking_camera_view"-->
+        <!--opencv:camera_id = "back"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentEnd="true" />-->
 
 </RelativeLayout>

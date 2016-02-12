@@ -3,6 +3,7 @@ package com.robodoot.dr.RoboApp;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
 
@@ -16,6 +17,7 @@ import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
@@ -50,10 +52,10 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        mOpenCvCameraView = (JavaCameraView) findViewById(R.id.fd_activity_surface_view);
+        mOpenCvCameraView = (JavaCameraView) findViewById(R.id.color_tracking_camera_view);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
-        // mOpenCvCameraView.setAlpha(0f);
+        mOpenCvCameraView.setAlpha(1.0f);
         mOpenCvCameraView.bringToFront();
 
         catCommunicator.AddListener(this);
@@ -72,16 +74,13 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
             @Override
             public void onManagerConnected(int status) {
                 switch (status) {
-                    case LoaderCallbackInterface.SUCCESS: {
+                    case LoaderCallbackInterface.SUCCESS:
                         mOpenCvCameraView.setCameraIndex(1);
-                        mOpenCvCameraView.enableFpsMeter();
+                        //mOpenCvCameraView.enableFpsMeter();
                         mOpenCvCameraView.enableView();
-
-                    }
                     break;
-                    default: {
+                    default:
                         super.onManagerConnected(status);
-                    }
                     break;
                 }
             }
@@ -97,20 +96,22 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
     }
 
     public void onCameraViewStarted(int width, int height) {
-        mRgba = new Mat();
-        mGray = new Mat();
+        mRgba = new Mat(height, width, CvType.CV_8UC4);
+        mGray = new Mat(height, width, CvType.CV_8UC4);
     }
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         try {
             inputFrame.rgba().copyTo(mRgba);
-            //inputFrame.gray().copyTo(mGray);
 
             // do stuff
         } catch (Exception e) {
             Log.i(TAG, "Exception " + e.getMessage());
             return null;
         }
+
+        // transpose and flip
+        Core.flip(mRgba.t(), mRgba, 0);
 
         // return the mat to be displayed
         return mRgba;

@@ -322,6 +322,12 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         super.onResume();
         pololu.home();
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
+
+        entry.clear();
+        showVideoFeed();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("pololu", pololu);
+        startActivity(intent);
     }
 
     public void onDestroy() {

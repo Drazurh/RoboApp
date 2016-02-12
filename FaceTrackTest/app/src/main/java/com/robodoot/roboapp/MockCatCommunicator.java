@@ -1,6 +1,7 @@
 package com.robodoot.roboapp;
 
 import android.os.Handler;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.List;
  * Created by alex on 2/10/16.
  */
 public class MockCatCommunicator implements CatCommunicator {
+    private static final String TAG = "MockCatCommunicator";
+
     // DEFAULT CONSTRUCTOR
     public MockCatCommunicator() {
         batteryUpdateHandler.postDelayed(batteryUpdateRunnable, 100);
@@ -33,7 +36,7 @@ public class MockCatCommunicator implements CatCommunicator {
                 listener.UpdateBatteryLevel(batteryLevel);
             }
 
-            /* and here comes the "trick" */
+            // call me again in 100 ms
             batteryUpdateHandler.postDelayed(this, 100);
         }
     };
@@ -41,6 +44,14 @@ public class MockCatCommunicator implements CatCommunicator {
     @Override
     public void AddListener(CatBatteryListener listener) {
         batteryListeners.add(listener);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // SENDING DATA TO CAT
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void SendObjectRelativePositionToCat(int relX, int relY) {
+        Log.i(TAG, "Sending relative coordinates to cat: x = " + relX + ", y = " + relY);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

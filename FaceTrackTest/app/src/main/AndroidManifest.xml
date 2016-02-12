@@ -36,7 +36,13 @@
         <activity
             android:name="com.robodoot.dr.RoboApp.ColorTrackingActivity"
             android:label="@string/title_activity_color_tracking"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="com.robodoot.dr.RoboApp.ColorTrackingActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -73,9 +73,18 @@ public class MainActivity extends FragmentActivity implements
             case 3:
                 finish();
                 break;
+            case 4:
+                Intent intent = new Intent("com.robodoot.dr.RoboApp.ColorTrackingActivity");
+                startActivity(intent);
+                return;
             default:
                 break;
 
+        }
+
+        if (fragment == null) {
+            Toast.makeText(this, "No associated fragment for the selected menu item.", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         transaction.replace(R.id.container, fragment);
