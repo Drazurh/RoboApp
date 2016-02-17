@@ -105,6 +105,55 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
             inputFrame.rgba().copyTo(mRgba);
 
             // do stuff
+            int iLowH = 170;
+            int iHighH = 179;
+
+            int iLowS = 150;
+            int iHighS = 255;
+
+            int iLowV = 60;
+            int iHighV = 255;
+
+//            Mat imgHSV = new Mat();
+//
+//            Imgproc.cvtColor(mRgba, imgHSV, Imgproc.COLOR_BGR2HSV); //Convert the captured frame from BGR to HSV
+//
+//            Mat imgThresholded = new Mat();
+//
+//            Core.inRange(imgHSV, new Scalar(iLowH, iLowS, iLowV), new Scalar(iHighH, iHighS, iHighV), imgThresholded); //Threshold the image
+//
+//            //morphological opening (removes small objects from the foreground)
+//            Imgproc.erode(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
+//            Imgproc.dilate(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
+//
+//            //morphological closing (removes small holes from the foreground)
+//            Imgproc.dilate(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
+//            Imgproc.erode(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
+//
+//            //Calculate the moments of the thresholded image
+//            Moments oMoments = Imgproc.moments(imgThresholded);
+//
+//            double dM01 = oMoments.m01;
+//            double dM10 = oMoments.m10;
+//            double dArea = oMoments.m00;
+//
+//            // if the area <= 10000, I consider that the there are no object in the image and it's because of the noise, the area is not zero
+//            if (dArea > 10000) {
+//                //calculate the position of the ball
+//                double posX = dM10 / dArea;
+//                double posY = dM01 / dArea;
+//
+//                if (posX >= 0 && posY >= 0) {
+//                    //Draw a red line from the previous point to the current point
+//                    Imgproc.line(mRgba, new Point(posX, posY), new Point(posX, posY), new Scalar(0, 0, 255), 2);
+//                }
+//
+////                float centerX = imgLines.size().width / 2.0f;
+////                float centerY = imgLines.size().height / 2.0f;
+////                float relativeX = posX - centerX;
+////                float relativeY = posY - centerY;
+//
+//                //cout << "x = " << relativeX << ", y = " << relativeY << endl;
         } catch (Exception e) {
             Log.i(TAG, "Exception " + e.getMessage());
             return null;
