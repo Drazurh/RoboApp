@@ -83,10 +83,10 @@ public class FeatureDetector {
     //javadoc: javaFeatureDetector::detect(image, keypoints, mask)
     public  void detect(Mat image, MatOfKeyPoint keypoints, Mat mask)
     {
-        Mat keypoints_mat = keypoints;
-        detect_0(nativeObj, image.nativeObj, keypoints_mat.nativeObj, mask.nativeObj);
+       // Mat keypoints_mat = keypoints;
+        detect_0(nativeObj, image.nativeObj, keypoints.nativeObj, mask.nativeObj);
         
-        return;
+
     }
 
     //javadoc: javaFeatureDetector::detect(image, keypoints)

@@ -24,7 +24,7 @@ public class Algorithm {
         
         clear_0(nativeObj);
         
-        return;
+
     }
 
 
@@ -37,8 +37,7 @@ public class Algorithm {
     {
         
         save_0(nativeObj, filename);
-        
-        return;
+
     }
 
 
@@ -50,9 +49,8 @@ public class Algorithm {
     public  String getDefaultName()
     {
         
-        String retVal = getDefaultName_0(nativeObj);
-        
-        return retVal;
+        return getDefaultName_0(nativeObj);
+
     }
 
 

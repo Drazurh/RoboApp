@@ -23,8 +23,7 @@ public class BackgroundSubtractor extends Algorithm {
     {
         
         apply_0(nativeObj, image.nativeObj, fgmask.nativeObj, learningRate);
-        
-        return;
+
     }
 
     //javadoc: BackgroundSubtractor::apply(image, fgmask)
@@ -32,8 +31,7 @@ public class BackgroundSubtractor extends Algorithm {
     {
         
         apply_1(nativeObj, image.nativeObj, fgmask.nativeObj);
-        
-        return;
+
     }
 
 
@@ -47,7 +45,6 @@ public class BackgroundSubtractor extends Algorithm {
         
         getBackgroundImage_0(nativeObj, backgroundImage.nativeObj);
         
-        return;
     }
 
 

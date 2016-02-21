@@ -52,8 +52,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Random;
@@ -65,11 +63,11 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     private GestureDetector gDetector;
     public enum CHAR {U, D, L, R}
-    public static Vector<CHAR> psswd = new Vector<>();
+    private static Vector<CHAR> psswd = new Vector<>();
     public static Vector<CHAR> entry = new Vector<>();
 
     private static final String TAG = "OCVSample::Activity";
-    public static final int JAVA_DETECTOR = 0;
+    private static final int JAVA_DETECTOR = 0;
 
 
 
@@ -114,10 +112,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     private Size stds = new Size(80,80);
 
-    double xCenter = -1;
+    private double xCenter = -1;
     double yCenter = -1;
 
-    boolean debugging = false;
+    private boolean debugging = false;
 
     private EditText ServoText;
     private EditText SpeedText;
@@ -125,12 +123,12 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     PololuHandler pololu;
 
-    TextView debug1;
+    private TextView debug1;
     TextView debug2;
-    TextView debug3;
+    private TextView debug3;
     TextView tempTextView;
 
-    String tempText;
+    private String tempText;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -141,13 +139,16 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     try {
                         // load cascade file from application resources
                         InputStream is = getResources().openRawResource(
-                                R.raw.lbpcascade_frontalface);
+                                R.raw.lbpcascade_frontalface); //opens resource for openCV cascade classifier
+                                                                //classifier is trained with afew hundred examples then can be applied to a region of interest
+                                                                // outputs 1 if object is likely to have object, 0 otherwise
+                                                                // see http://docs.opencv.org/2.4/modules/objdetect/doc/cascade_classification.html
                         File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
                         mCascadeFile = new File(cascadeDir,
                                 "lbpcascade_frontalface.xml");
                         FileOutputStream os = new FileOutputStream(mCascadeFile);
 
-                        byte[] buffer = new byte[4096];
+                        byte[] buffer = new byte[4096]; // a temporary buffer to facilitate IO
                         filter = new boolean[5];
                         int bytesRead;
                         while ((bytesRead = is.read(buffer)) != -1) {
@@ -407,7 +408,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     }
 
-    public void trackFavFace(Rect faceRect) {
+    private void trackFavFace(Rect faceRect) {
 
 
         int sumX = faceRect.x + faceRect.width / 2;
@@ -600,7 +601,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
             if (biggestFace.size().area()!=1)
             {
-                Rect r = biggestFace;
+                 Rect r = biggestFace;
                 Point mouthPt1 = new Point(r.x + r.width / 10, r.y + r.height / 2 + r.height / 10);
                 Point mouthPt2 = new Point(r.x + r.width - r.width / 10, r.y + r.height - r.height / 10);
                 Rect mouthRect = new Rect(mouthPt1, mouthPt2);
@@ -797,8 +798,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         double range = Math.sqrt(Math.pow(xCenter1-xCenter2,2)+Math.pow(yCenter1-yCenter2,2));
         double sizeDiff = Math.abs(r1.area()-r2.area());
 
-        if(range<maxRange&&sizeDiff<maxSizeDiff) return true;
-        return false;
+        return range < maxRange && sizeDiff < maxSizeDiff;
     }
 
     private void showVideoFeed()
@@ -867,7 +867,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     }
 
-    public static opencv_core.IplImage BitmapToIplImage(Bitmap source, int cols, int rows) {
+    private static opencv_core.IplImage BitmapToIplImage(Bitmap source, int cols, int rows) {
         opencv_core.IplImage container = opencv_core.IplImage.create(cols, rows, opencv_core.IPL_DEPTH_8U, 4);
         source.copyPixelsToBuffer(container.getByteBuffer());
         return container;
@@ -1024,7 +1024,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         return true;
     }
 
-    public boolean onSwipe(Direction direction){
+    private boolean onSwipe(Direction direction){
         if(direction == Direction.right) {
             entry.add(CHAR.R);
             //((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.right);
@@ -1097,7 +1097,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
      * @param y2 the y position of the second point
      * @return the angle between two points
      */
-    public double getAngle(float x1, float y1, float x2, float y2) {
+    private double getAngle(float x1, float y1, float x2, float y2) {
 
         double rad = Math.atan2(y1-y2,x2-x1) + Math.PI;
         return (rad*180/Math.PI + 180)%360;

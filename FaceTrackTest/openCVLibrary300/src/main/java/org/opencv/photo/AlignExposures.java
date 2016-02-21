@@ -28,7 +28,7 @@ public class AlignExposures extends Algorithm {
         Mat dst_mat = Converters.vector_Mat_to_Mat(dst);
         process_0(nativeObj, src_mat.nativeObj, dst_mat.nativeObj, times.nativeObj, response.nativeObj);
         
-        return;
+
     }
 
 

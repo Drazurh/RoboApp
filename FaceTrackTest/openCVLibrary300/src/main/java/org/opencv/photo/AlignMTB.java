@@ -27,8 +27,6 @@ public class AlignMTB extends AlignExposures {
         Mat src_mat = Converters.vector_Mat_to_Mat(src);
         Mat dst_mat = Converters.vector_Mat_to_Mat(dst);
         process_0(nativeObj, src_mat.nativeObj, dst_mat.nativeObj, times.nativeObj, response.nativeObj);
-        
-        return;
     }
 
 
@@ -42,8 +40,6 @@ public class AlignMTB extends AlignExposures {
         Mat src_mat = Converters.vector_Mat_to_Mat(src);
         Mat dst_mat = Converters.vector_Mat_to_Mat(dst);
         process_1(nativeObj, src_mat.nativeObj, dst_mat.nativeObj);
-        
-        return;
     }
 
 
@@ -70,8 +66,7 @@ public class AlignMTB extends AlignExposures {
     {
         
         shiftMat_0(nativeObj, src.nativeObj, dst.nativeObj, shift.x, shift.y);
-        
-        return;
+
     }
 
 
@@ -84,8 +79,7 @@ public class AlignMTB extends AlignExposures {
     {
         
         computeBitmaps_0(nativeObj, img.nativeObj, tb.nativeObj, eb.nativeObj);
-        
-        return;
+
     }
 
 
@@ -112,8 +106,6 @@ public class AlignMTB extends AlignExposures {
     {
         
         setMaxBits_0(nativeObj, max_bits);
-        
-        return;
     }
 
 
@@ -140,8 +132,7 @@ public class AlignMTB extends AlignExposures {
     {
         
         setExcludeRange_0(nativeObj, exclude_range);
-        
-        return;
+
     }
 
 
@@ -168,8 +159,6 @@ public class AlignMTB extends AlignExposures {
     {
         
         setCut_0(nativeObj, value);
-        
-        return;
     }
 
 

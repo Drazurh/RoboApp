@@ -37,4 +37,4 @@ public interface LoaderCallbackInterface
      * @param callback answer object with approve and cancel methods and the package description.
      */
     public void onPackageInstall(final int operation, InstallCallbackInterface callback);
-};
+}

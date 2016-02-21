@@ -139,7 +139,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
          * TODO: pass the parameters specifying the format of the frame (BPP, YUV or RGB and etc)
          */
         public Mat onCameraFrame(CvCameraViewFrame inputFrame);
-    };
+    }
 
     protected class CvCameraViewListenerAdapter implements CvCameraViewListener2  {
         public CvCameraViewListenerAdapter(CvCameraViewListener oldStypeListener) {
@@ -165,7 +165,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
                     break;
                 default:
                     Log.e(TAG, "Invalid frame format! Only RGBA and Gray Scale are supported!");
-            };
+            }
 
             return result;
         }
@@ -176,7 +176,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 
         private int mPreviewFormat = RGBA;
         private CvCameraViewListener mOldStyleListener;
-    };
+    }
 
     /**
      * This class interface is abstract representation of single frame from camera for onCameraFrame callback
@@ -193,7 +193,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
          * This method returns single channel gray scale Mat with frame
          */
         public Mat gray();
-    };
+    }
 
     public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
         Log.d(TAG, "call surfaceChanged event");
@@ -334,7 +334,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
                 mListener.onCameraViewStopped();
             }
             break;
-        };
+        }
     }
 
     private void processExitState(int state) {
@@ -346,7 +346,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
         case STOPPED:
             onExitStoppedState();
             break;
-        };
+        }
     }
 
     private void onEnterStoppedState() {
@@ -476,7 +476,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
     public interface ListItemAccessor {
         public int getWidth(Object obj);
         public int getHeight(Object obj);
-    };
+    }
 
     /**
      * This helper method can be called by subclasses to select camera preview size.

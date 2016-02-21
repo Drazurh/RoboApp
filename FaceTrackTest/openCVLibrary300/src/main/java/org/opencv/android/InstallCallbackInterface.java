@@ -31,4 +31,4 @@ public interface InstallCallbackInterface
      * Wait for package installation.
      */
     public void wait_install();
-};
+}
