@@ -1,15 +1,13 @@
 package com.robodoot.dr.RoboApp;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
 
 import com.robodoot.dr.facetracktest.R;
-import com.robodoot.roboapp.CatCommunicator;
-import com.robodoot.roboapp.MockCatCommunicator;
+import com.robodoot.roboapp.MockVirtualCat;
+import com.robodoot.roboapp.VirtualCat;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -19,29 +17,17 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.objdetect.CascadeClassifier;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 
 /**
  * Created by alex on 2/10/16.
  */
-public class ColorTrackingActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2, CatCommunicator.CatBatteryListener {
+public class ColorTrackingActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2, VirtualCat.CatBatteryListener {
     private static final String TAG = "ColorTrackingActivity";
     private JavaCameraView mOpenCvCameraView;
     private Mat mRgba;
     private Mat mGray;
 
-    CatCommunicator catCommunicator = new MockCatCommunicator();
+    VirtualCat catCommunicator = new MockVirtualCat();
 
     /**
      * Called when the activity is first created.
@@ -58,7 +44,7 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         mOpenCvCameraView.setAlpha(1.0f);
         mOpenCvCameraView.bringToFront();
 
-        catCommunicator.AddListener(this);
+        catCommunicator.AddBatteryListener(this);
     }
 
     @Override
