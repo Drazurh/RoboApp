@@ -36,8 +36,7 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-        pololu = (PololuHandler)intent.getExtras().getSerializable("pololu");
+        pololu = new PololuHandler();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -53,9 +52,18 @@ public class MainActivity extends FragmentActivity implements
     }
 
     @Override
+    public void onResume() {
+        pololu.onResume(getIntent(), this);
+
+        super.onResume();
+        pololu.home();
+    }
+
+    @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         Fragment fragment = null;
+        Intent intent = null;
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         switch(position) {
             case 0:
@@ -71,25 +79,27 @@ public class MainActivity extends FragmentActivity implements
                 Toast.makeText(this, "Console", Toast.LENGTH_SHORT).show();
                 break;
             case 3:
-                finish();
+                intent = new Intent("com.robodoot.dr.RoboApp.FdActivity");
                 break;
             case 4:
-                Intent intent = new Intent("com.robodoot.dr.RoboApp.ColorTrackingActivity");
-                startActivity(intent);
-                return;
+                intent = new Intent("com.robodoot.dr.RoboApp.ColorTrackingActivity");
+                break;
             default:
                 break;
 
         }
 
-        if (fragment == null) {
-            Toast.makeText(this, "No associated fragment for the selected menu item.", Toast.LENGTH_SHORT).show();
-            return;
+        if (intent != null) {
+            startActivity(intent);
         }
-
-        transaction.replace(R.id.container, fragment);
-        //transaction.addToBackStack(null);
-        transaction.commit();
+        else if (fragment != null) {
+            transaction.replace(R.id.container, fragment);
+            //transaction.addToBackStack(null);
+            transaction.commit();
+        }
+        else {
+            Toast.makeText(this, "No associated fragment for the selected menu item.", Toast.LENGTH_SHORT).show();
+        }
 
     }
 

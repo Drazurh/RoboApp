@@ -327,10 +327,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         entry.clear();
         showVideoFeed();
 
-        // GO TO MAIN ACTIVITY
+        /*// GO TO MAIN ACTIVITY
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("pololu", pololu);
-        startActivity(intent);
+        startActivity(intent);*/
     }
 
     public void onDestroy() {
