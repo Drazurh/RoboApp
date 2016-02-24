@@ -36,6 +36,7 @@ import org.opencv.imgproc.Moments;
  */
 public class ColorTrackingActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2, VirtualCat.CatBatteryListener, CompoundButton.OnCheckedChangeListener {
     private static final String TAG = "ColorTrackingActivity";
+
     private JavaCameraView mOpenCvCameraView;
     private Switch mSwitchThreshold;
     private Switch mSwitchCameraIndex;
@@ -45,9 +46,10 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
 
     private Mat mRgba;
     private Mat mGray;
+
     private boolean mShowThreshold;
 
-    VirtualCat virtualCat = new MockVirtualCat();
+    VirtualCat mVirtualCat = new MockVirtualCat();
 
     /**
      * Called when the activity is first created.
@@ -83,7 +85,7 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         mSeekBarLowV = (SeekBar) findViewById(R.id.seek_bar_low_v);
         mSeekBarHighV = (SeekBar) findViewById(R.id.seek_bar_high_v);
 
-        virtualCat.AddBatteryListener(this);
+        mVirtualCat.AddBatteryListener(this);
     }
 
     @Override
@@ -241,8 +243,8 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         // transpose and flip
         //Core.flip(mRgba.t(), mRgba, 0);
 
-        if (imgHSV != null)
-            imgHSV.release();
+        //if (imgHSV != null)
+        //    imgHSV.release();
 
         if (imgThresholded != null) {
             if (mShowThreshold) {
