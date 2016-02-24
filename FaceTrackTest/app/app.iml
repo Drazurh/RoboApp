@@ -105,6 +105,6 @@
     <orderEntry type="library" exported="" name="appcompat-v7-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="opencv" level="project" />
     <orderEntry type="library" exported="" name="libfreenect" level="project" />
-    <orderEntry type="module" module-name="openCVLibrary300" exported="" />
+    <orderEntry type="module" module-name="openCVLibrary310" exported="" />
   </component>
 </module>

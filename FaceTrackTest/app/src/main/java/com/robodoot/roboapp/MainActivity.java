@@ -33,6 +33,7 @@ public class MainActivity extends FragmentActivity implements
     private Toolbar mToolbar;
     public PololuHandler pololu;
 
+    static { System.loadLibrary("opencv_java3"); }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
