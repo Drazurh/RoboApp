@@ -26,6 +26,27 @@
             android:layout_weight=".33"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:id="@+id/switch_battery"
+                    android:checked="false" />
+
+                <com.robodoot.roboapp.BatteryView
+                    android:layout_width="60dp"
+                    android:layout_height="30dp"
+                    app:batteryShowPercent="true"
+                    android:id="@+id/battery_view" />
+
+            </LinearLayout>
+
             <SeekBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,7 +100,7 @@
             <Switch
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="camera index"
+                android:text="back camera"
                 android:id="@+id/switch_camera"
                 android:checked="false" />
         </LinearLayout>

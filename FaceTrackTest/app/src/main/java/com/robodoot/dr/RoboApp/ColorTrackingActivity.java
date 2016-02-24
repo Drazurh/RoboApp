@@ -12,6 +12,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.robodoot.dr.facetracktest.R;
+import com.robodoot.roboapp.BatteryView;
 import com.robodoot.roboapp.MockVirtualCat;
 import com.robodoot.roboapp.VirtualCat;
 
@@ -38,11 +39,13 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
     private JavaCameraView mOpenCvCameraView;
     private Switch mSwitchThreshold;
     private Switch mSwitchCameraIndex;
+    private Switch mSwitchBattery;
+    private BatteryView mBatteryView;
+    private SeekBar mSeekBarLowH, mSeekBarHighH, mSeekBarLowS, mSeekBarHighS, mSeekBarLowV, mSeekBarHighV;
+
     private Mat mRgba;
     private Mat mGray;
     private boolean mShowThreshold;
-
-    private SeekBar mSeekBarLowH, mSeekBarHighH, mSeekBarLowS, mSeekBarHighS, mSeekBarLowV, mSeekBarHighV;
 
     VirtualCat virtualCat = new MockVirtualCat();
 
@@ -60,12 +63,18 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         mOpenCvCameraView.setAlpha(1.0f);
         mOpenCvCameraView.bringToFront();
 
-
         mSwitchThreshold = (Switch) findViewById(R.id.switch_threshold);
         mSwitchThreshold.setOnCheckedChangeListener(this);
 
         mSwitchCameraIndex = (Switch) findViewById(R.id.switch_camera);
         mSwitchCameraIndex.setOnCheckedChangeListener(this);
+
+        mSwitchBattery = (Switch) findViewById(R.id.switch_battery);
+        mSwitchBattery.setOnCheckedChangeListener(this);
+
+        mBatteryView = (BatteryView) findViewById(R.id.battery_view);
+        mBatteryView.setConnected(true);
+        mBatteryView.setAlpha(0.0f); // hide initially
 
         mSeekBarLowH = (SeekBar) findViewById(R.id.seek_bar_low_h);
         mSeekBarHighH = (SeekBar) findViewById(R.id.seek_bar_high_h);
@@ -113,13 +122,18 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
 
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-        if (buttonView.getId() == R.id.switch_camera) {
-            mOpenCvCameraView.disableView();
-            mOpenCvCameraView.setCameraIndex(isChecked ? 1 : 0);
-            mOpenCvCameraView.enableView();
-        }
-        else if (buttonView.getId() == R.id.switch_threshold) {
-            mShowThreshold = isChecked;
+        switch (buttonView.getId()) {
+            case R.id.switch_camera:
+                mOpenCvCameraView.disableView();
+                mOpenCvCameraView.setCameraIndex(isChecked ? 1 : 0);
+                mOpenCvCameraView.enableView();
+                break;
+            case R.id.switch_threshold:
+                mShowThreshold = isChecked;
+                break;
+            case R.id.switch_battery:
+                mBatteryView.setAlpha(isChecked ? 1.0f : 0.0f);
+                break;
         }
     }
 
@@ -174,14 +188,15 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
             int iLowV = mSeekBarLowV.getProgress();
             int iHighV = mSeekBarHighV.getProgress();
 
-            imgHSV = new Mat();
+            //imgHSV = new Mat();
 
-            //Imgproc.cvtColor(mRgba, imgHSV, Imgproc.COLOR_BGR2HSV); //Convert the captured frame from BGR to HSV
-            Imgproc.cvtColor(mRgba, imgHSV, Imgproc.COLOR_RGB2HSV); //Convert the captured frame from BGR to HSV
+            //Imgproc.cvtColor(mRgba, imgHSV, Imgproc.COLOR_RGB2HSV); //Convert the captured frame from BGR to HSV
 
             imgThresholded = new Mat();
+            Imgproc.cvtColor(mRgba, imgThresholded, Imgproc.COLOR_RGB2HSV); //Convert the captured frame from BGR to HSV
 
-            Core.inRange(imgHSV, new Scalar(iLowH, iLowS, iLowV), new Scalar(iHighH, iHighS, iHighV), imgThresholded); //Threshold the image
+            //Core.inRange(imgHSV, new Scalar(iLowH, iLowS, iLowV), new Scalar(iHighH, iHighS, iHighV), imgThresholded); //Threshold the image
+            Core.inRange(imgThresholded, new Scalar(iLowH, iLowS, iLowV), new Scalar(iHighH, iHighS, iHighV), imgThresholded); //Threshold the image
 
             //morphological opening (removes small objects from the foreground)
             Imgproc.erode(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
@@ -252,6 +267,6 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
 
     @Override
     public void UpdateBatteryLevel(float level) {
-        // cool
+        mBatteryView.setCharge(level);
     }
 }
