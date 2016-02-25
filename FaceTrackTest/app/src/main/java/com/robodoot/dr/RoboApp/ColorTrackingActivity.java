@@ -38,9 +38,6 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
     private static final String TAG = "ColorTrackingActivity";
 
     private JavaCameraView mOpenCvCameraView;
-    private Switch mSwitchThreshold;
-    private Switch mSwitchCameraIndex;
-    private Switch mSwitchBattery;
     private BatteryView mBatteryView;
     private SeekBar mSeekBarLowH, mSeekBarHighH, mSeekBarLowS, mSeekBarHighS, mSeekBarLowV, mSeekBarHighV;
 
@@ -65,14 +62,9 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         mOpenCvCameraView.setAlpha(1.0f);
         mOpenCvCameraView.bringToFront();
 
-        mSwitchThreshold = (Switch) findViewById(R.id.switch_threshold);
-        mSwitchThreshold.setOnCheckedChangeListener(this);
-
-        mSwitchCameraIndex = (Switch) findViewById(R.id.switch_camera);
-        mSwitchCameraIndex.setOnCheckedChangeListener(this);
-
-        mSwitchBattery = (Switch) findViewById(R.id.switch_battery);
-        mSwitchBattery.setOnCheckedChangeListener(this);
+        ((Switch)findViewById(R.id.switch_threshold)).setOnCheckedChangeListener(this);
+        ((Switch)findViewById(R.id.switch_camera)).setOnCheckedChangeListener(this);
+        ((Switch)findViewById(R.id.switch_battery)).setOnCheckedChangeListener(this);;
 
         mBatteryView = (BatteryView) findViewById(R.id.battery_view);
         mBatteryView.setConnected(true);
