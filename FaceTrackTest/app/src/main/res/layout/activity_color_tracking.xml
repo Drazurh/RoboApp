@@ -13,7 +13,7 @@
         android:layout_height="fill_parent"
         android:orientation="horizontal" >
 
-        <org.opencv.android.JavaCameraView
+        <com.robodoot.roboapp.CatCameraView
             android:id="@+id/color_tracking_camera_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

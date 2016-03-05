@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.robodoot.dr.facetracktest.R;
 import com.robodoot.roboapp.BatteryView;
+import com.robodoot.roboapp.CatCameraView;
 import com.robodoot.roboapp.MockVirtualCat;
 import com.robodoot.roboapp.VirtualCat;
 
@@ -39,7 +40,7 @@ import org.opencv.imgproc.Imgproc;
 public class ColorTrackingActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2, VirtualCat.CatBatteryListener, CompoundButton.OnCheckedChangeListener {
     private static final String TAG = "ColorTrackingActivity";
 
-    private JavaCameraView mOpenCvCameraView;
+    private CatCameraView mOpenCvCameraView;
     private BatteryView mBatteryView;
     private SeekBar mSeekBarLowH, mSeekBarHighH, mSeekBarLowS, mSeekBarHighS, mSeekBarLowV, mSeekBarHighV;
 
@@ -59,7 +60,7 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        mOpenCvCameraView = (JavaCameraView) findViewById(R.id.color_tracking_camera_view);
+        mOpenCvCameraView = (CatCameraView) findViewById(R.id.color_tracking_camera_view);
         mOpenCvCameraView.setCvCameraViewListener(this);
         mOpenCvCameraView.setAlpha(1.0f);
         mOpenCvCameraView.bringToFront();
@@ -139,44 +140,15 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         mGray = new Mat(height, width, CvType.CV_8UC4);
     }
 
+    // it is probably possible to rewrite this stuff so it uses 100% javacv code.
+    // it would be faster overall if if the javacv functions are at least as fast as the opencv ones
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        Mat imgHSV = null;
         Mat imgThresholded = null;
         try {
             inputFrame.rgba().copyTo(mRgba);
 
+            // resize to transpose dimensions because it's stupid. not necessary with opencv 3.1.0
             Imgproc.resize(mRgba, mRgba, mRgba.t().size());
-
-            // red 1
-//            int iLowH = 170;
-//            int iHighH = 179;
-//
-//            int iLowS = 150;
-//            int iHighS = 255;
-//
-//            int iLowV = 60;
-//            int iHighV = 255;
-
-            // red 2
-//            int iLowH = 0;
-//            int iHighH = 179;
-//
-//            int iLowS = 210;
-//            int iHighS = 255;
-//
-//            int iLowV = 108;
-//            int iHighV = 179;
-
-
-            // white
-//            int iLowH = 0;
-//            int iHighH = 179;
-//
-//            int iLowS = 0;
-//            int iHighS = 70;
-//
-//            int iLowV = 150;
-//            int iHighV = 255;
 
             int iLowH = mSeekBarLowH.getProgress();
             int iHighH = mSeekBarHighH.getProgress();
@@ -187,80 +159,80 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
             int iLowV = mSeekBarLowV.getProgress();
             int iHighV = mSeekBarHighV.getProgress();
 
-            //imgHSV = new Mat();
-
-            //Imgproc.cvtColor(mRgba, imgHSV, Imgproc.COLOR_RGB2HSV); //Convert the captured frame from BGR to HSV
-
             imgThresholded = new Mat();
             Imgproc.cvtColor(mRgba, imgThresholded, Imgproc.COLOR_RGB2HSV); //Convert the captured frame from BGR to HSV
 
-            //Core.inRange(imgHSV, new Scalar(iLowH, iLowS, iLowV), new Scalar(iHighH, iHighS, iHighV), imgThresholded); //Threshold the image
             Core.inRange(imgThresholded, new Scalar(iLowH, iLowS, iLowV), new Scalar(iHighH, iHighS, iHighV), imgThresholded); //Threshold the image
 
-            //morphological opening (removes small objects from the foreground)
+            // morphological opening (removes small objects from the foreground)
             Imgproc.erode(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
             Imgproc.dilate(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
 
-            //morphological closing (removes small holes from the foreground)
+            // morphological closing (removes small holes from the foreground)
             Imgproc.dilate(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
             Imgproc.erode(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
 
-            //Calculate the moments of the thresholded image
+            // Calculate the moments of the thresholded image
+            // the moments stuff is missing from opencv 3.0.0 so we have to use javacv for this.
+            // get the mat data from imgThresholded as a byte array
             int length = (int) (imgThresholded.total() * imgThresholded.elemSize());
             byte buffer[] = new byte[length];
             imgThresholded.get(0, 0, buffer);
 
-            opencv_core.Mat asdf = new opencv_core.Mat(imgThresholded.height(), imgThresholded.width(), imgThresholded.type());
-            asdf.data().put(buffer);
-            opencv_core.Moments oMoments = opencv_imgproc.moments(asdf);
-            //opencv_core.Moments oMoments = Imgproc.moments(imgThresholded);
+            // construct a javacv mat from the byte array
+            opencv_core.Mat momentsMat = new opencv_core.Mat(imgThresholded.height(), imgThresholded.width(), imgThresholded.type());
+            momentsMat.data().put(buffer);
+
+            // compute moments
+            opencv_core.Moments oMoments = opencv_imgproc.moments(momentsMat);
 
             double dM01 = oMoments.m01();
             double dM10 = oMoments.m10();
             double dArea = oMoments.m00();
 
-            // if the area <= 100000, I consider that the there are no object in the image and it's because of the noise, the area is not zero
+            momentsMat.release();
+
+            // if area <= 100000, considered to be noise
             if (dArea > 100000) {
                 //calculate the position of the object
                 double posX = dM10 / dArea;
                 double posY = dM01 / dArea;
 
                 if (posX >= 0 && posY >= 0) {
-                    //Draw a red line from the previous point to the current point
+                    // draw a red line from the previous point to the current point
                     //Imgproc.line(mRgba, new Point(posX, posY), new Point(posX, posY), new Scalar(0, 0, 255), 2);
+
+                    // draw rectangle at point
                     Imgproc.rectangle(mRgba, new Point(posX, posY), new Point(posX + 20, posY + 20), new Scalar(255, 255, 255), 5);
                     //Imgproc.rectangle(mRgba, new Point(0, 0), new Point(20, 20), new Scalar(255, 255, 255), 5);
+
+                    // compute relative position of the object
+                    double relativeX = posX - (mRgba.width() / 2.0f);
+                    double relativeY = posY - (mRgba.height() / 2.0f);
 
                     Log.i(TAG, "I SEE AN OBJECT");
                 }
             }
 
-//                float centerX = imgLines.size().width / 2.0f;
-//                float centerY = imgLines.size().height / 2.0f;
-//                float relativeX = posX - centerX;
-//                float relativeY = posY - centerY;
-
-            //cout << "x = " << relativeX << ", y = " << relativeY << endl;
         } catch (Exception e) {
             Log.i(TAG, "Exception " + e.getMessage());
         }
 
-        //if (imgHSV != null)
-        //    imgHSV.release();
-
         if (imgThresholded != null) {
+            // if showThreshold enabled, copy it into mRgba for display
             if (mShowThreshold) {
                 imgThresholded.copyTo(mRgba);
             }
+
+            // free imgThresholded resources
             imgThresholded.release();
         }
 
-        // transpose and flip
+        // transpose and flip, not necessary for now
         //Core.flip(mRgba.t(), mRgba, 0);
 
         // return the mat to be displayed
         return mRgba;
-        //return imgThresholded;
     }
 
     public void onCameraViewStopped() {
