@@ -2,6 +2,7 @@ package com.robodoot.dr.RoboApp;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Camera;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
@@ -16,6 +17,8 @@ import com.robodoot.roboapp.BatteryView;
 import com.robodoot.roboapp.MockVirtualCat;
 import com.robodoot.roboapp.VirtualCat;
 
+import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.javacpp.opencv_imgproc;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
@@ -29,7 +32,6 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.imgproc.Moments;
 
 /**
  * Created by alex on 2/10/16.
@@ -61,6 +63,7 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         mOpenCvCameraView.setCvCameraViewListener(this);
         mOpenCvCameraView.setAlpha(1.0f);
         mOpenCvCameraView.bringToFront();
+        //mOpenCvCameraView.setRotation(90.0f);
 
         ((Switch)findViewById(R.id.switch_threshold)).setOnCheckedChangeListener(this);
         ((Switch)findViewById(R.id.switch_camera)).setOnCheckedChangeListener(this);
@@ -97,15 +100,15 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
                         mOpenCvCameraView.setCameraIndex(0);
                         //mOpenCvCameraView.enableFpsMeter();
                         mOpenCvCameraView.enableView();
-                    break;
+                        break;
                     default:
                         super.onManagerConnected(status);
-                    break;
+                        break;
                 }
             }
         };
         super.onResume();
-        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, this, mLoaderCallback);
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
     }
 
     @Override
@@ -141,6 +144,8 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         Mat imgThresholded = null;
         try {
             inputFrame.rgba().copyTo(mRgba);
+
+            Imgproc.resize(mRgba, mRgba, mRgba.t().size());
 
             // red 1
 //            int iLowH = 170;
@@ -201,14 +206,21 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
             Imgproc.erode(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
 
             //Calculate the moments of the thresholded image
-            Moments oMoments = Imgproc.moments(imgThresholded);
+            int length = (int) (imgThresholded.total() * imgThresholded.elemSize());
+            byte buffer[] = new byte[length];
+            imgThresholded.get(0, 0, buffer);
 
-            double dM01 = oMoments.m01;
-            double dM10 = oMoments.m10;
-            double dArea = oMoments.m00;
+            opencv_core.Mat asdf = new opencv_core.Mat(imgThresholded.height(), imgThresholded.width(), imgThresholded.type());
+            asdf.data().put(buffer);
+            opencv_core.Moments oMoments = opencv_imgproc.moments(asdf);
+            //opencv_core.Moments oMoments = Imgproc.moments(imgThresholded);
 
-            // if the area <= 10000, I consider that the there are no object in the image and it's because of the noise, the area is not zero
-            if (dArea > 10000) {
+            double dM01 = oMoments.m01();
+            double dM10 = oMoments.m10();
+            double dArea = oMoments.m00();
+
+            // if the area <= 100000, I consider that the there are no object in the image and it's because of the noise, the area is not zero
+            if (dArea > 100000) {
                 //calculate the position of the object
                 double posX = dM10 / dArea;
                 double posY = dM01 / dArea;
@@ -217,6 +229,7 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
                     //Draw a red line from the previous point to the current point
                     //Imgproc.line(mRgba, new Point(posX, posY), new Point(posX, posY), new Scalar(0, 0, 255), 2);
                     Imgproc.rectangle(mRgba, new Point(posX, posY), new Point(posX + 20, posY + 20), new Scalar(255, 255, 255), 5);
+                    //Imgproc.rectangle(mRgba, new Point(0, 0), new Point(20, 20), new Scalar(255, 255, 255), 5);
 
                     Log.i(TAG, "I SEE AN OBJECT");
                 }
@@ -227,13 +240,10 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
 //                float relativeX = posX - centerX;
 //                float relativeY = posY - centerY;
 
-                //cout << "x = " << relativeX << ", y = " << relativeY << endl;
+            //cout << "x = " << relativeX << ", y = " << relativeY << endl;
         } catch (Exception e) {
             Log.i(TAG, "Exception " + e.getMessage());
         }
-
-        // transpose and flip
-        //Core.flip(mRgba.t(), mRgba, 0);
 
         //if (imgHSV != null)
         //    imgHSV.release();
@@ -244,6 +254,9 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
             }
             imgThresholded.release();
         }
+
+        // transpose and flip
+        //Core.flip(mRgba.t(), mRgba, 0);
 
         // return the mat to be displayed
         return mRgba;

@@ -43,7 +43,9 @@
         <activity
             android:name="com.robodoot.dr.RoboApp.ColorTrackingActivity"
             android:label="@string/title_activity_color_tracking"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>>
                 <action android:name="com.robodoot.dr.RoboApp.ColorTrackingActivity" />
 

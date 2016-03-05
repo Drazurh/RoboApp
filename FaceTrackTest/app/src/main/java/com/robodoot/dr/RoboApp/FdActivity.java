@@ -69,8 +69,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     private static final String TAG = "OCVSample::Activity";
     private static final int JAVA_DETECTOR = 0;
 
-
-
     private CatEmotion kitty;
     public enum Directions {UP, DOWN, LEFT, RIGHT, CENTER}
     private Mat mRgba;
@@ -220,7 +218,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         setContentView(R.layout.activity_fd);
 
         psswd.add(CHAR.U);
@@ -322,7 +319,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
         super.onResume();
         pololu.home();
-        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, this, mLoaderCallback);
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
 
         entry.clear();
         showVideoFeed();
@@ -601,7 +598,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
             if (biggestFace.size().area()!=1)
             {
-                 Rect r = biggestFace;
+                Rect r = biggestFace;
                 Point mouthPt1 = new Point(r.x + r.width / 10, r.y + r.height / 2 + r.height / 10);
                 Point mouthPt2 = new Point(r.x + r.width - r.width / 10, r.y + r.height - r.height / 10);
                 Rect mouthRect = new Rect(mouthPt1, mouthPt2);
