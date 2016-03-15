@@ -22,7 +22,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.robodoot.dr.facetracktest.R;
+import com.robodoot.roboapp.Direction;
+import com.robodoot.roboapp.ImageUtil;
 import com.robodoot.roboapp.MainActivity;
+import com.robodoot.roboapp.Person;
 
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_face;
@@ -135,43 +138,59 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 case LoaderCallbackInterface.SUCCESS: {
 
                     try {
-                        // load cascade file from application resources
-                        InputStream is = getResources().openRawResource(
-                                R.raw.lbpcascade_frontalface); //opens resource for openCV cascade classifier
-                                                                //classifier is trained with afew hundred examples then can be applied to a region of interest
-                                                                // outputs 1 if object is likely to have object, 0 otherwise
-                                                                // see http://docs.opencv.org/2.4/modules/objdetect/doc/cascade_classification.html
-                        File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
-                        mCascadeFile = new File(cascadeDir,
-                                "lbpcascade_frontalface.xml");
-                        FileOutputStream os = new FileOutputStream(mCascadeFile);
+                        InputStream is = null;
+                        FileOutputStream os = null;
+                        File cascadeDir = null;
+                        try {
+                            // load cascade file from application resources
+                            is = getResources().openRawResource(
+                                    R.raw.lbpcascade_frontalface); //opens resource for openCV cascade classifier
+                                                                    //classifier is trained with afew hundred examples then can be applied to a region of interest
+                                                                    // outputs 1 if object is likely to have object, 0 otherwise
+                                                                    // see http://docs.opencv.org/2.4/modules/objdetect/doc/cascade_classification.html
+                            cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
+                            mCascadeFile = new File(cascadeDir,
+                                    "lbpcascade_frontalface.xml");
+                            os = new FileOutputStream(mCascadeFile);
 
-                        byte[] buffer = new byte[4096]; // a temporary buffer to facilitate IO
-                        filter = new boolean[5];
-                        int bytesRead;
-                        while ((bytesRead = is.read(buffer)) != -1) {
-                            os.write(buffer, 0, bytesRead);
+                            byte[] buffer = new byte[4096]; // a temporary buffer to facilitate IO
+                            filter = new boolean[5];
+                            int bytesRead;
+                                while ((bytesRead = is.read(buffer)) != -1) {
+                                    os.write(buffer, 0, bytesRead);
+                                }
                         }
-                        is.close();
-                        os.close();
-
-                        // --------------------------------- load smile
-                        // classificator -----------------------------------
-                        InputStream isS = getResources().openRawResource(
-                                R.raw.haarcascade_smile);
-                        File cascadeDirS = getDir("cascadeS",
-                                Context.MODE_PRIVATE);
-                        File cascadeFileS = new File(cascadeDirS,
-                                "haarcascade_smile.xml");
-                        FileOutputStream osS = new FileOutputStream(cascadeFileS);
-
-                        byte[] bufferS = new byte[4096];
-                        int bytesReadS;
-                        while ((bytesReadS = isS.read(bufferS)) != -1) {
-                            osS.write(bufferS, 0, bytesReadS);
+                        finally {
+                            if (is != null) is.close();
+                            if (os != null) os.close();
+                            //if (cascadeDir != null) cascadeDir.delete();
                         }
-                        isS.close();
-                        osS.close();
+
+                        InputStream isS = null;
+                        File cascadeDirS;
+                        File cascadeFileS = null;
+                        FileOutputStream osS = null;
+                        try {
+                            // --------------------------------- load smile
+                            // classificator -----------------------------------
+                            isS = getResources().openRawResource(
+                                    R.raw.haarcascade_smile);
+                            cascadeDirS = getDir("cascadeS",
+                                    Context.MODE_PRIVATE);
+                            cascadeFileS = new File(cascadeDirS,
+                                    "haarcascade_smile.xml");
+                            osS = new FileOutputStream(cascadeFileS);
+
+                            byte[] bufferS = new byte[4096];
+                            int bytesReadS;
+                            while ((bytesReadS = isS.read(bufferS)) != -1) {
+                                osS.write(bufferS, 0, bytesReadS);
+                            }
+                        }
+                        finally {
+                            if (isS != null) isS.close();
+                            if (osS != null) osS.close();
+                        }
 
                         mJavaDetectorFace = new CascadeClassifier(
                                 mCascadeFile.getAbsolutePath());
@@ -240,8 +259,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         arrows[3]=(ImageView)findViewById(R.id.arrow_left);
         //for (int i = 0; i < 4; i++) arrows[i].setVisibility(View.INVISIBLE);
 
-
-
         mOpenCvCameraView = (JavaCameraView) findViewById(R.id.fd_activity_surface_view);
         mOpenCvCameraView.setCvCameraViewListener(this);
         kitty = new CatEmotion(this);
@@ -276,9 +293,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 //
 //
 //        });
-
-
-
     }
 
     @Override
@@ -362,12 +376,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         refreshRecognizer=0;
         entry.clear();
 
-
-
-
         loading.setAlpha(0f);
-
-
     }
 
     public void onCameraViewStopped() {
@@ -387,7 +396,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         if (IDcount<=21)return 0;
         Mat check = face.clone();
         Imgproc.resize(check, check, stds);
-        opencv_core.Mat temp = convert(check);
+        opencv_core.Mat temp = ImageUtil.convert(check);
         int ID = faceRecognizer.predict(temp);
 
         if(ID>20) {
@@ -433,26 +442,22 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         else if (pY > 0.58) pololu.cameraPitchSpeed(-0.5f + (float) pY);
 
         setTextFieldText("pX = "+pX+"   "+(0.5f - (float)pX), debug1);
-        setTextFieldText("pY = "+pY+"   "+(0.5f - (float)pY), debug2);
+        setTextFieldText("pY = " + pY + "   " + (0.5f - (float) pY), debug2);
         //else pololu.stopNeckMotors();
     }
 
     public boolean adjustFaceBuffer(Rect faceRect)
     {
-
-
         int sumX = faceRect.x+faceRect.width/2;
         int sumY = faceRect.y+faceRect.height/2;
         int sumA = (int)faceRect.size().area();
         for(int i=FaceLocationBuffer.length-1;i>0;i--)
         {
-
             FaceMatBuffer[i - 1].copyTo(FaceMatBuffer[i]);
             FaceLocationBuffer[i]= FaceLocationBuffer[i-1];
             sumX = sumX + FaceLocationBuffer[i].x+FaceLocationBuffer[i].width/2;
             sumY = sumY + FaceLocationBuffer[i].y+FaceLocationBuffer[i].height/2;
             sumA = sumA + (int)FaceLocationBuffer[i].size().area();
-
         }
 
         FaceLocationBuffer[0]=faceRect;
@@ -493,7 +498,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 FaceLocationBuffer[i]=new Rect(new Point(0,0),new Size(1,1));
             }
 
-
             return true;
         }
 
@@ -501,8 +505,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     }
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-
-
         peopleThisCameraFrame.clear();
 
         try {
@@ -513,7 +515,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             Core.flip(mGray.t(), mGray, 0);
 
 
-
             if (mAbsoluteFaceSize == 0) {
                 int height = mGray.rows();
                 if (Math.round(height * mRelativeFaceSize) > 0) {
@@ -521,11 +522,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 }
             }
 
-
             if (mJavaDetectorFace != null)
                 mJavaDetectorFace.detectMultiScale(mGray, faces, 1.1, 2, 2, new Size(mAbsoluteFaceSize, mAbsoluteFaceSize), new Size());
 
-            Rect biggestFace = new Rect(new Point(0,0),new Size(1,1));
+            Rect biggestFace = new Rect(new Point(0, 0), new Size(1, 1));
 
             Rect[] facesArray = faces.toArray();
 
@@ -535,34 +535,24 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 //            }
 
             for (int i = 0; i < facesArray.length; i++) {
-
-
-
                 xCenter = (facesArray[i].x + facesArray[i].width + facesArray[i].x) / 2;
                 yCenter = (facesArray[i].y + facesArray[i].y + facesArray[i].height) / 2;
                 Point center = new Point(xCenter, yCenter);
 
                 Rect r = facesArray[i];
 
-
                 mGray.submat(r).copyTo(tempMat1);
                 Imgproc.equalizeHist(tempMat1, tempMat1);
 
                 int recoID = checkForRecognition(tempMat1);
 
-
-
                 Imgproc.cvtColor(tempMat1, tempMat1, Imgproc.COLOR_GRAY2RGBA);
 
-
-                if(recoID<21) {
+                if (recoID < 21) {
                     tempMat1.copyTo(mRgba.submat(r));
                     Imgproc.rectangle(mRgba, r.br(), r.tl(), new Scalar(255, 0, 0), 8);
-                    if(r.size().area()>biggestFace.size().area())biggestFace=r;
-                }
-                else {
-
-
+                    if (r.size().area() > biggestFace.size().area()) biggestFace = r;
+                } else {
                     Point mouthPt1 = new Point(r.x + r.width / 10, r.y + r.height / 2 + r.height / 10);
                     Point mouthPt2 = new Point(r.x + r.width - r.width / 10, r.y + r.height - r.height / 10);
                     Rect mouthRect = new Rect(mouthPt1, mouthPt2);
@@ -572,16 +562,14 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
                     if (mJavaDetectorSmile != null)
                         mJavaDetectorSmile.detectMultiScale(mGray.submat(mouthRect), smiles, 1.1, 6, 0, new Size(mouthRect.width * 0.6, mouthRect.height * 0.6), new Size());
-                    Rect [] smileArray = smiles.toArray();
+                    Rect[] smileArray = smiles.toArray();
                     boolean smiling = false;
-                    if(smileArray.length>0)smiling = true;
+                    if (smileArray.length > 0) smiling = true;
 
-
-
-                    Core.flip(mGray.submat(mouthRect),mGray.submat(mouthRect),-1);
+                    Core.flip(mGray.submat(mouthRect), mGray.submat(mouthRect), -1);
                     if (mJavaDetectorSmile != null)
                         mJavaDetectorSmile.detectMultiScale(mGray.submat(mouthRect), smiles, 1.05, 4, 0, new Size(mouthRect.width * 0.4, mouthRect.height * 0.4), new Size());
-                    Rect [] frownArray = smiles.toArray();
+                    Rect[] frownArray = smiles.toArray();
                     boolean frowning = false;
 //                    if(frownArray.length>0){
 //
@@ -591,13 +579,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
                     peopleThisCameraFrame.add(new Person(recoID, r, smiling, frowning));
                     //setTextFieldText(Integer.toString(recoID),debug1);
-
-
                 }
             }
 
-            if (biggestFace.size().area()!=1)
-            {
+            if (biggestFace.size().area() != 1) {
                 Rect r = biggestFace;
                 Point mouthPt1 = new Point(r.x + r.width / 10, r.y + r.height / 2 + r.height / 10);
                 Point mouthPt2 = new Point(r.x + r.width - r.width / 10, r.y + r.height - r.height / 10);
@@ -609,32 +594,28 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 if (mJavaDetectorSmile != null)
                     mJavaDetectorSmile.detectMultiScale(mGray.submat(mouthRect), smiles, 1.4, 3, 0, new Size(mouthRect.width * 0.6, mouthRect.height * 0.4), new Size());
 
-                Rect [] smileArray = smiles.toArray();
+                Rect[] smileArray = smiles.toArray();
 
-                if(smileArray.length>0)kitty.smiledAt();
-                if(adjustFaceBuffer(biggestFace)) {
+                if (smileArray.length > 0) kitty.smiledAt();
+                if (adjustFaceBuffer(biggestFace)) {
 
                     addNewUser();
                 }
 
-                if(peopleThisCameraFrame.size()==0)trackFavFace(biggestFace);
+                if (peopleThisCameraFrame.size() == 0) trackFavFace(biggestFace);
             }
 
-            if(peopleThisCameraFrame.size()>0) {
-
-
-
+            if (peopleThisCameraFrame.size() > 0) {
                 ArrayList<Integer> IDsToCheck = new ArrayList<Integer>();
 
                 for (int i = 0; i < peopleThisCameraFrame.size(); i++) {
                     for (int j = 0; j < peopleLastCameraFrame.size(); j++) {
-                        peopleThisCameraFrame.get(i).checkID();
-                        peopleThisCameraFrame.get(i).checkSimilar(peopleLastCameraFrame.get(j));
+                        peopleThisCameraFrame.get(i).checkID(SimilarID, UserColors);
+                        peopleThisCameraFrame.get(i).checkSimilar(peopleLastCameraFrame.get(j),SimilarID, UserColors);
                     }
-                    kitty.lookedAt( peopleThisCameraFrame.get(i).ID, peopleThisCameraFrame.get(i).smiling, peopleThisCameraFrame.get(i).frowning);
+                    kitty.lookedAt(peopleThisCameraFrame.get(i).ID, peopleThisCameraFrame.get(i).smiling, peopleThisCameraFrame.get(i).frowning);
                     Scalar color = UserColors.get(peopleThisCameraFrame.get(i).ID);
                     Imgproc.rectangle(mRgba, peopleThisCameraFrame.get(i).face.br(), peopleThisCameraFrame.get(i).face.tl(), color, 8);
-
 
                     IDsToCheck.add(peopleThisCameraFrame.get(i).ID);
                 }
@@ -654,110 +635,14 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 peopleLastCameraFrame.clear();
                 peopleLastCameraFrame.addAll(peopleThisCameraFrame);
                 kitty.reCalcFace();
-
-
             }
-
-
-
-        }
-        catch(Exception e){
-            Log.i(TAG,"Exception "+ e.getMessage());
+        } catch (Exception e) {
+            Log.i(TAG, "Exception " + e.getMessage());
             System.gc();
-            return null;}
+            return null;
+        }
 
         return mRgba;
-    }
-
-    private class Person {
-
-        public Rect face;
-        public int ID;
-        public boolean smiling;
-        public boolean frowning;
-
-        public Person(int _ID, Rect _face, boolean _smiling, boolean _frowning){
-            ID = _ID;
-            face = _face;
-            smiling = _smiling;
-            frowning = _frowning;
-        }
-
-        public void checkID()
-        {
-            if(this.ID>=SimilarID.size())
-            {
-                for(int i=SimilarID.size()-1; i<=this.ID;i++)
-                {
-                    SimilarID.add(new ArrayList<Integer>());
-
-                }
-            }
-            if(SimilarID.get(this.ID).size()>0) {
-                int minID = SimilarID.get(this.ID).get(0);
-                for (int i = 0; i < SimilarID.get(this.ID).size(); i++) {
-
-                    if(SimilarID.get(this.ID).get(i)<minID)
-                    {
-                        minID = SimilarID.get(this.ID).get(i);
-                    }
-
-                }
-                if(this.ID!=minID) {
-                    if(!UserColors.get(this.ID).equals(UserColors.get(minID)))
-                    {
-                        UserColors.get(this.ID).set(UserColors.get(minID).val);
-                    }
-                    this.ID = minID;
-                }
-            }
-
-
-        }
-
-        public boolean checkSimilar(Person other){
-
-            if(other.ID==this.ID)return true;
-
-            if(Math.max(other.ID, this.ID)>=SimilarID.size())
-            {
-                for(int i=SimilarID.size()-1; i<=Math.max(other.ID, this.ID);i++)
-                {
-                    SimilarID.add(new ArrayList<Integer>());
-
-                }
-            }
-            if(SimilarID.get(this.ID).size()>0) {
-                for (int i = 0; i < SimilarID.get(this.ID).size(); i++) {
-                    if(SimilarID.get(this.ID).get(i)==other.ID)
-                    {
-                        this.ID = Math.min(this.ID, other.ID);
-                        other.ID = this.ID;
-                        return true;
-                    }
-
-                }
-            }
-            if(checkSimilarRect(this.face, other.face))
-            {
-                String temp = "combined IDs " + this.ID + " and " + other.ID;
-                setTextFieldText(temp, debug3);
-
-                UserColors.get(Math.max(this.ID, other.ID)).set(UserColors.get(Math.min(this.ID, other.ID)).val);
-                SimilarID.get(this.ID).add(other.ID);
-                if(!SimilarID.get(other.ID).contains(this.ID))SimilarID.get(other.ID).add(this.ID);
-
-                this.ID = Math.min(this.ID, other.ID);
-                other.ID = this.ID;
-
-                return true;
-            }
-
-            return false;
-
-        }
-
-
     }
 
     private void setTextFieldText(String message, TextView field)
@@ -775,27 +660,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
             }
         });
-
-    }
-
-    private boolean checkSimilarRect(Rect r1, Rect r2)
-    {
-        double maxRange = (r1.width+r2.width)/20;
-
-
-        int xCenter1 = (r1.x + r1.width + r1.x) / 2;
-        int yCenter1 = (r1.y + r1.y + r1.height) / 2;
-
-        int xCenter2 = (r2.x + r2.width + r2.x) / 2;
-        int yCenter2 = (r2.y + r2.y + r2.height) / 2;
-
-        double avgArea = (r1.area()+r2.area())/2;
-        double maxSizeDiff = 0.15*avgArea;
-
-        double range = Math.sqrt(Math.pow(xCenter1-xCenter2,2)+Math.pow(yCenter1-yCenter2,2));
-        double sizeDiff = Math.abs(r1.area()-r2.area());
-
-        return range < maxRange && sizeDiff < maxSizeDiff;
     }
 
     private void showVideoFeed()
@@ -806,13 +670,8 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
                 mOpenCvCameraView.setAlpha(1.0f);
                 debugging = true;
-
-
             }
         });
-
-
-
     }
 
     private void hideVideoFeed()
@@ -820,70 +679,19 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
                 mOpenCvCameraView.setAlpha(0.0f);
-
-
             }
         });
-
-
-
     }
 
-    private opencv_core.Mat convert(Mat m)
-    {
-        bmp = null;
-        Mat tmp = new Mat (m.cols(), m.rows(), CvType.CV_8UC1, new Scalar(4));
-        try {
-
-            Imgproc.cvtColor(m, tmp, Imgproc.COLOR_GRAY2RGBA);
-            bmp = Bitmap.createBitmap(tmp.cols(), tmp.rows(), Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(tmp, bmp);
-        }
-        catch (CvException e){Log.d("Exception", e.getMessage());}
-
-
-        opencv_core.IplImage img = BitmapToIplImage(bmp, m.rows(), m.cols());
-
-
-        //arrows[2].setVisibility(View.VISIBLE);
-        opencv_core.Mat temp = opencv_core.cvarrToMat(img);
-
-
-
-        if(!temp.isContinuous())
-            temp.clone().copyTo(temp);
-
-
-        opencv_imgproc.cvtColor(temp, temp, opencv_imgproc.COLOR_RGB2GRAY);
-        //temp.convertTo(temp, opencv_imgproc.COLOR_RGB2GRAY);
-
-        return temp;
-
-
-    }
-
-    private static opencv_core.IplImage BitmapToIplImage(Bitmap source, int cols, int rows) {
-        opencv_core.IplImage container = opencv_core.IplImage.create(cols, rows, opencv_core.IPL_DEPTH_8U, 4);
-        source.copyPixelsToBuffer(container.getByteBuffer());
-        return container;
-    }
-
-
-
-    private void addNewUser(){
-
+    private void addNewUser() {
         Random rand = new Random();
         UserColors.add(IDcount, new Scalar(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255)));
         Log.i(TAG, "Adding New User with color " + UserColors.get(IDcount).toString() + " and ID " + IDcount);
 
         int count = 0;
 
-
-
         TrainingSets.add(IDcount, new ArrayList<Mat>());
-
 
         for(int i=0; i<EigenMats.length;i++)
         {
@@ -905,14 +713,18 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         opencv_core.Mat labels = new opencv_core.Mat(count,1,opencv_core.CV_32SC1);
         IntBuffer labelsBuf = labels.getIntBuffer();
 
-
-
         for(int i=1;i<TrainingSets.size();i++)
         {
             for(int j=0;j<TrainingSets.get(i).size();j++)
             {
                 Imgproc.resize(TrainingSets.get(i).get(j),TrainingSets.get(i).get(j),stds);
-                opencv_core.Mat temp = convert(TrainingSets.get(i).get(j));
+                opencv_core.Mat temp = ImageUtil.convert(TrainingSets.get(i).get(j));
+
+                if (temp == null) {
+                    Log.i(TAG, "null image in training set");
+                    continue;
+                }
+
                 TrainingMats.put(k,temp);
                 labelsBuf.put(k,i);
                 k++;
@@ -923,22 +735,20 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         faceRecognizer.train(TrainingMats, labels);
 
         IDcount++;
-
     }
 
-    private void loadTestFaces()
-    {
+    private void loadTestFaces() {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
                 for (int i = 1; i <= 20; i++) {
-
                     TrainingSets.add(i, new ArrayList<Mat>());
-                    Log.d(TAG, "Processing person "+i);
-                    for(int j=0;j<=4;j++) {
 
-                        Bitmap load = getBitmapFromAssets("FaceCases/" + i +"-"+j+ ".jpg");
+                    Log.d(TAG, "Processing person " + i);
+
+                    for(int j = 0; j <= 4; j++) {
+                        Bitmap load = getBitmapFromAssets("FaceCases/" + i + "-" + j + ".jpg");
 
                         TrainingSets.get(i).add(j, new Mat());
                         Utils.bitmapToMat(load, TrainingSets.get(i).get(j));
@@ -948,14 +758,14 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                         if (mJavaDetectorFace != null)
                             mJavaDetectorFace.detectMultiScale(TrainingSets.get(i).get(j), faces, 1.1, 2, 2, new Size(mAbsoluteFaceSize, mAbsoluteFaceSize), new Size());
 
-
                         Rect biggestFace = new Rect(new Point(0, 0), new Size(1, 1));
                         Rect[] facesArray = faces.toArray();
 
-                        if(facesArray.length>0) {
+                        if (facesArray.length > 0) {
                             for (int k = 0; k < facesArray.length; k++) {
                                 Rect r = facesArray[k];
-                                if (r.size().area() > biggestFace.size().area()) biggestFace = r;
+                                if (r.size().area() > biggestFace.size().area())
+                                    biggestFace = r;
                             }
                             TrainingSets.get(i).get(j).submat(biggestFace).copyTo(TrainingSets.get(i).get(j));
 
@@ -968,31 +778,24 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
                         bmp = null;
                         Mat m = TrainingSets.get(i).get(j);
+                        // pretty sure this is intentional (rows and cols swapped) but wtf is this code even doing
                         Mat tmp = new Mat (m.cols(), m.rows(), CvType.CV_8UC1, new Scalar(4));
                         try {
-
                             Imgproc.cvtColor(m, tmp, Imgproc.COLOR_GRAY2RGBA);
                             bmp = Bitmap.createBitmap(tmp.cols(), tmp.rows(), Bitmap.Config.ARGB_8888);
                             Utils.matToBitmap(tmp, bmp);
                         }
                         catch (CvException e){Log.d("Exception", e.getMessage());}
-
-
-
                     }
                     UserColors.add(IDcount, new Scalar(0, 0, 0));
                     IDcount++;
-
                 }
             }
 
 
 
             });
-
-
     }
-
 
     public Bitmap getBitmapFromAssets(String fileName) {
         AssetManager assetManager = getAssets();
@@ -1003,25 +806,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         }
         catch(Exception e){}
 
-
         return bitmap;
     }
 
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-
-        return true;
-    }
-
-    private boolean onSwipe(Direction direction){
+    private boolean onSwipe(Direction direction) {
         if(direction == Direction.right) {
             entry.add(CHAR.R);
             //((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.right);
@@ -1050,100 +838,17 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             intent.putExtra("pololu", pololu);
 
             startActivity(intent);
-
-
         }
 
         else if(entry.lastElement() != psswd.elementAt(entry.size()-1)) {
             entry.clear();
-
-
         }
 
         if(entry.size()>psswd.size()+2)
         {
             entry.clear();
-
         }
         return true;
-    }
-
-    /**
-     * Given two points in the plane p1=(x1, x2) and p2=(y1, y1), this method
-     * returns the direction that an arrow pointing from p1 to p2 would have.
-     * @param x1 the x position of the first point
-     * @param y1 the y position of the first point
-     * @param x2 the x position of the second point
-     * @param y2 the y position of the second point
-     * @return the direction
-     */
-    public Direction getDirection(float x1, float y1, float x2, float y2){
-        double angle = getAngle(x1, y1, x2, y2);
-        return Direction.get(angle);
-    }
-
-    /**
-     *
-     * Finds the angle between two points in the plane (x1,y1) and (x2, y2)
-     * The angle is measured with 0/360 being the X-axis to the right, angles
-     * increase counter clockwise.
-     *
-     * @param x1 the x position of the first point
-     * @param y1 the y position of the first point
-     * @param x2 the x position of the second point
-     * @param y2 the y position of the second point
-     * @return the angle between two points
-     */
-    private double getAngle(float x1, float y1, float x2, float y2) {
-
-        double rad = Math.atan2(y1-y2,x2-x1) + Math.PI;
-        return (rad*180/Math.PI + 180)%360;
-    }
-
-
-    public enum Direction{
-        up,
-        down,
-        left,
-        right;
-
-        /**
-         * Returns a direction given an angle.
-         * Directions are defined as follows:
-         *
-         * Up: [45, 135]
-         * Right: [0,45] and [315, 360]
-         * Down: [225, 315]
-         * Left: [135, 225]
-         *
-         * @param angle an angle from 0 to 360 - e
-         * @return the direction of an angle
-         */
-        public static Direction get(double angle){
-            if(inRange(angle, 45, 135)){
-                return Direction.up;
-            }
-            else if(inRange(angle, 0,45) || inRange(angle, 315, 360)){
-                return Direction.right;
-            }
-            else if(inRange(angle, 225, 315)){
-                return Direction.down;
-            }
-            else{
-                return Direction.left;
-            }
-
-        }
-
-        /**
-         * @param angle an angle
-         * @param init the initial bound
-         * @param end the final bound
-         * @return returns true if the given angle is in the interval [init, end).
-         */
-        private static boolean inRange(double angle, float init, float end){
-            return (angle >= init) && (angle < end);
-        }
     }
 
     @Override
@@ -1176,7 +881,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         float x2 = e2.getX();
         float y2 = e2.getY();
 
-        Direction direction = getDirection(x1, y1, x2, y2);
+        Direction direction = Direction.get(x1, y1, x2, y2);
         return onSwipe(direction);
     }
 
@@ -1201,12 +906,8 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     @Override
     public boolean onSingleTapUp(MotionEvent arg0) {
-
-
         return false;
     }
-
-
 
     public void turnCamera(Directions d)
     {
@@ -1215,7 +916,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             @Override
             public void run() {
                 for(int i=0;i<4;i++)arrows[i].setVisibility(View.INVISIBLE);
-
 
                 switch (dir) {
                     case UP:
@@ -1237,11 +937,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     default:
                         pololu.stopNeckMotors();
                 }
-
             }
         });
-
     }
-
-
 }

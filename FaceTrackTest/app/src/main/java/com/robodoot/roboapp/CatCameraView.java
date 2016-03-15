@@ -8,6 +8,7 @@ import android.util.Log;
 import org.opencv.android.JavaCameraView;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 /**
  * Created by alex on 3/5/16.
@@ -28,13 +29,19 @@ public class CatCameraView extends JavaCameraView {
     }
 
     private void setMaxFps() {
-        if (mCamera == null) {
-            Log.i(TAG, "mCamera is null. can't set fps");
-            return;
+        Camera.Parameters params = null;
+        synchronized (this) {
+            if (mCamera == null) {
+                Log.i(TAG, "mCamera is null. can't set fps");
+                return;
+            }
+            params = mCamera.getParameters();
         }
-        Camera.Parameters params = mCamera.getParameters();
+        if (params == null) return;
 
         List<int[]> supportedFpsRanges = params.getSupportedPreviewFpsRange();
+        if (supportedFpsRanges == null) return;
+
         int[] maxRange = new int[]{Integer.MIN_VALUE, Integer.MIN_VALUE};
         for (int[] range : supportedFpsRanges) {
             if (range[1] > maxRange[1]) {
