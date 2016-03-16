@@ -1,6 +1,7 @@
 package com.robodoot.dr.RoboApp;
 
-
+import android.content.ActivityNotFoundException;
+import android.speech.RecognizerIntent;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.robodoot.dr.facetracktest.R;
 import com.robodoot.roboapp.Direction;
@@ -57,10 +59,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Vector;
 
 public class FdActivity extends Activity implements GestureDetector.OnGestureListener, CvCameraViewListener2 {
+
+    private final int REQ_CODE_SPEECH_INPUT = 100;
+    public ArrayList<String> result;
 
     private boolean cameraIsChecked = false;
 
@@ -234,10 +240,14 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         Log.i(TAG, "Instantiated new " + this.getClass());
     }
 
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_fd);
+
+        //This is the code for the speech recognition
+        promptSpeechInput();
 
         psswd.add(CHAR.U);
         psswd.add(CHAR.U);
@@ -293,6 +303,38 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 //
 //
 //        });
+    }
+
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                getString(R.string.speech_prompt));
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.speech_not_supported),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+                    //The array list should contain all the words said during the input.
+                    result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                }
+                break;
+            }
+
+        }
     }
 
     @Override
