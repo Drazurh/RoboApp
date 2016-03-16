@@ -2,12 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.robodoot.dr.facetracktest">
 
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-feature android:name="android.hardware.camera"/>
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
-    <uses-feature android:name="android.hardware.camera.front"/>
-    <uses-feature android:name="android.hardware.camera.front.autofocus"/>
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera.front" />
+    <uses-feature android:name="android.hardware.camera.front.autofocus" />
 
     <application
         android:allowBackup="true"
@@ -21,6 +21,7 @@
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="com.robodoot.dr.RoboApp.FdActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -34,24 +35,28 @@
             android:parentActivityName="com.robodoot.dr.RoboApp.FdActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.robodoot.dr.RoboApp.FdActivity" />
         </activity>
         <activity
             android:name="com.robodoot.dr.RoboApp.ColorTrackingActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_color_tracking"
-            android:theme="@style/AppTheme"
             android:screenOrientation="landscape"
-            android:configChanges="keyboardHidden|orientation|screenSize">
-            <intent-filter>>
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                >
                 <action android:name="com.robodoot.dr.RoboApp.ColorTrackingActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name="com.robodoot.dr.RoboApp.SpeechActivity"></activity>
     </application>
 
 </manifest>
