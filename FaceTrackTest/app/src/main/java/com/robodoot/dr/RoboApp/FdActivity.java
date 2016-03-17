@@ -657,7 +657,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 tempTextView.setAlpha(1f);
                 tempTextView.setText(tempText);
                 tempTextView.bringToFront();
-
             }
         });
     }
@@ -667,7 +666,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
                 mOpenCvCameraView.setAlpha(1.0f);
                 debugging = true;
             }
@@ -738,75 +736,61 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     }
 
     private void loadTestFaces() {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        // for each set
+        for (int i = 1; i <= 20; i++) {
+            TrainingSets.add(i, new ArrayList<Mat>());
 
-                for (int i = 1; i <= 20; i++) {
-                    TrainingSets.add(i, new ArrayList<Mat>());
+            Log.d(TAG, "Processing person " + i);
 
-                    Log.d(TAG, "Processing person " + i);
+            // for each image in set
+            for(int j = 0; j <= 4; j++) {
+                // load image bitmap
+                Bitmap load = ImageUtil.GetBitmapFromContextAssets(getApplicationContext(), "FaceCases/" + i + "-" + j + ".jpg");
 
-                    for(int j = 0; j <= 4; j++) {
-                        Bitmap load = getBitmapFromAssets("FaceCases/" + i + "-" + j + ".jpg");
+                // convert to opencv mat
+                TrainingSets.get(i).add(j, new Mat());
+                Utils.bitmapToMat(load, TrainingSets.get(i).get(j));
+                Imgproc.cvtColor(TrainingSets.get(i).get(j), TrainingSets.get(i).get(j), Imgproc.COLOR_RGB2GRAY);
+                Imgproc.equalizeHist(TrainingSets.get(i).get(j), TrainingSets.get(i).get(j));
 
-                        TrainingSets.get(i).add(j, new Mat());
-                        Utils.bitmapToMat(load, TrainingSets.get(i).get(j));
-                        Imgproc.cvtColor(TrainingSets.get(i).get(j), TrainingSets.get(i).get(j), Imgproc.COLOR_RGB2GRAY);
-                        Imgproc.equalizeHist(TrainingSets.get(i).get(j), TrainingSets.get(i).get(j));
+                // detect faces
+                if (mJavaDetectorFace != null)
+                    mJavaDetectorFace.detectMultiScale(TrainingSets.get(i).get(j), faces, 1.1, 2, 2, new Size(mAbsoluteFaceSize, mAbsoluteFaceSize), new Size());
 
-                        if (mJavaDetectorFace != null)
-                            mJavaDetectorFace.detectMultiScale(TrainingSets.get(i).get(j), faces, 1.1, 2, 2, new Size(mAbsoluteFaceSize, mAbsoluteFaceSize), new Size());
-
-                        Rect biggestFace = new Rect(new Point(0, 0), new Size(1, 1));
-                        Rect[] facesArray = faces.toArray();
-
-                        if (facesArray.length > 0) {
-                            for (int k = 0; k < facesArray.length; k++) {
-                                Rect r = facesArray[k];
-                                if (r.size().area() > biggestFace.size().area())
-                                    biggestFace = r;
-                            }
-                            TrainingSets.get(i).get(j).submat(biggestFace).copyTo(TrainingSets.get(i).get(j));
-
-                            Imgproc.resize(TrainingSets.get(i).get(j), TrainingSets.get(i).get(j), stds);
-                        }
-                        else
-                        {
-                            TrainingSets.get(i).get(j).submat(0, 80, 0, 80).copyTo(TrainingSets.get(i).get(j));
-                        }
-
-                        bmp = null;
-                        Mat m = TrainingSets.get(i).get(j);
-                        // pretty sure this is intentional (rows and cols swapped) but wtf is this code even doing
-                        Mat tmp = new Mat (m.cols(), m.rows(), CvType.CV_8UC1, new Scalar(4));
-                        try {
-                            Imgproc.cvtColor(m, tmp, Imgproc.COLOR_GRAY2RGBA);
-                            bmp = Bitmap.createBitmap(tmp.cols(), tmp.rows(), Bitmap.Config.ARGB_8888);
-                            Utils.matToBitmap(tmp, bmp);
-                        }
-                        catch (CvException e){Log.d("Exception", e.getMessage());}
+                // find biggest face
+                Rect biggestFace = new Rect(new Point(0, 0), new Size(1, 1));
+                Rect[] facesArray = faces.toArray();
+                if (facesArray.length > 0) {
+                    for (int k = 0; k < facesArray.length; k++) {
+                        Rect r = facesArray[k];
+                        if (r.size().area() > biggestFace.size().area())
+                            biggestFace = r;
                     }
-                    UserColors.add(IDcount, new Scalar(0, 0, 0));
-                    IDcount++;
+
+                    // replace the image containing the face with its subimage containing only the face
+                    TrainingSets.get(i).get(j).submat(biggestFace).copyTo(TrainingSets.get(i).get(j));
+
+                    Imgproc.resize(TrainingSets.get(i).get(j), TrainingSets.get(i).get(j), stds);
                 }
+                else
+                {
+                    TrainingSets.get(i).get(j).submat(0, 80, 0, 80).copyTo(TrainingSets.get(i).get(j));
+                }
+
+                bmp = null;
+                Mat m = TrainingSets.get(i).get(j);
+                // pretty sure this is intentional (rows and cols swapped)
+                Mat tmp = new Mat (m.cols(), m.rows(), CvType.CV_8UC1, new Scalar(4));
+                try {
+                    Imgproc.cvtColor(m, tmp, Imgproc.COLOR_GRAY2RGBA);
+                    bmp = Bitmap.createBitmap(tmp.cols(), tmp.rows(), Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(tmp, bmp);
+                }
+                catch (CvException e){Log.d("Exception", e.getMessage());}
             }
-
-
-
-            });
-    }
-
-    public Bitmap getBitmapFromAssets(String fileName) {
-        AssetManager assetManager = getAssets();
-        Bitmap bitmap = null;
-        try {
-            InputStream istr = assetManager.open(fileName);
-            bitmap = BitmapFactory.decodeStream(istr);
+            UserColors.add(IDcount, new Scalar(0, 0, 0));
+            IDcount++;
         }
-        catch(Exception e){}
-
-        return bitmap;
     }
 
     private boolean onSwipe(Direction direction) {

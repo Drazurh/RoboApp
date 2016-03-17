@@ -1,6 +1,9 @@
 package com.robodoot.roboapp;
 
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import org.bytedeco.javacpp.opencv_core;
@@ -11,6 +14,8 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+
+import java.io.InputStream;
 
 /**
  * Created by alex on 3/14/16.
@@ -50,5 +55,17 @@ public class ImageUtil {
         if (container == null) return null;
         source.copyPixelsToBuffer(container.getByteBuffer());
         return container;
+    }
+
+    public static Bitmap GetBitmapFromContextAssets(Context context, String fileName) {
+        AssetManager assetManager = context.getAssets();
+        Bitmap bitmap = null;
+        try {
+            InputStream istr = assetManager.open(fileName);
+            bitmap = BitmapFactory.decodeStream(istr);
+        }
+        catch(Exception e){}
+
+        return bitmap;
     }
 }
