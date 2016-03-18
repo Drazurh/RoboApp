@@ -101,8 +101,13 @@
     <orderEntry type="library" exported="" name="appcompat-v7-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="flycapture" level="project" />
     <orderEntry type="library" exported="" name="usb-serial-for-android-v010" level="project" />
+<<<<<<< HEAD
     <orderEntry type="library" exported="" name="libfreenect" level="project" />
     <orderEntry type="library" exported="" name="flandmark-android-arm" level="project" />
+=======
+    <orderEntry type="library" exported="" name="flandmark-android-arm" level="project" />
+    <orderEntry type="library" exported="" name="libfreenect" level="project" />
+>>>>>>> d410ae5e0824f5a436d5a074e801701f4bc4d7aa
     <orderEntry type="library" exported="" name="opencv-android-arm" level="project" />
     <orderEntry type="library" exported="" name="flandmark" level="project" />
     <orderEntry type="module" module-name="openCVLibrary300" exported="" />
