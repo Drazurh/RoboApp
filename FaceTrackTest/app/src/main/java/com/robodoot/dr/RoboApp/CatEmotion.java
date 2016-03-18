@@ -306,6 +306,7 @@ public class CatEmotion {
 
     }
 
+
     public int lookedAt(int ID, boolean smiling, boolean frowning){
 
         Opinion catsOpinion = getOpinionFromList(ID,opinions);
@@ -393,12 +394,15 @@ public class CatEmotion {
 
     }
 
-
+    public void frownedAt() {
+        scale-=50;
+        reCalcFace();
+    }
 
     public void smiledAt()
     {
 
-        scale+=5;
+        scale+=50;
         reCalcFace();
     }
 

@@ -1,6 +1,10 @@
 package com.robodoot.dr.RoboApp;
 
-
+import java.util.ArrayList;
+import java.util.Locale;
+import android.content.ActivityNotFoundException;
+import android.speech.RecognizerIntent;
+import android.widget.ImageButton;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.robodoot.dr.facetracktest.R;
 import com.robodoot.roboapp.Direction;
@@ -63,6 +68,12 @@ import java.util.Vector;
 public class FdActivity extends Activity implements GestureDetector.OnGestureListener, CvCameraViewListener2 {
 
     private boolean cameraIsChecked = false;
+
+    private ImageButton btnSpeak;
+    private final int REQ_CODE_SPEECH_INPUT=100;
+    private ArrayList<String> result;
+    private static final String good = "good";
+    private static final String bad = "bad";
 
     private GestureDetector gDetector;
     public enum CHAR {U, D, L, R}
@@ -252,6 +263,14 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        btnSpeak = (ImageButton) findViewById(R.id.btnSpeak);
+        btnSpeak.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                promptSpeechInput();
+            }
+        });
+
         arrows = new ImageView[4];
         arrows[0]=(ImageView)findViewById(R.id.arrow_up);
         arrows[1]=(ImageView)findViewById(R.id.arrow_right);
@@ -293,6 +312,44 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 //
 //
 //        });
+    }
+
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.speech_prompt));
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(), getString(R.string.speech_not_supported), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if  (resultCode==RESULT_OK && null!=data) {
+                    //Insert ArrayList stuff
+                    result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    //Make a call to analyze the words and update cat's mood.
+                    if (result.contains(good)) {
+                        //Make the cat happy
+                        kitty.smiledAt();
+                    }
+                    if (result.contains(bad)) {
+                        //Make the cat mad.
+                        kitty.frownedAt();
+                    }
+                    //Clear the arrayList for the next time a button is pressed.
+                    result.clear();
+                }
+                break;
+            }
+        }
     }
 
     @Override
