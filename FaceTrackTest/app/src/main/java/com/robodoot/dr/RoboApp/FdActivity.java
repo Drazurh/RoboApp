@@ -79,6 +79,7 @@ import static org.bytedeco.javacpp.helper.opencv_imgcodecs.cvLoadImageBGRA;
 import static org.bytedeco.javacpp.opencv_imgcodecs.cvLoadImage;
 
 public class FdActivity extends Activity implements GestureDetector.OnGestureListener, CvCameraViewListener2 {
+    Logger logger;
 
     private boolean cameraIsChecked = false;
 
@@ -498,7 +499,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     }
 
     private void trackFavFace(Rect faceRect) {
-
+        logger.addRecordToLog("Favorite Fast: "+faceRect.x+","+faceRect.x+faceRect.width+","+faceRect.y+","+faceRect.height );
 
         int sumX = faceRect.x + faceRect.width / 2;
         int sumY = faceRect.y + faceRect.height / 2;
