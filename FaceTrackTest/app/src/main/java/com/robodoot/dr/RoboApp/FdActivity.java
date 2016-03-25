@@ -754,13 +754,13 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 String[] tokens = files.split("\\.(?=[^\\.]+$)");
                 String name = tokens[0];
 
-                iplimage[j] = cvLoadImage(Environment.getExternalStorageDirectory().getPath() + "/Video_images/" + name + ".jpg");
+                iplimage[j] = cvLoadImage(directory + "/"+ name + ".jpg");
 
             }
 
         }
 
-        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(Environment.getExternalStorageDirectory().getPath() + "/Video_images/output" + System.currentTimeMillis() + ".mp4", 200, 150);
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(directory +"/output" + System.currentTimeMillis() + ".mp4", 200, 150);
 
         try {
             recorder.setVideoCodec(13); // CODEC_ID_MPEG4 //CODEC_ID_MPEG1VIDEO
