@@ -12,10 +12,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_fd">RoboCat</string>
     <string name="title_activity_color_tracking">ColorTrackingActivity</string>
-<<<<<<< HEAD
+
     <string name="speech_prompt">Say Something</string>
     <string name="speech_not_supported">Speech is not supported</string>
-=======
+
     <string name="title_activity_readme">Readme</string>
->>>>>>> d410ae5e0824f5a436d5a074e801701f4bc4d7aa
+
 </resources>
