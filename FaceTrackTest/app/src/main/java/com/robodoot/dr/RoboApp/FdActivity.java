@@ -1,8 +1,11 @@
 package com.robodoot.dr.RoboApp;
 
+import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 import android.content.ActivityNotFoundException;
+import android.os.Environment;
 import android.speech.RecognizerIntent;
 import android.widget.ImageButton;
 import android.app.Activity;
@@ -37,6 +40,11 @@ import org.bytedeco.javacpp.opencv_face;
 import org.bytedeco.javacpp.opencv_face.*;
 
 import org.bytedeco.javacpp.opencv_imgproc;
+import org.bytedeco.javacpp.opencv_videoio;
+import org.bytedeco.javacv.FFmpegFrameRecorder;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameConverter;
+import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
@@ -64,8 +72,14 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static org.bytedeco.javacpp.helper.opencv_imgcodecs.cvLoadImageBGRA;
+import static org.bytedeco.javacpp.opencv_imgcodecs.cvLoadImage;
 
 public class FdActivity extends Activity implements GestureDetector.OnGestureListener, CvCameraViewListener2 {
+    Logger logger;
 
     private boolean cameraIsChecked = false;
 
@@ -234,6 +248,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         }
     };
 
+    private String timestamp;
+    private String imageCaptureDirectory;
+    private int frameNumber;
+
     public FdActivity() {
         mDetectorName = new String[2];
         mDetectorName[JAVA_DETECTOR] = "Java";
@@ -294,6 +312,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         mOpenCvCameraView.setAlpha(0f);
         mOpenCvCameraView.bringToFront();
 
+
 //        ServoText = (EditText)findViewById(R.id.servoField);
 //        SpeedText = (EditText)findViewById(R.id.speedField);
 //        final Button button = (Button)findViewById(R.id.goButton);
@@ -335,9 +354,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 if  (resultCode==RESULT_OK && null!=data) {
                     //Insert ArrayList stuff
                     result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    for (int i=0; i< result.size(); i++) {
-                        Log.d("WORDS", result.get(i));
-                    }
                     //Make a call to analyze the words and update cat's mood.
                     if (result.contains(good)) {
                         //Make the cat happy
@@ -385,11 +401,15 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         super.onPause();
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
+        record(imageCaptureDirectory);
+        timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+        imageCaptureDirectory = Environment.getExternalStorageDirectory().getPath()+"/RoboApp/Video_images/"+timestamp;
+        frameNumber = 0;
     }
 
     @Override
     public void onResume() {
-        pololu.onResume(getIntent(),this);
+        pololu.onResume(getIntent(), this);
 
         super.onResume();
         pololu.home();
@@ -397,6 +417,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
         entry.clear();
         showVideoFeed();
+
+        timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+        imageCaptureDirectory = Environment.getExternalStorageDirectory().getPath()+"/RoboApp/Video_images/"+timestamp;
+        frameNumber = 0;
 
         /*// GO TO MAIN ACTIVITY
         Intent intent = new Intent(this, MainActivity.class);
@@ -475,7 +499,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     }
 
     private void trackFavFace(Rect faceRect) {
-
+        logger.addRecordToLog("Favorite Fast: "+faceRect.x+","+faceRect.x+faceRect.width+","+faceRect.y+","+faceRect.height );
 
         int sumX = faceRect.x + faceRect.width / 2;
         int sumY = faceRect.y + faceRect.height / 2;
@@ -701,8 +725,77 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             System.gc();
             return null;
         }
-
+        frameNumber++;
+        saveMat(imageCaptureDirectory +"/"+ frameNumber, mRgba);
         return mRgba;
+    }
+
+    private void record(String directory) {
+
+        Log.d("Record", "creating video from images in directory: " + directory);
+        String path = directory; // You can provide SD Card path here.
+
+        File folder = new File(path);
+
+        File[] listOfFiles = folder.listFiles();
+        opencv_core.IplImage[] iplimage = null;
+        if (listOfFiles.length > 0) {
+
+            iplimage = new opencv_core.IplImage[listOfFiles.length];
+
+            for (int j = 0; j < listOfFiles.length; j++) {
+
+                String files = "";
+
+                if (listOfFiles[j].isFile()) {
+                    files = listOfFiles[j].getName();
+                    System.out.println(" j " + j + listOfFiles[j]);
+                }
+
+                String[] tokens = files.split("\\.(?=[^\\.]+$)");
+                String name = tokens[0];
+
+                iplimage[j] = cvLoadImage(directory + "/"+ name + ".jpg");
+
+            }
+
+        }
+
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(directory +"/output" + System.currentTimeMillis() + ".mp4", 200, 150);
+
+        try {
+            recorder.setVideoCodec(13); // CODEC_ID_MPEG4 //CODEC_ID_MPEG1VIDEO
+            // //http://stackoverflow.com/questions/14125758/javacv-ffmpegframerecorder-properties-explanation-needed
+
+            recorder.setFrameRate(30); // This is the frame rate for video. If you really want to have good video quality you need to provide large set of images.
+            recorder.setPixelFormat(0); // PIX_FMT_YUV420P
+
+            recorder.start();
+            OpenCVFrameConverter frameConverter = new OpenCVFrameConverter.ToIplImage();
+            for (int i = 0; i < iplimage.length; i++) {
+                recorder.record(frameConverter.convert(iplimage[i]));
+            }
+            recorder.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private final void saveMat(String path, Mat mat) {
+        File file = new File(path).getAbsoluteFile();
+        file.getParentFile().mkdirs();
+        try {
+            int cols = mat.cols();
+            float[] data = new float[(int) mat.total() * mat.channels()];
+            mat.get(0, 0, data);
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path))) {
+                oos.writeObject(cols);
+                oos.writeObject(data);
+                oos.close();
+            }
+        } catch (IOException | ClassCastException ex) {
+            System.err.println("ERROR: Could not save mat to file: " + path);
+        }
     }
 
     private void setTextFieldText(String message, TextView field)
