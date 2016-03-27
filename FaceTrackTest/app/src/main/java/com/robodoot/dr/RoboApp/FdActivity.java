@@ -77,7 +77,8 @@ import static org.bytedeco.javacpp.helper.opencv_imgcodecs.cvLoadImageBGRA;
 import static org.bytedeco.javacpp.opencv_imgcodecs.cvLoadImage;
 
 public class FdActivity extends Activity implements GestureDetector.OnGestureListener, CvCameraViewListener2 {
-    Logger logger;
+    private Logger mFaceRectLogger;
+    private Logger mSpeechTextLogger;
 
     private boolean cameraIsChecked = false;
 
@@ -259,6 +260,9 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         pololu = new PololuHandler();
 
         Log.i(TAG, "Instantiated new " + this.getClass());
+
+        mFaceRectLogger = new Logger("Robocat", "face_rect_log");
+        mSpeechTextLogger = new Logger("Robocat", "speech_text_log");
     }
 
     /** Called when the activity is first created. */
@@ -352,8 +356,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 if  (resultCode==RESULT_OK && null!=data) {
                     //Insert ArrayList stuff
                     result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    mSpeechTextLogger.addRecordToLog("time: " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()));
                     for (int i=0; i< result.size(); i++) {
-                        Log.d("WORDS", result.get(i));
+                        //Log.d("WORDS", result.get(i));
+                        mSpeechTextLogger.addRecordToLog(result.get(i));
                     }
                     //Make a call to analyze the words and update cat's mood.
                     if (result.contains(good)) {
@@ -402,9 +408,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         super.onPause();
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
-        record(imageCaptureDirectory);
-        timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-        imageCaptureDirectory = Environment.getExternalStorageDirectory().getPath()+"/RoboApp/Video_images/"+timestamp;
+        //record(imageCaptureDirectory);
         frameNumber = 0;
     }
 
@@ -500,7 +504,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     }
 
     private void trackFavFace(Rect faceRect) {
-        logger.addRecordToLog("Favorite Face: " + faceRect.x + ", " + faceRect.y + ", " + faceRect.width + ", " + faceRect.height);
+        mFaceRectLogger.addRecordToLog("Favorite Face: " + faceRect.x + ", " + faceRect.y + ", " + faceRect.width + ", " + faceRect.height);
 
         int sumX = faceRect.x + faceRect.width / 2;
         int sumY = faceRect.y + faceRect.height / 2;
