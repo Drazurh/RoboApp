@@ -72,8 +72,6 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static org.bytedeco.javacpp.helper.opencv_imgcodecs.cvLoadImageBGRA;
 import static org.bytedeco.javacpp.opencv_imgcodecs.cvLoadImage;
@@ -354,6 +352,9 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 if  (resultCode==RESULT_OK && null!=data) {
                     //Insert ArrayList stuff
                     result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    for (int i=0; i< result.size(); i++) {
+                        Log.d("WORDS", result.get(i));
+                    }
                     //Make a call to analyze the words and update cat's mood.
                     if (result.contains(good)) {
                         //Make the cat happy
@@ -499,7 +500,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     }
 
     private void trackFavFace(Rect faceRect) {
-        logger.addRecordToLog("Favorite Fast: "+faceRect.x+","+faceRect.x+faceRect.width+","+faceRect.y+","+faceRect.height );
+        logger.addRecordToLog("Favorite Face: " + faceRect.x + ", " + faceRect.y + ", " + faceRect.width + ", " + faceRect.height);
 
         int sumX = faceRect.x + faceRect.width / 2;
         int sumY = faceRect.y + faceRect.height / 2;
@@ -525,7 +526,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         else if (pX > 0.58) pololu.cameraYawSpeed(0.5f - (float)pX);
         else if (pY > 0.58) pololu.cameraPitchSpeed(-0.5f + (float) pY);
 
-        setTextFieldText("pX = "+pX+"   "+(0.5f - (float)pX), debug1);
+        setTextFieldText("pX = " + pX + "   " + (0.5f - (float) pX), debug1);
         setTextFieldText("pY = " + pY + "   " + (0.5f - (float) pY), debug2);
         //else pololu.stopNeckMotors();
     }
@@ -598,7 +599,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             Core.flip(mRgba.t(), mRgba, 0);
             Core.flip(mGray.t(), mGray, 0);
 
-
             if (mAbsoluteFaceSize == 0) {
                 int height = mGray.rows();
                 if (Math.round(height * mRelativeFaceSize) > 0) {
@@ -606,6 +606,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 }
             }
 
+            // detect faces
             if (mJavaDetectorFace != null)
                 mJavaDetectorFace.detectMultiScale(mGray, faces, 1.1, 2, 2, new Size(mAbsoluteFaceSize, mAbsoluteFaceSize), new Size());
 
@@ -613,54 +614,60 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
             Rect[] facesArray = faces.toArray();
 
-//            if(faces.toArray().length==0)
-//            {
-//                trackFavFace(new Rect(0,0,mGray.width(),mGray.height()));
-//            }
-
+            // for each face
             for (int i = 0; i < facesArray.length; i++) {
+                // calculate center position of face
                 xCenter = (facesArray[i].x + facesArray[i].width + facesArray[i].x) / 2;
                 yCenter = (facesArray[i].y + facesArray[i].y + facesArray[i].height) / 2;
                 Point center = new Point(xCenter, yCenter);
 
                 Rect r = facesArray[i];
 
+                // make mat from submat containing only the face
                 mGray.submat(r).copyTo(tempMat1);
+                // equalize the grayscale values (stretch them out)
                 Imgproc.equalizeHist(tempMat1, tempMat1);
 
+                // attempt to recognize the face
                 int recoID = checkForRecognition(tempMat1);
 
+                // convert from grayscale to rgba
                 Imgproc.cvtColor(tempMat1, tempMat1, Imgproc.COLOR_GRAY2RGBA);
 
                 if (recoID < 21) {
+                    // copy the submat we were working with back into the area it occupied in the original mat (the current frame)
                     tempMat1.copyTo(mRgba.submat(r));
+                    // draw a red rectangle around the face
                     Imgproc.rectangle(mRgba, r.br(), r.tl(), new Scalar(255, 0, 0), 8);
+                    // keep track of biggest face
                     if (r.size().area() > biggestFace.size().area()) biggestFace = r;
                 } else {
+                    // calculate mouth rect
                     Point mouthPt1 = new Point(r.x + r.width / 10, r.y + r.height / 2 + r.height / 10);
                     Point mouthPt2 = new Point(r.x + r.width - r.width / 10, r.y + r.height - r.height / 10);
                     Rect mouthRect = new Rect(mouthPt1, mouthPt2);
-                    //find the number of smiles
 
                     //Imgproc.rectangle(mRgba, mouthRect.br(), mouthRect.tl(), new Scalar(0, 255, 0), 4);
 
+                    // detect smiles
                     if (mJavaDetectorSmile != null)
                         mJavaDetectorSmile.detectMultiScale(mGray.submat(mouthRect), smiles, 1.1, 6, 0, new Size(mouthRect.width * 0.6, mouthRect.height * 0.6), new Size());
                     Rect[] smileArray = smiles.toArray();
                     boolean smiling = false;
+                    // if detected any smiles, set smiling
                     if (smileArray.length > 0) smiling = true;
 
+                    // flip the mouth rect
                     Core.flip(mGray.submat(mouthRect), mGray.submat(mouthRect), -1);
+                    // detect flipped smiles (frowns)
                     if (mJavaDetectorSmile != null)
                         mJavaDetectorSmile.detectMultiScale(mGray.submat(mouthRect), smiles, 1.05, 4, 0, new Size(mouthRect.width * 0.4, mouthRect.height * 0.4), new Size());
                     Rect[] frownArray = smiles.toArray();
-                    boolean frowning = false;
-//                    if(frownArray.length>0){
-//
-//                        if(smiling == false)frowning=true;
-//                        else smiling = false;
-//                    }
 
+                    // if detected any frowns, set frowning if not smiling
+                    boolean frowning = frownArray.length > 0 && !smiling;
+
+                    // add person
                     peopleThisCameraFrame.add(new Person(recoID, r, smiling, frowning));
                     //setTextFieldText(Integer.toString(recoID),debug1);
                 }
@@ -725,8 +732,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             System.gc();
             return null;
         }
-        frameNumber++;
-        saveMat(imageCaptureDirectory +"/"+ frameNumber, mRgba);
+
         return mRgba;
     }
 
