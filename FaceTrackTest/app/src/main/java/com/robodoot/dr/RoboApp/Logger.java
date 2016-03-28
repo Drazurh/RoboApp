@@ -19,15 +19,14 @@ import android.util.Log;
  */
 
 public class Logger {
-    private String mProjectName;
     private String mLogName;
 
     static boolean isExternalStorageAvailable = false;
     static boolean isExternalStorageWriteable = false;
     static String state = Environment.getExternalStorageState();
+    static String directory = Environment.getExternalStorageDirectory().getPath() + "/RoboApp";
 
-    public Logger(String projectName, String logName) {
-        mProjectName = projectName;
+    public Logger(String logName) {
         mLogName = logName;
     }
 
@@ -46,14 +45,14 @@ public class Logger {
             isExternalStorageAvailable = isExternalStorageWriteable = false;
         }
 
-        File dir = new File("/sdcard/Files/" + mProjectName);
+        File dir = new File(directory);
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             if(!dir.exists()) {
                 Log.d("Dir created ", "Dir created ");
                 dir.mkdirs();
             }
 
-            File logFile = new File("/sdcard/Files/" + mProjectName + "/" + mLogName + ".txt");
+            File logFile = new File(directory + "/" + mLogName + ".txt");
 
             if (!logFile.exists())  {
                 try  {

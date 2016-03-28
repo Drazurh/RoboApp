@@ -82,7 +82,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     private Logger mSpeechTextLogger;
 
     private ArrayList<opencv_core.Mat> framesForVideo = new ArrayList<opencv_core.Mat>();
-    private static String saveFramePath = "/sdcard/Files/video/";
     private int frameNumber;
 
     private boolean cameraIsChecked = false;
@@ -265,8 +264,8 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
         Log.i(TAG, "Instantiated new " + this.getClass());
 
-        mFaceRectLogger = new Logger("Robocat", "face_rect_log");
-        mSpeechTextLogger = new Logger("Robocat", "speech_text_log");
+        mFaceRectLogger = new Logger("face_rect_log");
+        mSpeechTextLogger = new Logger("speech_text_log");
     }
 
     /** Called when the activity is first created. */
@@ -360,7 +359,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 if  (resultCode==RESULT_OK && null!=data) {
                     //Insert ArrayList stuff
                     result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    mSpeechTextLogger.addRecordToLog("time: " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()));
+                    mSpeechTextLogger.addRecordToLog(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()));
                     for (int i=0; i< result.size(); i++) {
                         //Log.d("WORDS", result.get(i));
                         mSpeechTextLogger.addRecordToLog(result.get(i));
@@ -428,8 +427,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         showVideoFeed();
 
         timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-        imageCaptureDirectory = Environment.getExternalStorageDirectory().getPath() + "/RoboApp/Video_images/" + timestamp;
+        imageCaptureDirectory = Environment.getExternalStorageDirectory().getPath() + "/RoboApp/" + timestamp;
         frameNumber = 0;
+
+        mFaceRectLogger.addRecordToLog("\n" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()));
     }
 
     public void onDestroy() {
@@ -503,7 +504,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     }
 
     private void trackFavFace(Rect faceRect) {
-        mFaceRectLogger.addRecordToLog("Favorite Face: " + faceRect.x + ", " + faceRect.y + ", " + faceRect.width + ", " + faceRect.height);
+        mFaceRectLogger.addRecordToLog(faceRect.x + ", " + faceRect.y + ", " + faceRect.width + ", " + faceRect.height);
 
         int sumX = faceRect.x + faceRect.width / 2;
         int sumY = faceRect.y + faceRect.height / 2;
@@ -775,7 +776,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         opencv_core.Mat[] frames = new opencv_core.Mat[framesForVideo.size()];
         framesForVideo.toArray(frames);
 
-        String path = directory +"/output" + System.currentTimeMillis() + ".mp4";
+        String path = directory + "/output" + System.currentTimeMillis() + ".mp4";
         File file = new File(path).getAbsoluteFile();
         file.getParentFile().mkdirs();
 
