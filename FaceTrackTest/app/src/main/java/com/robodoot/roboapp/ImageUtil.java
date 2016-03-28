@@ -8,6 +8,7 @@ import android.util.Log;
 
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_imgproc;
+import org.opencv.android.JavaCameraView;
 import org.opencv.android.Utils;
 import org.opencv.core.CvException;
 import org.opencv.core.CvType;
@@ -50,11 +51,29 @@ public class ImageUtil {
         return temp;
     }
 
+    public static opencv_core.Mat OpenCVMatToJavaCVMat(Mat m) {
+        int length = (int) (m.total() * m.elemSize());
+        byte buffer[] = new byte[length];
+        m.get(0, 0, buffer);
+
+        // construct a javacv mat from the byte array
+        opencv_core.Mat javaCVMat = new opencv_core.Mat(m.height(), m.width(), m.type());
+        javaCVMat.data().put(buffer);
+        return javaCVMat;
+    }
+
     public static opencv_core.IplImage BitmapToIplImage(Bitmap source, int cols, int rows) {
         opencv_core.IplImage container = opencv_core.IplImage.create(cols, rows, opencv_core.IPL_DEPTH_8U, 4);
         if (container == null) return null;
         source.copyPixelsToBuffer(container.getByteBuffer());
         return container;
+    }
+
+    public static opencv_core.IplImage CopyMatToIplImage(Mat m) {
+        Mat copy = new Mat(m.rows(), m.cols(), m.type());
+        m.copyTo(copy);
+        opencv_core.Mat converted_copy = convert(copy);
+        return new opencv_core.IplImage(converted_copy);
     }
 
     public static Bitmap GetBitmapFromContextAssets(Context context, String fileName) {
