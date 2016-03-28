@@ -772,7 +772,8 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         }*/
 
         //opencv_core.IplImage[] iplimage = (opencv_core.IplImage[])framesForVideo.toArray();
-        opencv_core.Mat[] iplimage = framesForVideo.toArray(new opencv_core.Mat[0]);
+        opencv_core.Mat[] frames = new opencv_core.Mat[framesForVideo.size()];
+        framesForVideo.toArray(frames);
 
         String path = directory +"/output" + System.currentTimeMillis() + ".mp4";
         File file = new File(path).getAbsoluteFile();
@@ -784,7 +785,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             recorder.setVideoCodec(13); // CODEC_ID_MPEG4 //CODEC_ID_MPEG1VIDEO
             // //http://stackoverflow.com/questions/14125758/javacv-ffmpegframerecorder-properties-explanation-needed
 
-            recorder.setFrameRate(30); // This is the frame rate for video. If you really want to have good video quality you need to provide large set of images.
+            recorder.setFrameRate(10); // This is the frame rate for video. If you really want to have good video quality you need to provide large set of images.
             recorder.setPixelFormat(0); // PIX_FMT_YUV420P
 
             recorder.start();
@@ -793,14 +794,23 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 recorder.record(frameConverter.convert(iplimage[i]));
             }*/
             OpenCVFrameConverter frameConverter = new OpenCVFrameConverter.ToMat();
-            for (int i = 0; i < iplimage.length; i++) {
-                Frame f = frameConverter.convert(iplimage[i]);
+            for (int i = 0; i < frames.length; i++) {
+                Frame f = frameConverter.convert(frames[i]);
                 recorder.record(f);
             }
             recorder.stop();
         } catch (Exception e) {
             e.printStackTrace();
+            for (opencv_core.Mat f : framesForVideo) {
+                f.release();
+            }
+            framesForVideo.clear();
         }
+
+        for (opencv_core.Mat f : framesForVideo) {
+            f.release();
+        }
+        framesForVideo.clear();
     }
 
     private final void saveMat(String path, Mat mat) {
