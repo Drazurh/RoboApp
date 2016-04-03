@@ -103,6 +103,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     private CatEmotion kitty;
     public enum Directions {UP, DOWN, LEFT, RIGHT, CENTER}
     private Mat mRgba;
+    private Mat mRgbaForColorTracking;
     private Mat mGray;
     private Mat tempMat1;
     private MatOfRect faces;
@@ -443,6 +444,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         loading.setAlpha(1.0f);
         mGray = new Mat();
         mRgba = new Mat();
+        mRgbaForColorTracking = new Mat();
         tempMat1 = new Mat();
         faces = new MatOfRect();
         smiles = new MatOfRect();
@@ -471,13 +473,13 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     public void onCameraViewStopped() {
         mGray.release();
         mRgba.release();
+        mRgbaForColorTracking.release();
         tempMat1.release();
         faces.release();
         smiles.release();
         for(int i = 0;i<9;i++)EigenMats[i].release();
         for(int i = 0;i<12;i++)FaceMatBuffer[i].release();
     }
-
 
     public int checkForRecognition(Mat face)
     {
@@ -741,7 +743,87 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         //framesForVideo.add(ImageUtil.CopyMatToIplImage(mRgba));
         framesForVideo.add(ImageUtil.OpenCVMatToJavaCVMat(mRgba));
 
+        trackColor(inputFrame);
+
         return mRgba;
+    }
+
+    private Point trackColor(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+        Mat imgThresholded = null;
+        Point objectCoords = null;
+        try {
+            inputFrame.rgba().copyTo(mRgbaForColorTracking);
+
+            // resize to transpose dimensions because it's stupid. not necessary with opencv 3.1.0
+            Imgproc.resize(mRgbaForColorTracking, mRgbaForColorTracking, mRgbaForColorTracking.t().size());
+
+            // need to set these somehow, either pre-configure or allow calibration
+            int iLowH = 0;
+            int iHighH = 255;
+            int iLowS = 0;
+            int iHighS = 255;
+            int iLowV = 0;
+            int iHighV = 255;
+
+            imgThresholded = new Mat();
+            Imgproc.cvtColor(mRgbaForColorTracking, imgThresholded, Imgproc.COLOR_RGB2HSV); //Convert the captured frame from BGR to HSV
+
+            Core.inRange(imgThresholded, new Scalar(iLowH, iLowS, iLowV), new Scalar(iHighH, iHighS, iHighV), imgThresholded); //Threshold the image
+
+            // morphological opening (removes small objects from the foreground)
+            Imgproc.erode(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
+            Imgproc.dilate(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
+
+            // morphological closing (removes small holes from the foreground)
+            Imgproc.dilate(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
+            Imgproc.erode(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
+
+            // Calculate the moments of the thresholded image
+            // the moments stuff is missing from opencv 3.0.0 so we have to use javacv for this.
+            // get the mat data from imgThresholded as a byte array
+            int length = (int) (imgThresholded.total() * imgThresholded.elemSize());
+            byte buffer[] = new byte[length];
+            imgThresholded.get(0, 0, buffer);
+
+            // construct a javacv mat from the byte array
+            opencv_core.Mat momentsMat = new opencv_core.Mat(imgThresholded.height(), imgThresholded.width(), imgThresholded.type());
+            momentsMat.data().put(buffer);
+
+            // compute moments
+            opencv_core.Moments oMoments = opencv_imgproc.moments(momentsMat);
+
+            double dM01 = oMoments.m01();
+            double dM10 = oMoments.m10();
+            double dArea = oMoments.m00();
+
+            momentsMat.release();
+
+            // if area <= 100000, considered to be noise
+            if (dArea > 100000) {
+                //calculate the position of the object
+                double posX = dM10 / dArea;
+                double posY = dM01 / dArea;
+
+                if (posX >= 0 && posY >= 0) {
+                    // compute relative position of the object
+                    objectCoords = new Point();
+                    objectCoords.x = posX - (mRgbaForColorTracking.width() / 2.0f);
+                    objectCoords.y = posY - (mRgbaForColorTracking.height() / 2.0f);
+
+                    Log.i(TAG, "I SEE A COLOR OBJECT");
+                }
+            }
+
+        } catch (Exception e) {
+            Log.i(TAG, "Exception " + e.getMessage());
+        }
+
+        if (imgThresholded != null) {
+            // free imgThresholded resources
+            imgThresholded.release();
+        }
+
+        return objectCoords;
     }
 
     private void record(String directory) {

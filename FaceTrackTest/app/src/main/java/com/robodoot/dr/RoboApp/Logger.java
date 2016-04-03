@@ -16,6 +16,7 @@ import android.util.Log;
  * @author Rakesh.Jha
  * Date - 07/10/2013
  * Definition - Logger file use to keep Log info to external SD with the simple method
+ * Modified by Alex Bagnall
  */
 
 public class Logger {

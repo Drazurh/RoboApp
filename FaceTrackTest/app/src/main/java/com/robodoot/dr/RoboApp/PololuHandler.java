@@ -25,14 +25,11 @@ public class PololuHandler implements Serializable {
         HEAD_YAW        (9, "Head Yaw",1600,0,0),
         HEAD_PITCH      (10, "Head Pitch",2200,0,0);
 
-
         public final int number;
         public final int homePos;
         public final int min;
         public final int max;
         public final String name;
-
-
 
         Motor(int num, String str, int h, int mi, int ma)
         {
@@ -43,12 +40,7 @@ public class PololuHandler implements Serializable {
             max = ma;
 
         }
-
     }
-
-
-
-
 
     public float speedConst = 90f;
 
@@ -60,28 +52,17 @@ public class PololuHandler implements Serializable {
         if(isConnected)
         {
             maestro.setTarget(ID, target);
-
         }
-
     }
-
-
 
     public PololuHandler()
     {
-
         maestro = new MaestroSSC();
-
-
-
-
-
     }
 
     public boolean isOpen()
     {
         return isConnected;
-
     }
 
     public void home()
@@ -90,15 +71,10 @@ public class PololuHandler implements Serializable {
         maestro.setTarget(10,1600);
         yaw = 1600;
         pitch = 2200;
-
-
-
-
     }
 
     public void setSpeedConst(float newConst)
     {
-
         speedConst=newConst;
     }
 
@@ -114,13 +90,10 @@ public class PololuHandler implements Serializable {
                 isConnected = true;
             } else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
                 maestro.setDevice(null, null);
-            } else {
-
-            }
+            }/* else {
+            }*/
         }
     }
-
-
 
     public void stopNeckMotors()
     {
@@ -133,7 +106,6 @@ public class PololuHandler implements Serializable {
         int addToYaw = (int)(speedPercent*speedConst);
         yaw+=addToYaw;
         maestro.setTarget(NECK_YAW_SERVO, yaw);
-
     }
 
     public void cameraPitchSpeed(float speedPercent)
@@ -142,8 +114,4 @@ public class PololuHandler implements Serializable {
         pitch+=addToPitch;
         maestro.setTarget(NECK_PITCH_SERVO, pitch);
     }
-
-
-
-
 }
