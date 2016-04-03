@@ -24,7 +24,7 @@ public class MainActivity extends FragmentActivity implements
         NavigationDrawerCallbacks,
         ServoControlFragment.OnFragmentInteractionListener,
         CompTestFragment.OnFragmentInteractionListener,
-        HomeFragment.OnFragmentInteractionListener{
+        ConsoleFragment.OnFragmentInteractionListener{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -46,6 +46,10 @@ public class MainActivity extends FragmentActivity implements
                 getFragmentManager().findFragmentById(R.id.fragment_drawer);
 
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, new HomeFragment());
+        transaction.commit();
     }
 
     @Override
@@ -63,22 +67,25 @@ public class MainActivity extends FragmentActivity implements
         Intent intent = null;
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         switch(position) {
-            case 0:
+            /*case 0:
                 fragment = new ServoControlFragment();
                 Toast.makeText(this, "Servo Control", Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 fragment = new CompTestFragment();
                 Toast.makeText(this, "Unit Testing", Toast.LENGTH_SHORT).show();
-                break;
-            case 2:
+                break;*/
+            /*case 0:
                 fragment = new HomeFragment();
-                Toast.makeText(this, "Console", Toast.LENGTH_SHORT).show();
+                break;*/
+            case 0:
+                fragment = new ConsoleFragment();
+                //Toast.makeText(this, "Console", Toast.LENGTH_SHORT).show();
                 break;
-            case 3:
+            case 1:
                 intent = new Intent("com.robodoot.dr.RoboApp.FdActivity");
                 break;
-            case 4:
+            case 2:
                 intent = new Intent("com.robodoot.dr.RoboApp.ColorTrackingActivity");
                 break;
             //case 5:

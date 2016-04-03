@@ -18,4 +18,6 @@
 
     <string name="title_activity_readme">Readme</string>
 
+    <string name="hello_blank_fragment">\n\n\n\n\n\n\n\nClick here to navigate to an activity.</string>
+
 </resources>
