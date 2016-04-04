@@ -21,7 +21,8 @@ import com.robodoot.dr.RoboApp.PololuHandler;
 import com.robodoot.dr.facetracktest.R;
 
 public class MainActivity extends FragmentActivity implements
-        NavigationDrawerCallbacks,
+        NavigationDrawerCallbacks, HomeFragment.OnFragmentInteractionListener,
+        ReadmeFragment.OnFragmentInteractionListener,
         ServoControlFragment.OnFragmentInteractionListener,
         CompTestFragment.OnFragmentInteractionListener,
         ConsoleFragment.OnFragmentInteractionListener{
@@ -90,6 +91,10 @@ public class MainActivity extends FragmentActivity implements
                 break;
             case 3:
                 fragment = new ReadmeFragment();
+                break;
+            case 4:
+                intent = new Intent("com.robodoot.dr.RoboApp.WalkingActivity");
+                break;
             //case 5:
               //  intent = new Intent("com.robodoot.dr.RoboApp.Readme");
               //  break;

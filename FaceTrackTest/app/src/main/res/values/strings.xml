@@ -19,5 +19,6 @@
     <string name="title_activity_readme">Readme</string>
 
     <string name="hello_blank_fragment">\n\n\n\n\n\n\n\nPress here to navigate to an activity.</string>
+    <string name="title_activity_walking">WalkingActivity</string>
 
 </resources>
