@@ -8,11 +8,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="ReadMe"
+        android:text="About"
         android:id="@+id/textView2"
         android:layout_gravity="center_horizontal" />
 
-    <TextView
+    <!--<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Allows for manual control of servos"
-        android:id="@+id/textView4" />
+        android:id="@+id/textView4" />-->
 
     <Space
         android:layout_width="match_parent"
@@ -60,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="The activity containing favial and audio detection"
+        android:text="Interact with the RoboCat via face detection and speech recognition"
         android:id="@+id/textView8" />
 
     <Space
@@ -79,7 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="The activity which contains the color tracking code"
+        android:text="Interactively determine HSV values for optimal color tracking"
         android:id="@+id/textView10" />
 
     <LinearLayout

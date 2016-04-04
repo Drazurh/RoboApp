@@ -30,7 +30,7 @@ public class ReadmeFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public HomeFragment() {
+    public ReadmeFragment() {
         // Required empty public constructor
     }
 
