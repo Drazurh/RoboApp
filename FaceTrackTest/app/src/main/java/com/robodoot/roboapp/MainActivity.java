@@ -88,6 +88,8 @@ public class MainActivity extends FragmentActivity implements
             case 2:
                 intent = new Intent("com.robodoot.dr.RoboApp.ColorTrackingActivity");
                 break;
+            case 3:
+                fragment = new ReadmeFragment();
             //case 5:
               //  intent = new Intent("com.robodoot.dr.RoboApp.Readme");
               //  break;
