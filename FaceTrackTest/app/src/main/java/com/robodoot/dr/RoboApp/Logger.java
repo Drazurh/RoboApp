@@ -21,6 +21,7 @@ import android.util.Log;
 
 public class Logger {
     private String mLogName;
+    private boolean append = true;
 
     static boolean isExternalStorageAvailable = false;
     static boolean isExternalStorageWriteable = false;
@@ -29,6 +30,10 @@ public class Logger {
 
     public Logger(String logName) {
         mLogName = logName;
+    }
+    public Logger(String logName, boolean app) {
+        mLogName = logName;
+        append = app;
     }
 
     public void addRecordToLog(String message) {
@@ -66,7 +71,7 @@ public class Logger {
             }
             try {
                 //BufferedWriter for performance, true to set append to file flag
-                BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+                BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, append));
 
                 buf.write(message);
                 //buf.append(message);

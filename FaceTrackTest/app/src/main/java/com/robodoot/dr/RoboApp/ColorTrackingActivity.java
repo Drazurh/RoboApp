@@ -1,16 +1,15 @@
 package com.robodoot.dr.RoboApp;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.Camera;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import com.robodoot.dr.facetracktest.R;
 import com.robodoot.roboapp.BatteryView;
@@ -51,6 +50,11 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
 
     VirtualCat mVirtualCat = new MockVirtualCat();
 
+    private Logger mRedLogger;
+    private Logger mGreenLogger;
+    private Logger mBlueLogger;
+
+
     /**
      * Called when the activity is first created.
      */
@@ -82,6 +86,10 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         mSeekBarHighV = (SeekBar) findViewById(R.id.seek_bar_high_v);
 
         mVirtualCat.AddBatteryListener(this);
+
+        mRedLogger = new Logger("red_color_values", false);
+        mGreenLogger = new Logger("green_color_values", false);
+        mBlueLogger = new Logger("blue_ color_values", false);
     }
 
     @Override
@@ -247,5 +255,39 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
     @Override
     public void UpdateBatteryLevel(float level) {
         mBatteryView.setCharge(level);
+    }
+
+    public void setColor(View view) {
+        final int button_id = view.getId();
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Saving color values")
+                .setMessage("Are you sure you want to save these color values?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String s = mSeekBarLowH.getProgress() + " " + mSeekBarHighH.getProgress()
+                                + " "+ mSeekBarLowS.getProgress() + " " + mSeekBarHighS.getProgress()
+                                + " " + mSeekBarLowV.getProgress() + " " + mSeekBarHighV.getProgress();
+                        switch (button_id) {
+                            case R.id.button_save_red:
+                                Log.i(TAG, "set red");
+                                mRedLogger.addRecordToLog(s);
+                                break;
+                            case R.id.button_save_green:
+                                Log.i(TAG, "set green");
+                                mGreenLogger.addRecordToLog(s);
+                                break;
+                            case R.id.button_save_blue:
+                                Log.i(TAG, "set blue");
+                                mBlueLogger.addRecordToLog(s);
+                                break;
+                        };
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 }
