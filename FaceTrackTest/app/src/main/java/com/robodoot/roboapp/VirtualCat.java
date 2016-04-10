@@ -1,35 +1,43 @@
 package com.robodoot.roboapp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by alex on 2/10/16.
  */
-public interface VirtualCat {
+public abstract class VirtualCat {
     // interface for anyone who wants battery level updates
-    interface CatBatteryListener {
+    public interface CatBatteryListener {
         void UpdateBatteryLevel(float level);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // INTERFACE METHODS
+    // BATTERY LEVEL STUFF
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void AddBatteryListener(CatBatteryListener listener);
+    // battery event listeners
+    protected List<CatBatteryListener> batteryListeners = new ArrayList<CatBatteryListener>();
 
-    public void UpdateObjectPosition(int relX, int relY);
+    public void AddBatteryListener(CatBatteryListener listener) {
+        batteryListeners.add(listener);
+    }
 
-    public void stepForward();
+    public abstract void UpdateObjectPosition(int relX, int relY);
 
-    public void stepBackward();
+    public abstract void stepForward();
 
-    public void stepLeft();
+    public abstract void stepBackward();
 
-    public void stepRight();
+    public abstract void stepLeft();
 
-    public void turnHeadLeft();
+    public abstract void stepRight();
 
-    public void turnHeadRight();
+    public abstract void turnHeadLeft();
 
-    public void turnHeadUp();
+    public abstract void turnHeadRight();
 
-    public void turnHeadDown();
+    public abstract void turnHeadUp();
+
+    public abstract void turnHeadDown();
 }
