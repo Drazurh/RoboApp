@@ -16,4 +16,20 @@ public interface VirtualCat {
     public void AddBatteryListener(CatBatteryListener listener);
 
     public void UpdateObjectPosition(int relX, int relY);
+
+    public void stepForward();
+
+    public void stepBackward();
+
+    public void stepLeft();
+
+    public void stepRight();
+
+    public void turnHeadLeft();
+
+    public void turnHeadRight();
+
+    public void turnHeadUp();
+
+    public void turnHeadDown();
 }

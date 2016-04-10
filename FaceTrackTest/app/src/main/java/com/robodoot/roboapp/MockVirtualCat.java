@@ -3,6 +3,8 @@ package com.robodoot.roboapp;
 import android.os.Handler;
 import android.util.Log;
 
+import com.robodoot.dr.RoboApp.PololuHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +13,10 @@ import java.util.List;
  */
 public class MockVirtualCat implements VirtualCat {
     private static final String TAG = "MockVirtualCat";
-
+    private static PololuHandler p;
     // DEFAULT CONSTRUCTOR
     public MockVirtualCat() {
+        p = new PololuHandler();
         batteryUpdateHandler.postDelayed(batteryUpdateRunnable, 100);
     }
 
@@ -55,6 +58,40 @@ public class MockVirtualCat implements VirtualCat {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: MORE STUFF
+    // Implementation of cat movements
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void stepForward() {
+        p.stepForward();
+    }
+    @Override
+    public void stepBackward() {
+        //p.setBackward();
+    }
+    @Override
+    public void stepLeft() {
+        //p.stepLeft();
+    }
+    @Override
+    public void stepRight() {
+        //p.stepRight();
+    }
+    @Override
+    public void turnHeadDown() {
+        p.cameraPitchSpeed(-0.3f);
+    }
+    @Override
+    public void turnHeadLeft() {
+        p.cameraYawSpeed(0.3f);
+    }
+    @Override
+    public void turnHeadRight() {
+        p.cameraYawSpeed(-0.3f);
+    }
+    @Override
+    public void turnHeadUp() {
+        p.cameraPitchSpeed(-0.3f);
+    }
+
+
 }
