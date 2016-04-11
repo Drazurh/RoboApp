@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.util.Log;
 
 import org.pololu.maestro.*;
 
@@ -18,12 +19,14 @@ public class PololuHandler implements Serializable {
     public MaestroSSC maestro;
 
     public static final int NECK_YAW_SERVO = 10;
+    public static final int NECK_YAW_SERVO_HOME = 1600;
     public static final int NECK_PITCH_SERVO = 9;
+    public static final int NECK_PITCH_SERVO_HOME = 2200;
     private boolean isConnected=false;
 
     public enum Motor{
-        HEAD_YAW        (9, "Head Yaw",1600,0,0),
-        HEAD_PITCH      (10, "Head Pitch",2200,0,0);
+        HEAD_YAW        (NECK_PITCH_SERVO, "Head Yaw",NECK_YAW_SERVO_HOME,0,0),
+        HEAD_PITCH      (NECK_YAW_SERVO, "Head Pitch",NECK_PITCH_SERVO_HOME,0,0);
 
         public final int number;
         public final int homePos;
@@ -44,8 +47,8 @@ public class PololuHandler implements Serializable {
 
     public float speedConst = 90f;
 
-    public int yaw=1600;
-    public int pitch=2200;
+    public int yaw=NECK_YAW_SERVO_HOME;
+    public int pitch=NECK_PITCH_SERVO_HOME;
 
     public void setTarget(int ID, int target)
     {
@@ -67,10 +70,10 @@ public class PololuHandler implements Serializable {
 
     public void home()
     {
-        maestro.setTarget(9,2200);
-        maestro.setTarget(10,1600);
-        yaw = 1600;
-        pitch = 2200;
+        maestro.setTarget(NECK_PITCH_SERVO,NECK_PITCH_SERVO_HOME);
+        maestro.setTarget(NECK_YAW_SERVO,NECK_YAW_SERVO_HOME);
+        yaw = NECK_YAW_SERVO_HOME;
+        pitch = NECK_PITCH_SERVO_HOME;
     }
 
     public void setSpeedConst(float newConst)
@@ -81,7 +84,7 @@ public class PololuHandler implements Serializable {
     public void onResume(Intent intent,Activity parent ){
         String action = intent.getAction();
         isConnected = false;
-
+        Log.d("POLOLUHANDLER", "IN ON RESUME");
         if (action.equals("android.hardware.usb.action.USB_DEVICE_ATTACHED")) {
             UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
             if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
@@ -113,5 +116,237 @@ public class PololuHandler implements Serializable {
         int addToPitch = (int)(speedPercent*speedConst);
         pitch+=addToPitch;
         maestro.setTarget(NECK_PITCH_SERVO, pitch);
+    }
+
+    public void stepForward()
+    {
+        maestro.setTarget(1, 10856);
+        maestro.setTarget(2, 12904);
+        maestro.setTarget(3, 15976);
+
+        maestro.setTarget(16, 11368);
+        maestro.setTarget(17, 12136);
+        maestro.setTarget(18, 8296);
+
+        maestro.setTarget(1, 10856);
+        maestro.setTarget(2, 11880);
+        maestro.setTarget(3, 15976);
+
+        maestro.setTarget(16, 11368);
+        maestro.setTarget(17, 12392);
+        maestro.setTarget(18, 8296);
+
+        maestro.setTarget(1, 10856);
+        maestro.setTarget(2, 10600);
+        maestro.setTarget(3, 15976);
+
+        maestro.setTarget(16, 11368);
+        maestro.setTarget(17, 12904);
+        maestro.setTarget(18, 8296);
+
+        maestro.setTarget(1, 10856);
+        maestro.setTarget(2, 8296);
+        maestro.setTarget(3, 15976);
+
+        maestro.setTarget(16, 11368);
+        maestro.setTarget(17, 13672);
+        maestro.setTarget(18, 8296);
+
+        maestro.setTarget(1, 10856);
+        maestro.setTarget(2, 6248);
+        maestro.setTarget(3, 15976);
+
+        maestro.setTarget(16, 11368);
+        maestro.setTarget(17, 14696);
+        maestro.setTarget(18, 8296);
+
+        maestro.setTarget(1, 10856);
+        maestro.setTarget(2, 4968);
+        maestro.setTarget(3, 15976);
+
+        maestro.setTarget(16, 11368);
+        maestro.setTarget(17, 15208);
+        maestro.setTarget(18, 8296);
+
+        maestro.setTarget(1, 10856);
+        maestro.setTarget(2, 4968);
+        maestro.setTarget(3, 15976);
+
+        maestro.setTarget(16, 11368);
+        maestro.setTarget(17, 15208);
+        maestro.setTarget(18, 8296);
+
+        maestro.setTarget(1, 11880);
+        maestro.setTarget(2, 4968);
+        maestro.setTarget(3, 16232);
+
+        maestro.setTarget(16, 10600);
+        maestro.setTarget(17, 15208);
+        maestro.setTarget(18, 8040);
+
+        maestro.setTarget(1, 12392);
+        maestro.setTarget(2, 4968);
+        maestro.setTarget(3, 16488);
+
+        maestro.setTarget(16, 10088);
+        maestro.setTarget(17, 15208);
+        maestro.setTarget(18, 8040);
+
+        maestro.setTarget(1, 13160);
+        maestro.setTarget(2, 4968);
+        maestro.setTarget(3, 16232);
+
+        maestro.setTarget(16, 9320);
+        maestro.setTarget(17, 15208);
+        maestro.setTarget(18, 8040);
+
+        maestro.setTarget(1, 13672);
+        maestro.setTarget(2, 4968);
+        maestro.setTarget(3, 16232);
+
+        maestro.setTarget(16, 8808);
+        maestro.setTarget(17, 15208);
+        maestro.setTarget(18, 8040);
+
+        maestro.setTarget(1, 13160);
+        maestro.setTarget(2, 8296);
+        maestro.setTarget(3, 16232);
+
+        maestro.setTarget(16, 9320);
+        maestro.setTarget(17, 13672);
+        maestro.setTarget(18, 8040);
+
+        maestro.setTarget(1, 12392);
+        maestro.setTarget(2, 10600);
+        maestro.setTarget(3, 16488);
+
+        maestro.setTarget(16, 10088);
+        maestro.setTarget(17, 12904);
+        maestro.setTarget(18, 8040);
+
+        maestro.setTarget(1, 10856);
+        maestro.setTarget(2, 12904);
+        maestro.setTarget(3, 15976);
+
+        maestro.setTarget(16, 11368);
+        maestro.setTarget(17, 12136);
+        maestro.setTarget(18, 8296);
+
+        maestro.setTarget(12, 11624);
+        maestro.setTarget(13, 12904);
+        maestro.setTarget(14, 15976);
+        maestro.setTarget(15, 15976);
+
+        maestro.setTarget(5, 9832);
+        maestro.setTarget(6, 12392);
+        maestro.setTarget(7, 8296);
+
+        maestro.setTarget(12, 11624);
+        maestro.setTarget(13, 11880);
+        maestro.setTarget(14, 15976);
+        maestro.setTarget(15, 15976);
+
+        maestro.setTarget(5, 9832);
+        maestro.setTarget(6, 13416);
+        maestro.setTarget(7, 8296);
+
+        maestro.setTarget(12, 11624);
+        maestro.setTarget(13, 10600);
+        maestro.setTarget(14, 15976);
+        maestro.setTarget(15, 15976);
+
+        maestro.setTarget(5, 9832);
+        maestro.setTarget(6, 14440);
+        maestro.setTarget(7, 8296);
+
+        maestro.setTarget(12, 11624);
+        maestro.setTarget(13, 8296);
+        maestro.setTarget(14, 15976);
+        maestro.setTarget(15, 15976);
+
+        maestro.setTarget(5, 9832);
+        maestro.setTarget(6, 16488);
+        maestro.setTarget(7, 8296);
+
+        maestro.setTarget(12, 11624);
+        maestro.setTarget(13, 4968);
+        maestro.setTarget(14, 15976);
+        maestro.setTarget(15, 15976);
+
+        maestro.setTarget(5, 9832);
+        maestro.setTarget(6, 19304);
+        maestro.setTarget(7, 8296);
+
+        maestro.setTarget(12, 11624);
+        maestro.setTarget(13, 4968);
+        maestro.setTarget(14, 15976);
+        maestro.setTarget(15, 15976);
+
+        maestro.setTarget(5, 9832);
+        maestro.setTarget(6, 19304);
+        maestro.setTarget(7, 8296);
+
+        maestro.setTarget(12, 12392);
+        maestro.setTarget(13, 4968);
+        maestro.setTarget(14, 16232);
+        maestro.setTarget(15, 16232);
+
+        maestro.setTarget(5, 8808);
+        maestro.setTarget(6, 19304);
+        maestro.setTarget(7, 8040);
+
+        maestro.setTarget(12, 12904);
+        maestro.setTarget(13, 4968);
+        maestro.setTarget(14, 16488);
+        maestro.setTarget(15, 16488);
+
+        maestro.setTarget(5, 8552);
+        maestro.setTarget(6, 19304);
+        maestro.setTarget(7, 8040);
+
+        maestro.setTarget(12, 13672);
+        maestro.setTarget(13, 4968);
+        maestro.setTarget(14, 16232);
+        maestro.setTarget(15, 16232);
+
+        maestro.setTarget(5, 7528);
+        maestro.setTarget(6, 19304);
+        maestro.setTarget(7, 8040);
+
+        maestro.setTarget(12, 14184);
+        maestro.setTarget(13, 4968);
+        maestro.setTarget(14, 16232);
+        maestro.setTarget(15, 16232);
+
+        maestro.setTarget(5, 7272);
+        maestro.setTarget(6, 19304);
+        maestro.setTarget(7, 8040);
+
+        maestro.setTarget(12, 13672);
+        maestro.setTarget(13, 8296);
+        maestro.setTarget(14, 16232);
+        maestro.setTarget(15, 16232);
+
+        maestro.setTarget(5, 7528);
+        maestro.setTarget(6, 16488);
+        maestro.setTarget(7, 8040);
+
+        maestro.setTarget(12, 12904);
+        maestro.setTarget(13, 10600);
+        maestro.setTarget(14, 16488);
+        maestro.setTarget(15, 16488);
+
+        maestro.setTarget(5, 8552);
+        maestro.setTarget(6, 14440);
+        maestro.setTarget(7, 8040);
+
+        maestro.setTarget(12, 11624);
+        maestro.setTarget(13, 12904);
+        maestro.setTarget(14, 15976);
+        maestro.setTarget(15, 15976);
+
+        maestro.setTarget(5, 9832);
+        maestro.setTarget(6, 12392);
+        maestro.setTarget(7, 8296);
     }
 }

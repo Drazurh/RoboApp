@@ -3,13 +3,15 @@ package com.robodoot.roboapp;
 import android.os.Handler;
 import android.util.Log;
 
+import com.robodoot.dr.RoboApp.PololuHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by alex on 2/10/16.
  */
-public class MockVirtualCat implements VirtualCat {
+public class MockVirtualCat extends VirtualCat {
     private static final String TAG = "MockVirtualCat";
 
     // DEFAULT CONSTRUCTOR
@@ -20,9 +22,6 @@ public class MockVirtualCat implements VirtualCat {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // BATTERY LEVEL STUFF
     ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // battery event listeners
-    private List<CatBatteryListener> batteryListeners = new ArrayList<CatBatteryListener>();
 
     // periodically raise battery update event
     private float batteryLevel = 0.0f;
@@ -41,11 +40,6 @@ public class MockVirtualCat implements VirtualCat {
         }
     };
 
-    @Override
-    public void AddBatteryListener(CatBatteryListener listener) {
-        batteryListeners.add(listener);
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // SENDING DATA TO CAT
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +49,38 @@ public class MockVirtualCat implements VirtualCat {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: MORE STUFF
+    // Mock cat movements
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void stepForward() {
+        Log.i(TAG, "mock cat stepping forward.");
+    }
+    @Override
+    public void stepBackward() {
+        Log.i(TAG, "mock cat stepping backward.");
+    }
+    @Override
+    public void stepLeft() {
+        Log.i(TAG, "mock cat stepping left.");
+    }
+    @Override
+    public void stepRight() {
+        Log.i(TAG, "mock cat stepping right.");
+    }
+    @Override
+    public void turnHeadDown() {
+        Log.i(TAG, "mock cat turning head down.");
+    }
+    @Override
+    public void turnHeadLeft() {
+        Log.i(TAG, "mock cat turning head left.");
+    }
+    @Override
+    public void turnHeadRight() {
+        Log.i(TAG, "mock cat turning head right.");
+    }
+    @Override
+    public void turnHeadUp() {
+        Log.i(TAG, "mock cat turning head up.");
+    }
 }

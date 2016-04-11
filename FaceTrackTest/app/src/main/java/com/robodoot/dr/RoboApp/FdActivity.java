@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.media.MediaRecorder;
 
 import com.robodoot.dr.facetracktest.R;
 import com.robodoot.roboapp.Direction;
@@ -91,6 +92,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     private ArrayList<String> result;
     private static final String good = "good";
     private static final String bad = "bad";
+    MediaRecorder mRecorder;
 
     private GestureDetector gDetector;
     public enum CHAR {U, D, L, R}
@@ -273,6 +275,15 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_fd);
+        /*mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mRecorder.setOutputFile("/dev/null");
+        mRecorder.prepare();
+        mRecorder.start();
+
+        int powerDb = 20 * log10(getAmplitude() / referenceAmp);*/
 
         psswd.add(CHAR.U);
         psswd.add(CHAR.U);
@@ -432,6 +443,14 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         frameNumber = 0;
 
         mFaceRectLogger.addRecordToLog("\n" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()));
+    }
+
+    public double getAmplitude() {
+        if (mRecorder != null)
+            return  (mRecorder.getMaxAmplitude());
+        else
+            return 0;
+
     }
 
     public void onDestroy() {
