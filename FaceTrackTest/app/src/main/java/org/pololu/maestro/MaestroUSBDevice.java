@@ -39,6 +39,12 @@ public class MaestroUSBDevice implements Serializable {
     public MaestroUSBDevice() {
     }
 
+    public void explicitSend(byte[] a) {
+        Log.d("DEVICE" , "device Details: " + device.toString());
+        int x = controlConnection.bulkTransfer(device.getInterface(0).getEndpoint(0), a, a.length, 5000);
+        Log.d("DEVICE" , "X: " + x);
+    }
+
     public void sendCommand(int command, int channel, int value) {
         Log.d(TAG, "sendCommand(" + command + ", " + channel + ", " + value + ")");
 

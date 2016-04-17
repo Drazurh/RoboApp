@@ -58,7 +58,7 @@ public class MaestroSSC extends MaestroUSBDevice {
 
     public void setTarget(int channel, int target) {
         // Pololu Protocol expects you to pass in how many QUARTER-seconds.
-        //target = target * 4;
+        target = target * 4;
 
         sendCommand(CMD_SET_POSITION, channel, target);
     }

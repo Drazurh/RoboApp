@@ -10,6 +10,8 @@ import android.util.Log;
 import org.pololu.maestro.*;
 
 import java.io.Serializable;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 /**
  * Created by Joel on 12/7/2015.
@@ -83,6 +85,8 @@ public class PololuHandler implements Serializable {
 
     public void onResume(Intent intent,Activity parent ){
         String action = intent.getAction();
+        Log.d("POLOLU HANDLER", "action: " + action);
+        Log.d("POLOLU", intent.toString());
         isConnected = false;
         Log.d("POLOLUHANDLER", "IN ON RESUME");
         if (action.equals("android.hardware.usb.action.USB_DEVICE_ATTACHED")) {
@@ -120,7 +124,18 @@ public class PololuHandler implements Serializable {
 
     public void stepForward()
     {
-        maestro.setTarget(1, 10856);
+        /*int[] a = {170, 12, 31,  3,  1, 104, 42, 104, 50, 104, 62};
+        ByteBuffer byteBuffer = ByteBuffer.allocate(a.length * 4);
+        IntBuffer intBuffer = byteBuffer.asIntBuffer();
+        intBuffer.put(a);
+
+        byte[] array = byteBuffer.array();
+
+        maestro.explicitSend(array);
+
+        maestro.goHome();*/
+
+/*        maestro.setTarget(1, 10856);
         maestro.setTarget(2, 12904);
         maestro.setTarget(3, 15976);
 
@@ -347,6 +362,6 @@ public class PololuHandler implements Serializable {
 
         maestro.setTarget(5, 9832);
         maestro.setTarget(6, 12392);
-        maestro.setTarget(7, 8296);
+        maestro.setTarget(7, 8296);*/
     }
 }

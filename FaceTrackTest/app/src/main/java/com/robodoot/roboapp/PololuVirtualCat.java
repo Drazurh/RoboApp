@@ -10,7 +10,7 @@ import com.robodoot.dr.RoboApp.PololuHandler;
 public class PololuVirtualCat extends VirtualCat {
     private static final String TAG = "PololuVirtualCat";
 
-    private static PololuHandler p;
+    public static PololuHandler p;
     // DEFAULT CONSTRUCTOR
     public PololuVirtualCat() {
         p = new PololuHandler();

@@ -1,5 +1,7 @@
 package com.robodoot.dr.RoboApp;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,10 +12,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.robodoot.dr.facetracktest.R;
+import com.robodoot.roboapp.PololuVirtualCat;
 
 public class WalkingActivity extends AppCompatActivity {
 
-    public PololuHandler pololu;
+    public PololuVirtualCat p;
     public TextView tv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +30,17 @@ public class WalkingActivity extends AppCompatActivity {
                 walk();
             }
         });
-
+        Intent i = getIntent();
+        Activity parent = getParent();
+        p = new PololuVirtualCat();
         tv = (TextView) findViewById(R.id.textView3);
 
+    }
 
-        pololu = new PololuHandler();
+    @Override
+    protected void onResume() {
+        p.p.onResume(getIntent(), this);
+        super.onResume();
     }
 
     @Override
@@ -57,9 +66,9 @@ public class WalkingActivity extends AppCompatActivity {
     }
 
     public void walk() {
-        pololu.stepForward();
+        p.stepForward();
         Log.d("WALKING", "WALKING");
-        if(pololu.isOpen()) tv.setText("TRUE");
-        else                tv.setText("FALSE");
+        if(p.p.isOpen()) tv.setText("TRUE");
+        else             tv.setText("FALSE");
     }
 }

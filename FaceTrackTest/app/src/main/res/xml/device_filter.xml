@@ -18,4 +18,5 @@
     <!-- vendor 8187 (0x1ffb) and product 139 (0x008B) ID for Pololu 24 Channel Maestro Servo Controller NOTE: Not verified! -->
     <usb-device vendor-id="8187" product-id="139"/>
     <usb-device vendor-id="8187" product-id="140"/>
+    <usb-device vendor-id="8187" product-id="133"/>
 </resources>
