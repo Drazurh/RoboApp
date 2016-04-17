@@ -3,10 +3,13 @@ package com.robodoot.dr.RoboApp;
 /**
  * Created by john on 3/24/16.
  */
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.FileHandler;
 
 import android.os.Environment;
@@ -23,10 +26,10 @@ public class Logger {
     private String mLogName;
     private boolean append = true;
 
-    static boolean isExternalStorageAvailable = false;
-    static boolean isExternalStorageWriteable = false;
-    static String state = Environment.getExternalStorageState();
-    static String directory = Environment.getExternalStorageDirectory().getPath() + "/RoboApp";
+    static boolean isExternalStorageAvailable;
+    static boolean isExternalStorageWriteable;
+    static String state;
+    static String directory;
 
     public Logger(String logName) {
         mLogName = logName;
@@ -36,7 +39,9 @@ public class Logger {
         append = app;
     }
 
-    public void addRecordToLog(String message) {
+    private void init() {
+        state = Environment.getExternalStorageState();
+        directory = Environment.getExternalStorageDirectory().getPath() + "/RoboApp";
 
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             // We can read and write the media
@@ -50,7 +55,9 @@ public class Logger {
             //  to know is we can neither read nor write
             isExternalStorageAvailable = isExternalStorageWriteable = false;
         }
+    }
 
+    public void addRecordToLog(String message) {
         File dir = new File(directory);
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             if(!dir.exists()) {
@@ -83,5 +90,35 @@ public class Logger {
                 e.printStackTrace();
             }
         }
+    }
+
+    public String[] ReadLines() {
+        File dir = new File(directory);
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            if (!dir.exists()) {
+                return null;
+            }
+
+            File logFile = new File(directory + "/" + mLogName + ".txt");
+
+            if (!logFile.exists()) {
+                return null;
+            }
+
+            ArrayList<String> lines = new ArrayList<>();
+
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(logFile));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    lines.add(line);
+                }
+            } catch (Exception e) {
+                return null;
+            }
+
+            return lines.toArray(new String[lines.size()]);
+        }
+        return null;
     }
 }

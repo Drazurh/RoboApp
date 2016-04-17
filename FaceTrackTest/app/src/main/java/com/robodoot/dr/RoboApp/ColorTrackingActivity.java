@@ -260,34 +260,34 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
     public void setColor(View view) {
         final int button_id = view.getId();
         new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Saving color values")
-                .setMessage("Are you sure you want to save these color values?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String s = mSeekBarLowH.getProgress() + " " + mSeekBarHighH.getProgress()
-                                + " "+ mSeekBarLowS.getProgress() + " " + mSeekBarHighS.getProgress()
-                                + " " + mSeekBarLowV.getProgress() + " " + mSeekBarHighV.getProgress();
-                        switch (button_id) {
-                            case R.id.button_save_red:
-                                Log.i(TAG, "set red");
-                                mRedLogger.addRecordToLog(s);
-                                break;
-                            case R.id.button_save_green:
-                                Log.i(TAG, "set green");
-                                mGreenLogger.addRecordToLog(s);
-                                break;
-                            case R.id.button_save_blue:
-                                Log.i(TAG, "set blue");
-                                mBlueLogger.addRecordToLog(s);
-                                break;
-                        };
-                    }
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle("Saving color values")
+            .setMessage("Are you sure you want to save these color values?")
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                String s = mSeekBarLowH.getProgress() + " " + mSeekBarHighH.getProgress()
+                        + " " + mSeekBarLowS.getProgress() + " " + mSeekBarHighS.getProgress()
+                        + " " + mSeekBarLowV.getProgress() + " " + mSeekBarHighV.getProgress();
+                switch (button_id) {
+                    case R.id.button_save_red:
+                        Log.i(TAG, "set red");
+                        mRedLogger.addRecordToLog(s);
+                        break;
+                    case R.id.button_save_green:
+                        Log.i(TAG, "set green");
+                        mGreenLogger.addRecordToLog(s);
+                        break;
+                    case R.id.button_save_blue:
+                        Log.i(TAG, "set blue");
+                        mBlueLogger.addRecordToLog(s);
+                        break;
+                }
+                    ;
+                }
 
-                })
-                .setNegativeButton("No", null)
-                .show();
+            })
+            .setNegativeButton("No", null)
+            .show();
     }
 }
