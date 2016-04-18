@@ -32,11 +32,10 @@ public class Logger {
     static String directory;
 
     public Logger(String logName) {
-        mLogName = logName;
+        mLogName = logName; init();
     }
     public Logger(String logName, boolean app) {
-        mLogName = logName;
-        append = app;
+        mLogName = logName; append = app; init();
     }
 
     private void init() {
