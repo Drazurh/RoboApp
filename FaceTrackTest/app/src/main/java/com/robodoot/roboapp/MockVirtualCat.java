@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.robodoot.dr.RoboApp.PololuHandler;
 
+import org.opencv.core.Point;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,4 +85,12 @@ public class MockVirtualCat extends VirtualCat {
     public void turnHeadUp() {
         Log.i(TAG, "mock cat turning head up.");
     }
+
+    @Override
+    public void lookToward(Point relPos) {}
+    @Override
+    public void lookAwayFrom(Point relPos) {}
+
+    @Override
+    public void resetHead() {}
 }

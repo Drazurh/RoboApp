@@ -5,26 +5,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 import android.content.ActivityNotFoundException;
-import android.media.Image;
 import android.os.Environment;
 import android.speech.RecognizerIntent;
 import android.widget.ImageButton;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,16 +29,16 @@ import com.robodoot.roboapp.Direction;
 import com.robodoot.roboapp.ImageUtil;
 import com.robodoot.roboapp.MainActivity;
 import com.robodoot.roboapp.Person;
+import com.robodoot.roboapp.PololuVirtualCat;
+import com.robodoot.roboapp.VirtualCat;
 
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_face;
 import org.bytedeco.javacpp.opencv_face.*;
 
 import org.bytedeco.javacpp.opencv_imgproc;
-import org.bytedeco.javacpp.opencv_videoio;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;
-import org.bytedeco.javacv.FrameConverter;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -71,11 +64,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
 
-import static org.bytedeco.javacpp.helper.opencv_imgcodecs.cvLoadImageBGRA;
 import static org.bytedeco.javacpp.opencv_imgcodecs.cvLoadImage;
 
 public class FdActivity extends Activity implements GestureDetector.OnGestureListener, CvCameraViewListener2 {
@@ -149,7 +140,8 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     private boolean debugging = false;
 
-    PololuHandler pololu;
+    //PololuHandler pololu;
+    VirtualCat virtualCat;
 
     private TextView debug1;
     TextView debug2;
@@ -288,7 +280,8 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         peopleThisCameraFrame = new ArrayList<Person>();
         peopleLastCameraFrame = new ArrayList<Person>();
         SimilarID = new ArrayList<ArrayList<Integer>>();
-        pololu = new PololuHandler();
+        //pololu = new PololuHandler();
+        virtualCat = new PololuVirtualCat();
 
         Log.i(TAG, "Instantiated new " + this.getClass());
 
@@ -361,11 +354,11 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         }
         if ((lines = new Logger("green_color_values", false).ReadLines()) != null
                 && lines.length > 0) {
-            redValues = new ColorValues(lines[0]);
+            greenValues = new ColorValues(lines[0]);
         }
         if ((lines = new Logger("color_values", false).ReadLines()) != null
                 && lines.length > 0) {
-            redValues = new ColorValues(lines[0]);
+            blueValues = new ColorValues(lines[0]);
         }
 //        ServoText = (EditText)findViewById(R.id.servoField);
 //        SpeedText = (EditText)findViewById(R.id.speedField);
@@ -466,10 +459,12 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     @Override
     public void onResume() {
-        pololu.onResume(getIntent(), this);
+        //pololu.onResume(getIntent(), this);
+        virtualCat.onResume(getIntent(), this);
 
         super.onResume();
-        pololu.home();
+        //pololu.home();
+        virtualCat.resetHead();
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
 
         entry.clear();
@@ -561,7 +556,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     }
 
-    private void trackFavFace(Rect faceRect) {
+    /*private void trackFavFace(Rect faceRect) {
         mFaceRectLogger.addRecordToLog(faceRect.x + ", " + faceRect.y + ", " + faceRect.width + ", " + faceRect.height);
 
         int sumX = faceRect.x + faceRect.width / 2;
@@ -591,7 +586,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         setTextFieldText("pX = " + pX + "   " + (0.5f - (float) pX), debug1);
         setTextFieldText("pY = " + pY + "   " + (0.5f - (float) pY), debug2);
         //else pololu.stopNeckMotors();
-    }
+    }*/
 
     public boolean adjustFaceBuffer(Rect faceRect)
     {
@@ -755,7 +750,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     addNewUser();
                 }
 
-                if (peopleThisCameraFrame.size() == 0) trackFavFace(biggestFace);
+                //if (peopleThisCameraFrame.size() == 0) trackFavFace(biggestFace);
             }
 
             if (peopleThisCameraFrame.size() > 0) {
@@ -773,7 +768,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     IDsToCheck.add(peopleThisCameraFrame.get(i).ID);
                 }
 
-                int favID = kitty.getFavPerson(IDsToCheck);
+                /*int favID = kitty.getFavPerson(IDsToCheck);
                 Person favPerson = peopleThisCameraFrame.get(0);
 
                 if (favID > 20) {
@@ -783,7 +778,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                             trackFavFace(favPerson.face);
                         }
                     }
-                }
+                }*/
 
                 peopleLastCameraFrame.clear();
                 peopleLastCameraFrame.addAll(peopleThisCameraFrame);
@@ -799,32 +794,44 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         //framesForVideo.add(ImageUtil.CopyMatToIplImage(mRgba));
         framesForVideo.add(ImageUtil.OpenCVMatToJavaCVMat(mRgba));
 
-        trackColor(inputFrame);
+        Point relRedObjectPos = trackColor(inputFrame, redValues);
+        reactToRedObject(relRedObjectPos);
+        Point relGreenObjectPos = trackColor(inputFrame, greenValues);
+        reactToGreenObject(relGreenObjectPos);
+        /*Point relBlueObjectPos = trackColor(inputFrame, blueValues);
+        reactToBlueObject(relBlueObjectPos);*/
 
         return mRgba;
     }
 
-    private Point trackColor(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+    private void reactToRedObject(Point relRedObjectPos) {
+        if (relRedObjectPos == null)
+            return;
+        virtualCat.lookAwayFrom(relRedObjectPos);
+    }
+
+    private void reactToGreenObject(Point relGreenObjectPos) {
+        if (relGreenObjectPos == null)
+            return;
+        virtualCat.lookToward(relGreenObjectPos);
+    }
+
+    /* returns a Point relative position of object or null if no object found */
+    private Point trackColor(CameraBridgeViewBase.CvCameraViewFrame inputFrame, ColorValues cv) {
+        if (cv == null)
+            return null;
         Mat imgThresholded = null;
         Point objectCoords = null;
         try {
             inputFrame.rgba().copyTo(mRgbaForColorTracking);
 
-            // resize to transpose dimensions because it's stupid. not necessary with opencv 3.1.0
+            // resize to transpose dimensions because reasons. not necessary with opencv 3.1.0
             Imgproc.resize(mRgbaForColorTracking, mRgbaForColorTracking, mRgbaForColorTracking.t().size());
-
-            // need to set these somehow, either pre-configure or allow calibration
-            int iLowH = 0;
-            int iHighH = 255;
-            int iLowS = 0;
-            int iHighS = 255;
-            int iLowV = 0;
-            int iHighV = 255;
 
             imgThresholded = new Mat();
             Imgproc.cvtColor(mRgbaForColorTracking, imgThresholded, Imgproc.COLOR_RGB2HSV); //Convert the captured frame from BGR to HSV
 
-            Core.inRange(imgThresholded, new Scalar(iLowH, iLowS, iLowV), new Scalar(iHighH, iHighS, iHighV), imgThresholded); //Threshold the image
+            Core.inRange(imgThresholded, new Scalar(cv.lowH, cv.lowS, cv.lowV), new Scalar(cv.highH, cv.highS, cv.highV), imgThresholded); //Threshold the image
 
             // morphological opening (removes small objects from the foreground)
             Imgproc.erode(imgThresholded, imgThresholded, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5)));
@@ -883,34 +890,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     }
 
     private void record(String directory) {
-        /*Log.d("Record", "creating video from images in directory: " + directory);
-        String path = directory; // You can provide SD Card path here.
-
-        File folder = new File(path);
-
-        File[] listOfFiles = folder.listFiles();
-        opencv_core.IplImage[] iplimage = null;
-        if (listOfFiles.length > 0) {
-
-            iplimage = new opencv_core.IplImage[listOfFiles.length];
-
-            for (int j = 0; j < listOfFiles.length; j++) {
-
-                String files = "";
-
-                if (listOfFiles[j].isFile()) {
-                    files = listOfFiles[j].getName();
-                    System.out.println(" j " + j + listOfFiles[j]);
-                }
-
-                String[] tokens = files.split("\\.(?=[^\\.]+$)");
-                String name = tokens[0];
-
-                iplimage[j] = cvLoadImage(directory + "/" + name + ".jpg");
-            }
-        }*/
-
-        //opencv_core.IplImage[] iplimage = (opencv_core.IplImage[])framesForVideo.toArray();
         opencv_core.Mat[] frames = new opencv_core.Mat[framesForVideo.size()];
         framesForVideo.toArray(frames);
 
@@ -928,10 +907,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             recorder.setPixelFormat(0); // PIX_FMT_YUV420P
 
             recorder.start();
-            /*OpenCVFrameConverter frameConverter = new OpenCVFrameConverter.ToIplImage();
-            for (int i = 0; i < iplimage.length; i++) {
-                recorder.record(frameConverter.convert(iplimage[i]));
-            }*/
             OpenCVFrameConverter frameConverter = new OpenCVFrameConverter.ToMat();
             for (int i = 0; i < frames.length; i++) {
                 Frame f = frameConverter.convert(frames[i]);
@@ -1143,7 +1118,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             showVideoFeed();
             Intent intent = new Intent(this, MainActivity.class);
 
-            intent.putExtra("pololu", pololu);
+            //intent.putExtra("pololu", pololu);
 
             startActivity(intent);
         }
@@ -1217,7 +1192,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         return false;
     }
 
-    public void turnCamera(Directions d)
+    /*public void turnCamera(Directions d)
     {
         dir = d;
         this.runOnUiThread(new Runnable() {
@@ -1247,5 +1222,5 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 }
             }
         });
-    }
+    }*/
 }

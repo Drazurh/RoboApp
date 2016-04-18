@@ -1,5 +1,10 @@
 package com.robodoot.roboapp;
 
+import android.app.Activity;
+import android.content.Intent;
+
+import org.opencv.core.Point;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +16,8 @@ public abstract class VirtualCat {
     public interface CatBatteryListener {
         void UpdateBatteryLevel(float level);
     }
+
+    public void onResume(Intent intent, Activity parent) {}
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // BATTERY LEVEL STUFF
@@ -40,4 +47,10 @@ public abstract class VirtualCat {
     public abstract void turnHeadUp();
 
     public abstract void turnHeadDown();
+
+    public abstract void lookToward(Point relPos);
+
+    public abstract void lookAwayFrom(Point relPos);
+
+    public abstract void resetHead();
 }
