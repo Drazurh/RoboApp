@@ -27,6 +27,7 @@ public class PololuVirtualCat extends VirtualCat {
 
     public void onResume(Intent intent, Activity parent) {
         p.onResume(intent, parent);
+        Log.i(TAG, "IN ONRESUME");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,8 +75,30 @@ public class PololuVirtualCat extends VirtualCat {
 
     @Override
     public void lookToward(Point relPos) {
-        p.cameraYawSpeed((float) relPos.x);
-        p.cameraPitchSpeed((float) relPos.y);
+        double len = Math.sqrt(Math.pow(relPos.x, 2) + Math.pow(relPos.y, 2));
+        Point norm = new Point(relPos.x / len / 2.0, relPos.y / len / 2.0);
+        if (Math.abs(norm.x) > 0.08) {
+            //p.cameraYawSpeed((float) norm.x);
+            if (norm.x < 0.0)
+                turnHeadLeft();
+            else
+                turnHeadRight();
+            //Log.i(TAG, "setting yaw: " + norm.x);
+        }
+        else
+            p.cameraYawSpeed(0.0f);
+
+        if (Math.abs(norm.y) > 0.08) {
+            //p.cameraPitchSpeed((float) norm.y);
+            if (norm.y < 0.0)
+                turnHeadDown();
+            else
+                turnHeadUp();
+            //Log.i(TAG, "setting pitch: " + norm.y);
+        }
+        else {
+            p.cameraPitchSpeed(0.0f);
+        }
     }
 
     @Override
@@ -85,5 +108,6 @@ public class PololuVirtualCat extends VirtualCat {
 
     public void resetHead() {
         p.home();
+        Log.i(TAG, "RESETTING HEAD");
     }
 }

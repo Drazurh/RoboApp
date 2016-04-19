@@ -794,10 +794,12 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         //framesForVideo.add(ImageUtil.CopyMatToIplImage(mRgba));
         framesForVideo.add(ImageUtil.OpenCVMatToJavaCVMat(mRgba));
 
-        Point relRedObjectPos = trackColor(inputFrame, redValues);
-        reactToRedObject(relRedObjectPos);
+        /*Point relRedObjectPos = trackColor(inputFrame, redValues);
+        reactToRedObject(relRedObjectPos);*/
         Point relGreenObjectPos = trackColor(inputFrame, greenValues);
         reactToGreenObject(relGreenObjectPos);
+        if (relGreenObjectPos != null)
+            Imgproc.rectangle(mRgba, relGreenObjectPos, new Point(relGreenObjectPos.x + 20, relGreenObjectPos.y + 20), new Scalar(255, 255, 255), 5);
         /*Point relBlueObjectPos = trackColor(inputFrame, blueValues);
         reactToBlueObject(relBlueObjectPos);*/
 
@@ -807,12 +809,15 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     private void reactToRedObject(Point relRedObjectPos) {
         if (relRedObjectPos == null)
             return;
+
+        Log.i(TAG, "red rel pos: " + relRedObjectPos);
         virtualCat.lookAwayFrom(relRedObjectPos);
     }
 
     private void reactToGreenObject(Point relGreenObjectPos) {
         if (relGreenObjectPos == null)
             return;
+        Log.i(TAG, "green rel pos: " + relGreenObjectPos);
         virtualCat.lookToward(relGreenObjectPos);
     }
 
