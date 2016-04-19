@@ -394,6 +394,16 @@ public class CatEmotion {
 
     }
 
+    public void lookLeft() {
+        state = EMOTION.LOOK_LEFT;
+        reCalcFace();
+    }
+
+    public void lookRight() {
+        state = EMOTION.LOOK_RIGHT;
+        reCalcFace();
+    }
+
     public void frownedAt() {
         scale-=50;
         reCalcFace();

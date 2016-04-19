@@ -142,7 +142,8 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     private boolean debugging = false;
 
     //PololuHandler pololu;
-    VirtualCat virtualCat;
+    //VirtualCat virtualCat;
+    PololuVirtualCat virtualCat;
 
     private TextView debug1;
     TextView debug2;
@@ -267,15 +268,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_fd);
-        /*mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        mRecorder.setOutputFile("/dev/null");
-        mRecorder.prepare();
-        mRecorder.start();
-
-        int powerDb = 20 * log10(getAmplitude() / referenceAmp);*/
 
         debugging = true;
 
@@ -384,12 +376,42 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     }
                     //Make a call to analyze the words and update cat's mood.
                     if (result.contains(good)) {
-                        //Make the cat happy
+                        //Make the cat happy.
                         kitty.smiledAt();
                     }
                     if (result.contains(bad)) {
                         //Make the cat mad.
                         kitty.frownedAt();
+                    }
+                    if (result.contains("forward")) {
+                        //Make the cat walk forward
+                        Log.d("MOVEMENT", "Call made to forwards motion");
+                    }
+                    if (result.contains("back")) {
+                        //Make the cat walk backward
+                        Log.d("MOVEMENT", "Call made to backwardss motion");
+                    }
+                    if (result.contains("red")) {
+                        //Make the cat detect red
+                    }
+                    if (result.contains("blue")) {
+                        //Make the cat detect blue
+                    }
+                    if (result.contains("green")) {
+                        //Make the cat detect green
+                    }
+                    if (result.contains("left")) {
+                        //Make the cat head move left
+                        kitty.lookLeft();
+                        virtualCat.turnHeadLeft();
+                    }
+                    if (result.contains("right")) {
+                        //Make the cat head move right
+                        kitty.lookRight();
+                        virtualCat.turnHeadRight();
+                    }
+                    if (result.contains("here") || result.contains("hear")) {
+                        virtualCat.resetHead();
                     }
                     //Clear the arrayList for the next time a button is pressed.
                     result.clear();
