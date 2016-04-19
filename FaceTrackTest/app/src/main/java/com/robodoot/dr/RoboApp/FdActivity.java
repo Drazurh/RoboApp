@@ -142,8 +142,8 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     private boolean debugging = false;
 
     //PololuHandler pololu;
-    //VirtualCat virtualCat;
-    PololuVirtualCat virtualCat;
+    VirtualCat virtualCat;
+    //PololuVirtualCat virtualCat;
 
     private TextView debug1;
     TextView debug2;
@@ -827,8 +827,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     }
 
     private void reactToGreenObject(Point relGreenObjectPos) {
-        if (relGreenObjectPos == null)
+        if (relGreenObjectPos == null) {
+            virtualCat.stopMovingHead();
             return;
+        }
         Log.i(TAG, "green rel pos: " + relGreenObjectPos);
         virtualCat.lookToward(relGreenObjectPos);
     }

@@ -74,6 +74,22 @@ public class PololuVirtualCat extends VirtualCat {
     }
 
     @Override
+    public void stopMovingHead() {
+        stopLookingLeftRight();
+        stopLookingUpDown();
+    }
+
+    @Override
+    public void stopLookingLeftRight() {
+        p.setYaw(0);
+    }
+
+    @Override
+    public void stopLookingUpDown() {
+        p.setPitch(0);
+    }
+
+    @Override
     public void lookToward(Point relPos) {
         double len = Math.sqrt(Math.pow(relPos.x, 2) + Math.pow(relPos.y, 2));
         Point norm = new Point(relPos.x / len / 2.0, relPos.y / len / 2.0);
@@ -86,7 +102,7 @@ public class PololuVirtualCat extends VirtualCat {
             //Log.i(TAG, "setting yaw: " + norm.x);
         }
         else
-            p.cameraYawSpeed(0.0f);
+            stopLookingLeftRight();
 
         if (Math.abs(norm.y) > 0.08) {
             //p.cameraPitchSpeed((float) norm.y);
@@ -97,7 +113,7 @@ public class PololuVirtualCat extends VirtualCat {
             //Log.i(TAG, "setting pitch: " + norm.y);
         }
         else {
-            p.cameraPitchSpeed(0.0f);
+            stopLookingUpDown();
         }
     }
 
