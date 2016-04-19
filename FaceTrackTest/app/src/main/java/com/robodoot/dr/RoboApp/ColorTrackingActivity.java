@@ -14,6 +14,7 @@ import android.widget.Switch;
 import com.robodoot.dr.facetracktest.R;
 import com.robodoot.roboapp.BatteryView;
 import com.robodoot.roboapp.CatCameraView;
+import com.robodoot.roboapp.ColorValues;
 import com.robodoot.roboapp.MockVirtualCat;
 import com.robodoot.roboapp.VirtualCat;
 
@@ -90,6 +91,17 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         mRedLogger = new Logger("red_color_values", false);
         mGreenLogger = new Logger("green_color_values", false);
         mBlueLogger = new Logger("blue_ color_values", false);
+
+        String[] lines = new Logger("green_color_values", false).ReadLines();
+        if (lines != null) {
+            ColorValues cv = new ColorValues(lines[0]);
+            mSeekBarLowH.setProgress(cv.lowH);
+            mSeekBarHighH.setProgress(cv.highH);
+            mSeekBarLowS.setProgress(cv.lowS);
+            mSeekBarHighS.setProgress(cv.highS);
+            mSeekBarLowV.setProgress(cv.lowV);
+            mSeekBarHighV.setProgress(cv.highV);
+        }
     }
 
     @Override
@@ -290,4 +302,35 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
             .setNegativeButton("No", null)
             .show();
     }
+
+    /*public void loadColor(View view) {
+        final int button_id = view.getId();
+        String[] lines = null;
+        switch (button_id) {
+            case R.id.button_save_red:
+                Log.i(TAG, "load red");
+                lines = new Logger("red_color_values", false).ReadLines();
+                break;
+            case R.id.button_save_green:
+                Log.i(TAG, "load green");
+                lines = new Logger("green_color_values", false).ReadLines();
+                break;
+            case R.id.button_save_blue:
+                Log.i(TAG, "load blue");
+                lines = new Logger("blue_color_values", false).ReadLines();
+                break;
+        }
+
+        if (lines == null)
+            return;
+
+        ColorValues cv = new ColorValues(lines[0]);
+
+        mSeekBarLowH.setProgress(cv.lowH);
+        mSeekBarHighH.setProgress(cv.highH);
+        mSeekBarLowS.setProgress(cv.lowS);
+        mSeekBarHighS.setProgress(cv.highS);
+        mSeekBarLowV.setProgress(cv.lowV);
+        mSeekBarHighV.setProgress(cv.highV);
+    }*/
 }

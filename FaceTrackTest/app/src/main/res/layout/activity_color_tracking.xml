@@ -104,6 +104,37 @@
                 android:id="@+id/switch_camera"
                 android:checked="false" />
 
+            <!--<LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Load Red"
+                    android:id="@+id/button_load_red"
+                    android:layout_weight=".33"
+                    android:onClick="loadColor" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Load Green"
+                    android:id="@+id/button_load_green"
+                    android:layout_weight=".33"
+                    android:onClick="loadColor" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Load Blue"
+                    android:id="@+id/button_load_blue"
+                    android:layout_weight=".33"
+                    android:onClick="loadColor" />
+            </LinearLayout>-->
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"

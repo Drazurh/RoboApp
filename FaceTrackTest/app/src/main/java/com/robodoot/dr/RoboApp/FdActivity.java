@@ -25,6 +25,7 @@ import android.widget.Toast;
 import android.media.MediaRecorder;
 
 import com.robodoot.dr.facetracktest.R;
+import com.robodoot.roboapp.ColorValues;
 import com.robodoot.roboapp.Direction;
 import com.robodoot.roboapp.ImageUtil;
 import com.robodoot.roboapp.MainActivity;
@@ -245,33 +246,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     private String timestamp;
     private String imageCaptureDirectory;
 
-    private class ColorValues {
-        public int lowH;
-        public int highH;
-        public int lowS;
-        public int highS;
-        public int lowV;
-        public int highV;
-        public ColorValues(int lH, int hH, int lS, int hS, int lV, int hV) {
-            lowH = lH; highH = hH; lowS = lS;
-            highS = hS; lowV = lV; highV = hV;
-        }
-        public ColorValues(String s) {
-            String[] tokens = s.split(" ");
-            if (tokens.length != 6) {
-                throw new IllegalArgumentException("need string containing 6 integer values");
-            }
-            try {
-                lowH = Integer.parseInt(tokens[0]); highH = Integer.parseInt(tokens[1]);
-                lowS = Integer.parseInt(tokens[2]); highS = Integer.parseInt(tokens[3]);
-                lowV = Integer.parseInt(tokens[4]); highV = Integer.parseInt(tokens[5]);
-            }
-            catch (NumberFormatException e) {
-                throw new IllegalArgumentException("need string containing 6 integer values");
-            }
-        }
-    }
-
     private ColorValues redValues = null, greenValues = null, blueValues = null;
 
     public FdActivity() {
@@ -302,6 +276,8 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         mRecorder.start();
 
         int powerDb = 20 * log10(getAmplitude() / referenceAmp);*/
+
+        debugging = true;
 
         psswd.add(CHAR.U);
         psswd.add(CHAR.U);
@@ -798,12 +774,26 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         reactToRedObject(relRedObjectPos);*/
         Point relGreenObjectPos = trackColor(inputFrame, greenValues);
         reactToGreenObject(relGreenObjectPos);
-        if (relGreenObjectPos != null)
-            Imgproc.rectangle(mRgba, relGreenObjectPos, new Point(relGreenObjectPos.x + 20, relGreenObjectPos.y + 20), new Scalar(255, 255, 255), 5);
+        if (relGreenObjectPos != null) {
+            //Imgproc.rectangle(mRgbaForColorTracking, relGreenObjectPos, new Point(relGreenObjectPos.x + 20, relGreenObjectPos.y + 20), new Scalar(255, 255, 255), 5);
+            /*Imgproc.rectangle(mRgbaForColorTracking,
+                    new Point(relGreenObjectPos.x + (mRgbaForColorTracking.width() / 2.0f),
+                            relGreenObjectPos.y + (mRgbaForColorTracking.height() / 2.0f)),
+                    new Point(relGreenObjectPos.x + (mRgbaForColorTracking.width() / 2.0f) + 20,
+                            relGreenObjectPos.y + (mRgbaForColorTracking.height() / 2.0f) + 20),
+                    new Scalar(255, 255, 255), 5);*/
+            double len = Math.sqrt(Math.pow(relGreenObjectPos.x, 2) + Math.pow(relGreenObjectPos.y, 2));
+            if (len == 0.0)
+                return mRgbaForColorTracking;
+            Point norm = new Point(relGreenObjectPos.x / len / 2.0, relGreenObjectPos.y / len / 2.0);
+            setTextFieldText("pX = " + norm.x, debug1);
+            setTextFieldText("pY = " + norm.y, debug2);
+            //Log.i(TAG, "object is " + relGreenObjectPos.x + ", " + relGreenObjectPos.y + " from the center");
+        }
         /*Point relBlueObjectPos = trackColor(inputFrame, blueValues);
         reactToBlueObject(relBlueObjectPos);*/
 
-        return mRgba;
+        return mRgbaForColorTracking;
     }
 
     private void reactToRedObject(Point relRedObjectPos) {

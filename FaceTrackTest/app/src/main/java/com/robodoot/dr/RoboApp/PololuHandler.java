@@ -108,6 +108,25 @@ public class PololuHandler implements Serializable {
 //        maestro.setSpeed(NECK_PITCH_SERVO,0);
     }
 
+    public void setYaw(int y) {
+        yaw = y;
+        maestro.setTarget(NECK_YAW_SERVO, yaw);
+    }
+
+    public void setPitch(int p) {
+        pitch = p;
+        maestro.setTarget(NECK_PITCH_SERVO, pitch);
+    }
+
+    public void addToYaw(int y) {
+        yaw += y;
+        maestro.setTarget(NECK_YAW_SERVO, yaw);
+    }
+    public void addToPitch(int p) {
+        pitch += p;
+        maestro.setTarget(NECK_PITCH_SERVO, pitch);
+    }
+
     public void cameraYawSpeed(float speedPercent)
     {
         int addToYaw = (int)(speedPercent*speedConst);

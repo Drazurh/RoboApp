@@ -80,9 +80,9 @@ public class PololuVirtualCat extends VirtualCat {
         if (Math.abs(norm.x) > 0.08) {
             //p.cameraYawSpeed((float) norm.x);
             if (norm.x < 0.0)
-                turnHeadLeft();
+                p.addToYaw(-1);
             else
-                turnHeadRight();
+                p.addToYaw(1);
             //Log.i(TAG, "setting yaw: " + norm.x);
         }
         else
@@ -91,9 +91,9 @@ public class PololuVirtualCat extends VirtualCat {
         if (Math.abs(norm.y) > 0.08) {
             //p.cameraPitchSpeed((float) norm.y);
             if (norm.y < 0.0)
-                turnHeadDown();
+                p.addToPitch(-1);
             else
-                turnHeadUp();
+                p.addToPitch(1);
             //Log.i(TAG, "setting pitch: " + norm.y);
         }
         else {
