@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:text="> Message from Arduino: 'Hello'"
             android:textColor="#00FF00"/>
+        <!--
         <TextView
             android:id="@+id/sendtext"
             android:layout_width="match_parent"
@@ -50,7 +51,7 @@
                 android:background="@color/background_floating_material_light"
                 android:textColor="@color/background_floating_material_dark" />
         </LinearLayout>
-
+    -->
 
     </RelativeLayout>
 

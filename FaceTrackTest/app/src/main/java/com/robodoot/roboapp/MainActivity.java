@@ -176,7 +176,7 @@ public class MainActivity extends FragmentActivity implements
             }
         }
     }
-
+/*
     public void AddMessage(View view) {
         TextView disp = (TextView)findViewById(R.id.sendtext);
         CharSequence curr = disp.getText();
@@ -186,5 +186,5 @@ public class MainActivity extends FragmentActivity implements
         disp.setText(newT, 0, newT.length);
         ((EditText)findViewById(R.id.message)).setText("");
         return;
-    }
+    } */
 }
