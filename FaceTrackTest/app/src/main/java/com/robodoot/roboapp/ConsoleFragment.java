@@ -29,6 +29,7 @@ public class ConsoleFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private TextView tv  = null;
 
     private OnFragmentInteractionListener mListener;
 
@@ -104,6 +105,13 @@ public class ConsoleFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        tv = (TextView) getView().findViewById(R.id.place);
+
+        tv.setText("Score: ---Updated ");
     }
 
     /**
