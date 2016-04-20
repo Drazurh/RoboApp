@@ -807,7 +807,8 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             double len = Math.sqrt(Math.pow(relGreenObjectPos.x, 2) + Math.pow(relGreenObjectPos.y, 2));
             if (len == 0.0)
                 return mRgbaForColorTracking;
-            Point norm = new Point(relGreenObjectPos.x / len / 2.0, relGreenObjectPos.y / len / 2.0);
+            //Point norm = new Point(relGreenObjectPos.x / len, relGreenObjectPos.y / len);
+            Point norm = relGreenObjectPos;
             setTextFieldText("pX = " + norm.x, debug1);
             setTextFieldText("pY = " + norm.y, debug2);
             //Log.i(TAG, "object is " + relGreenObjectPos.x + ", " + relGreenObjectPos.y + " from the center");

@@ -73,16 +73,18 @@ public class PololuVirtualCat extends VirtualCat {
         p.cameraPitchSpeed(-0.3f);
     }
 
+    static final int TURN_SPEED = 3;
     @Override
     public void lookToward(Point relPos) {
         double len = Math.sqrt(Math.pow(relPos.x, 2) + Math.pow(relPos.y, 2));
-        Point norm = new Point(relPos.x / len / 2.0, relPos.y / len / 2.0);
+        //Point norm = new Point(relPos.x / len, relPos.y / len);
+        Point norm = relPos;
         if (Math.abs(norm.x) > 0.08) {
             //p.cameraYawSpeed((float) norm.x);
             if (norm.x < 0.0)
-                p.addToYaw(-1);
+                p.addToYaw(-TURN_SPEED);
             else
-                p.addToYaw(1);
+                p.addToYaw(TURN_SPEED);
             //Log.i(TAG, "setting yaw: " + norm.x);
         }
         else
@@ -91,9 +93,9 @@ public class PololuVirtualCat extends VirtualCat {
         if (Math.abs(norm.y) > 0.08) {
             //p.cameraPitchSpeed((float) norm.y);
             if (norm.y < 0.0)
-                p.addToPitch(-1);
+                p.addToPitch(-TURN_SPEED);
             else
-                p.addToPitch(1);
+                p.addToPitch(TURN_SPEED);
             //Log.i(TAG, "setting pitch: " + norm.y);
         }
         else {
