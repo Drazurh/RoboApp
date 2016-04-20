@@ -87,6 +87,22 @@ public class MockVirtualCat extends VirtualCat {
     }
 
     @Override
+    public void stopMovingHead() {
+        stopLookingLeftRight();
+        stopLookingUpDown();
+    }
+
+    @Override
+    public void stopLookingLeftRight() {
+        Log.i(TAG, "mock cat turning stop look left/right.");
+    }
+
+    @Override
+    public void stopLookingUpDown() {
+        Log.i(TAG, "mock cat turning stop look up/down.");
+    }
+
+    @Override
     public void lookToward(Point relPos) {}
     @Override
     public void lookAwayFrom(Point relPos) {}
