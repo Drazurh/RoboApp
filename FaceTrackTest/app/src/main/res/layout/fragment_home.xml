@@ -7,20 +7,9 @@
     <!-- TODO: Update blank fragment layout -->
 
     <ImageView
-        android:layout_width="133dp"
-        android:layout_height="195dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/imageView"
-        android:layout_gravity="left|top"
-        android:contentDescription="arrow"
-        android:alpha="1"
-        android:src="@drawable/curved_arrow" />
-
-    <TextView
-        android:layout_width="241dp"
-        android:layout_height="224dp"
-        android:text="@string/hello_blank_fragment"
-        android:layout_gravity="right|top"
-        android:textStyle="bold"
-        android:typeface="normal" />
-
+        android:layout_gravity="center"
+        android:src="@drawable/roboapplogo"/>
 </FrameLayout>
