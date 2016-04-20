@@ -33,9 +33,7 @@ public class ConsoleFragment extends Fragment {
     private String mParam2;
     private TextView tv  = null;
 
-    private static int log_count = 0;
-    private String[] word = { "Pretty", "Cool", "Weird" };
-    String[] logEntries = new String[100]; // This value may need to be changed so all entries fit on screen
+
 
 
     private OnFragmentInteractionListener mListener;
@@ -58,10 +56,7 @@ public class ConsoleFragment extends Fragment {
         return fragment;
     }
 
-    public void log_console(String in){
-        logEntries[++log_count]=in;
-        return;
-    }
+
 
 
 
@@ -124,15 +119,18 @@ public class ConsoleFragment extends Fragment {
         super.onResume();
         tv = (TextView) getView().findViewById(R.id.place);
 
-        tv.setText("Score: ---Updated "+(++log_count)+"\n");
+        tv.setText("-- Recent Logs --\n");
 
 
 
         StringBuilder builder = new StringBuilder();
-        for (String s: word) {
-            builder.append("> ");
-            builder.append(s);
-            builder.append("\n");
+
+        for (String s: MainActivity.logEntries) {
+            if(s!=null) {
+                builder.append("> ");
+                builder.append(s);
+                builder.append("\n");
+            }
         }
 
         tv.append(builder.toString().trim()); // .trim to remove the trailing space.

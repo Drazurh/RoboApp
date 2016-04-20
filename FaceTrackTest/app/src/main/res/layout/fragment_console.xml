@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.robodoot.roboapp.ConsoleFragment"
-    android:background="@android:color/black">
+    android:background="@android:color/black"
+    android:id="@+id/fragment_console">
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.robodoot.roboapp.ConsoleFragment;
 
 import com.robodoot.dr.RoboApp.PololuHandler;
 import com.robodoot.dr.facetracktest.R;
@@ -34,9 +36,18 @@ public class MainActivity extends FragmentActivity implements
     private Toolbar mToolbar;
     public PololuHandler pololu;
 
+    public static int log_count = 0;
+    public static final int LOG_SIZE = 100;
+    public static String[] logEntries = new String[LOG_SIZE]; // This value may need to be changed so all entries fit on screen
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         pololu = new PololuHandler();
 
         super.onCreate(savedInstanceState);
@@ -45,6 +56,8 @@ public class MainActivity extends FragmentActivity implements
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.fragment_drawer);
+
+
 
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
 
@@ -64,6 +77,10 @@ public class MainActivity extends FragmentActivity implements
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
+
+
+
+
         Fragment fragment = null;
         Intent intent = null;
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -90,9 +107,11 @@ public class MainActivity extends FragmentActivity implements
                 intent = new Intent("com.robodoot.dr.RoboApp.ColorTrackingActivity");
                 break;
             case 3:
+                log_console("Readme Displayed");
                 fragment = new ReadmeFragment();
                 break;
             case 4:
+
                 intent = new Intent("com.robodoot.dr.RoboApp.WalkingActivity");
                 break;
             //case 5:
@@ -187,4 +206,12 @@ public class MainActivity extends FragmentActivity implements
         ((EditText)findViewById(R.id.message)).setText("");
         return;
     } */
+
+
+    public void log_console(String in){
+        logEntries[log_count++%LOG_SIZE]=in;
+        return;
+    }
 }
+
+
