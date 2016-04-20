@@ -7,6 +7,8 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.util.Log;
 
+import com.robodoot.roboapp.Util;
+
 import org.pololu.maestro.*;
 
 import java.io.Serializable;
@@ -22,10 +24,14 @@ public class PololuHandler implements Serializable {
 
     public static final int NECK_YAW_SERVO = 10;
     public static final int NECK_YAW_SERVO_HOME = 1600;
+    public static final int NECK_YAW_SERVO_RANGE = 1400;
     public static final int NECK_PITCH_SERVO = 9;
     public static final int NECK_PITCH_SERVO_HOME = 2200;
-    public static final int NECK_YAW_SERVO_MAX = NECK_YAW_SERVO_HOME * 2;
-    public static final int NECK_PITCH_SERVO_MAX = NECK_PITCH_SERVO_HOME * 2;
+    public static final int NECK_PITCH_SERVO_RANGE = 1200;
+    public static final int NECK_YAW_SERVO_MIN = NECK_YAW_SERVO_HOME - NECK_YAW_SERVO_RANGE / 2;
+    public static final int NECK_PITCH_SERVO_MIN = NECK_PITCH_SERVO_HOME - NECK_PITCH_SERVO_RANGE / 2;
+    public static final int NECK_YAW_SERVO_MAX = NECK_YAW_SERVO_HOME + NECK_YAW_SERVO_RANGE / 2;
+    public static final int NECK_PITCH_SERVO_MAX = NECK_PITCH_SERVO_HOME + NECK_PITCH_SERVO_RANGE / 2;
     private boolean isConnected=false;
 
     public enum Motor{
@@ -121,11 +127,13 @@ public class PololuHandler implements Serializable {
     }
 
     public void addToYaw(int y) {
-        yaw += y;
+        yaw = Util.clamp(yaw + y, NECK_YAW_SERVO_MIN, NECK_YAW_SERVO_MAX);
+        //yaw += y;
         maestro.setTarget(NECK_YAW_SERVO, yaw);
     }
     public void addToPitch(int p) {
-        pitch += p;
+        yaw = Util.clamp(pitch + p, NECK_PITCH_SERVO_MIN, NECK_PITCH_SERVO_MAX);
+        //pitch += p;
         maestro.setTarget(NECK_PITCH_SERVO, pitch);
     }
 
