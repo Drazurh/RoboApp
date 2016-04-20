@@ -835,10 +835,12 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             return;
         }
         Log.i(TAG, "green rel pos: " + relGreenObjectPos);
-        virtualCat.lookToward(new Point(relGreenObjectPos.y, relGreenObjectPos.x));
+        //virtualCat.lookToward(new Point(relGreenObjectPos.y, relGreenObjectPos.x));
+        virtualCat.lookToward(relGreenObjectPos);
     }
 
-    /* returns a Point position of object or null if no object found */
+    /* returns a Point position of object or null if no object found
+     * normalized to range [-0.5, 0.5]  */
     private Point trackColor(CameraBridgeViewBase.CvCameraViewFrame inputFrame, ColorValues cv) {
         if (cv == null)
             return null;
@@ -892,8 +894,8 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 if (posX >= 0 && posY >= 0) {
                     // compute relative position of the object
                     objectCoords = new Point();
-                    objectCoords.x = posX - (mRgbaForColorTracking.width() / 4.0f);
-                    objectCoords.y = posY - (mRgbaForColorTracking.height() / 2.0f);
+                    objectCoords.y = -(posX - mRgbaForColorTracking.width() / 4.0f) / (mRgbaForColorTracking.width() / 2.0f);
+                    objectCoords.x = -(posY - mRgbaForColorTracking.height() / 2.0f) /  mRgbaForColorTracking.height();
 
                     Log.i(TAG, "I SEE A COLOR OBJECT");
                 }

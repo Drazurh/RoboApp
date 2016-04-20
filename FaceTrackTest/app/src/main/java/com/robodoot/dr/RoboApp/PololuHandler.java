@@ -24,6 +24,8 @@ public class PololuHandler implements Serializable {
     public static final int NECK_YAW_SERVO_HOME = 1600;
     public static final int NECK_PITCH_SERVO = 9;
     public static final int NECK_PITCH_SERVO_HOME = 2200;
+    public static final int NECK_YAW_SERVO_MAX = NECK_YAW_SERVO_HOME * 2;
+    public static final int NECK_PITCH_SERVO_MAX = NECK_PITCH_SERVO_HOME * 2;
     private boolean isConnected=false;
 
     public enum Motor{

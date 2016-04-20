@@ -14,6 +14,8 @@ import org.opencv.core.Point;
 public class PololuVirtualCat extends VirtualCat {
     private static final String TAG = "PololuVirtualCat";
 
+    static final int TURN_SPEED = 5;
+
     public static PololuHandler p;
 
     // DEFAULT CONSTRUCTOR
@@ -73,7 +75,6 @@ public class PololuVirtualCat extends VirtualCat {
         p.cameraPitchSpeed(-0.3f);
     }
 
-    static final int TURN_SPEED = 5;
     @Override
     public void stopMovingHead() {
         stopLookingLeftRight();
@@ -96,23 +97,25 @@ public class PololuVirtualCat extends VirtualCat {
         //Point norm = new Point(relPos.x / len, relPos.y / len);
         Point norm = relPos;
         if (Math.abs(norm.x) > 0.08) {
-            //p.cameraYawSpeed((float) norm.x);
-            if (norm.x < 0.0)
-                p.addToYaw(TURN_SPEED);
-            else
+            /*if (norm.x < 0.0)
                 p.addToYaw(-TURN_SPEED);
+            else
+                p.addToYaw(TURN_SPEED);*/
             //Log.i(TAG, "setting yaw: " + norm.x);
+
+            p.addToYaw((int)(relPos.x * p.NECK_YAW_SERVO_MAX));
         }
         else
             stopLookingLeftRight();
 
         if (Math.abs(norm.y) > 0.08) {
-            //p.cameraPitchSpeed((float) norm.y);
-            if (norm.y < 0.0)
-                p.addToPitch(TURN_SPEED);
-            else
+            /*if (norm.y < 0.0)
                 p.addToPitch(-TURN_SPEED);
+            else
+                p.addToPitch(TURN_SPEED);*/
             //Log.i(TAG, "setting pitch: " + norm.y);
+
+            p.addToPitch((int) (relPos.y * p.NECK_PITCH_SERVO_MAX));
         }
         else {
             stopLookingUpDown();
