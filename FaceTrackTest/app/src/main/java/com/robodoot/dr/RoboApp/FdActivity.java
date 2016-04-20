@@ -512,7 +512,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         TrainingSets.add(0,new ArrayList<Mat>());
         faceRecognizer = opencv_face.createFisherFaceRecognizer();
         //kitty.pic.setVisibility(View.GONE);
-        loadTestFaces();
+        //loadTestFaces();
         refreshRecognizer=0;
         entry.clear();
 
@@ -645,7 +645,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     }
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        peopleThisCameraFrame.clear();
+        /*peopleThisCameraFrame.clear();
 
         try {
             inputFrame.rgba().copyTo(mRgba);
@@ -766,7 +766,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     IDsToCheck.add(peopleThisCameraFrame.get(i).ID);
                 }
 
-                /*int favID = kitty.getFavPerson(IDsToCheck);
+                *//*int favID = kitty.getFavPerson(IDsToCheck);
                 Person favPerson = peopleThisCameraFrame.get(0);
 
                 if (favID > 20) {
@@ -776,7 +776,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                             trackFavFace(favPerson.face);
                         }
                     }
-                }*/
+                }*//*
 
                 peopleLastCameraFrame.clear();
                 peopleLastCameraFrame.addAll(peopleThisCameraFrame);
@@ -786,7 +786,9 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             Log.i(TAG, "Exception " + e.getMessage());
             System.gc();
             return null;
-        }
+        }*/
+
+        inputFrame.rgba().copyTo(mRgba);
 
         //saveMat(imageCaptureDirectory + "/image_" + (frameNumber++) + ".jpg", mRgba);
         //framesForVideo.add(ImageUtil.CopyMatToIplImage(mRgba));
@@ -807,7 +809,8 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             double len = Math.sqrt(Math.pow(relGreenObjectPos.x, 2) + Math.pow(relGreenObjectPos.y, 2));
             if (len == 0.0)
                 return mRgbaForColorTracking;
-            Point norm = new Point(relGreenObjectPos.x / len / 2.0, relGreenObjectPos.y / len / 2.0);
+            //Point norm = new Point(relGreenObjectPos.x / len, relGreenObjectPos.y / len);
+            Point norm = relGreenObjectPos;
             setTextFieldText("pX = " + norm.x, debug1);
             setTextFieldText("pY = " + norm.y, debug2);
             //Log.i(TAG, "object is " + relGreenObjectPos.x + ", " + relGreenObjectPos.y + " from the center");
@@ -815,7 +818,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         /*Point relBlueObjectPos = trackColor(inputFrame, blueValues);
         reactToBlueObject(relBlueObjectPos);*/
 
-        return mRgbaForColorTracking;
+        return mRgba;
     }
 
     private void reactToRedObject(Point relRedObjectPos) {
@@ -832,10 +835,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             return;
         }
         Log.i(TAG, "green rel pos: " + relGreenObjectPos);
-        virtualCat.lookToward(relGreenObjectPos);
+        virtualCat.lookToward(new Point(relGreenObjectPos.y, relGreenObjectPos.x));
     }
 
-    /* returns a Point relative position of object or null if no object found */
+    /* returns a Point position of object or null if no object found */
     private Point trackColor(CameraBridgeViewBase.CvCameraViewFrame inputFrame, ColorValues cv) {
         if (cv == null)
             return null;
@@ -889,7 +892,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 if (posX >= 0 && posY >= 0) {
                     // compute relative position of the object
                     objectCoords = new Point();
-                    objectCoords.x = posX - (mRgbaForColorTracking.width() / 2.0f);
+                    objectCoords.x = posX - (mRgbaForColorTracking.width() / 4.0f);
                     objectCoords.y = posY - (mRgbaForColorTracking.height() / 2.0f);
 
                     Log.i(TAG, "I SEE A COLOR OBJECT");
