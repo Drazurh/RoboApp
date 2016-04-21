@@ -6,8 +6,15 @@ import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.util.Log;
+import com.felhr.*;
+import com.felhr.usbserial.UsbSerialDevice;
+import com.felhr.usbserial.UsbSerialInterface;
+import com.felhr.utils.HexData;
 
 import java.io.Serializable;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 
 /**
  * Primary class for controlling servos via USB.
@@ -25,6 +32,7 @@ public class MaestroUSBDevice implements Serializable {
     private static final String TAG = "MaestroUSBDevice";
     private UsbDevice device;
     private UsbDeviceConnection controlConnection;
+    private UsbSerialDevice serial;
 
     // Pololu Protocol Commands
     public static final int CMD_SET_POSITION = 0x85;
@@ -40,9 +48,20 @@ public class MaestroUSBDevice implements Serializable {
     }
 
     public void explicitSend(byte[] a) {
-        Log.d("DEVICE" , "device Details: " + device.toString());
-        int x = controlConnection.bulkTransfer(device.getInterface(0).getEndpoint(0), a, a.length, 5000);
-        Log.d("DEVICE" , "X: " + x);
+        //serial.write(a);
+        if(a != null && serial != null) {
+            Log.d("MAESTRO: SEND: ", HexData.hexToString(a));
+            //serial.syncWrite(a, 5000);
+            //serial.syncRead(buffer, 5000);
+            serial.write(a);
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //Log.d("MAESTRO: ", String.valueOf(i));
+        }
+
     }
 
     public void sendCommand(int command, int channel, int value) {
@@ -85,6 +104,13 @@ public class MaestroUSBDevice implements Serializable {
 
             if (connection != null && connection.claimInterface(controlInterface, true)) {
                 controlConnection = connection;
+                serial = UsbSerialDevice.createUsbSerialDevice(device, controlConnection);
+                boolean t = serial.open();
+                Log.d("Set DEVICE : ", "" + t);
+                serial.setBaudRate(9600);
+                serial.setParity(UsbSerialInterface.PARITY_NONE);
+                serial.setStopBits(UsbSerialInterface.STOP_BITS_1);
+                serial.setDataBits(UsbSerialInterface.DATA_BITS_8);
             } else {
                 Log.e(TAG, "open connection FAIL");
                 controlConnection = null;

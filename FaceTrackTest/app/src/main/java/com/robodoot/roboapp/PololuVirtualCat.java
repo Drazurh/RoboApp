@@ -18,7 +18,11 @@ public class PololuVirtualCat extends VirtualCat {
 
     // DEFAULT CONSTRUCTOR
     public PololuVirtualCat() {
-        p = new PololuHandler();
+        new Thread(new Runnable() {
+            public void run() {
+                p = new PololuHandler();
+            }
+        }).start();
     }
 
     public void UpdateObjectPosition(int relX, int relY) {

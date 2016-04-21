@@ -22,7 +22,7 @@
             android:label="@string/title_activity_fd"
             android:launchMode="singleTop" >
             <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+             <!--   <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />-->
                 <action android:name="com.robodoot.dr.RoboApp.FdActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -75,13 +75,13 @@
 
             <intent-filter>
                 <action android:name="com.robodoot.dr.RoboApp.WalkingActivity" />
-
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
-            <!--<meta-data
+            <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter" />-->
+                android:resource="@xml/device_filter" />
         </activity>
     </application>
 
