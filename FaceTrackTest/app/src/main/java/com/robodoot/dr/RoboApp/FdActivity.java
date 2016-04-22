@@ -451,7 +451,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         super.onPause();
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
-        record(imageCaptureDirectory);
+        //record(imageCaptureDirectory);
         frameNumber = 0;
     }
 
@@ -792,7 +792,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
         //saveMat(imageCaptureDirectory + "/image_" + (frameNumber++) + ".jpg", mRgba);
         //framesForVideo.add(ImageUtil.CopyMatToIplImage(mRgba));
-        framesForVideo.add(ImageUtil.OpenCVMatToJavaCVMat(mRgba));
+        //framesForVideo.add(ImageUtil.OpenCVMatToJavaCVMat(mRgba));
 
         /*Point relRedObjectPos = trackColor(inputFrame, redValues);
         reactToRedObject(relRedObjectPos);*/
