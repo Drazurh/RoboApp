@@ -61,28 +61,33 @@ public class PololuVirtualCat extends VirtualCat {
 
     @Override
     public void turnHeadDown() {
-        p.cameraPitchSpeed(-0.3f);
+        //p.cameraPitchSpeed(-0.3f);
+        p.addToPitch(30);
     }
 
     @Override
     public void turnHeadLeft() {
-        p.cameraYawSpeed(0.3f);
+        //p.cameraYawSpeed(0.3f);
+        p.addToYaw(-50);
     }
 
     @Override
     public void turnHeadRight() {
-        p.cameraYawSpeed(-0.3f);
+        p.addToYaw(50);
+        //p.cameraYawSpeed(-0.3f);
     }
 
     @Override
     public void turnHeadUp() {
-        p.cameraPitchSpeed(-0.3f);
+        //p.cameraPitchSpeed(-0.3f);
+        p.addToPitch(-30);
     }
 
     @Override
     public void stopMovingHead() {
-        stopLookingLeftRight();
-        stopLookingUpDown();
+        //stopLookingLeftRight();
+        //stopLookingUpDown();
+        //NOTHING
     }
 
     @Override

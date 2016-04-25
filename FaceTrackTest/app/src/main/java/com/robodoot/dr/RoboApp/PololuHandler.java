@@ -71,6 +71,7 @@ public class PololuHandler {
 
     public PololuHandler() {
         maestro = new MaestroSSC();
+        yaw = NECK_YAW_SERVO_HOME;
     }
 
     public boolean isOpen() {
@@ -128,6 +129,7 @@ public class PololuHandler {
 
     public void addToYaw(int y) {
         yaw = Util.clamp(yaw + y, NECK_YAW_SERVO_MIN, NECK_YAW_SERVO_MAX);
+
         //yaw += y;
         maestro.setTarget(NECK_YAW_SERVO, yaw);
     }

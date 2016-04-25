@@ -91,7 +91,8 @@ public class CatEmotion {
                         state = EMOTION.HAPPY_TONGUE;
                     } else if (scale <= 100) {
                         state = EMOTION.HAPPIER;
-                    } else {
+                    }
+                    else{
                         state = EMOTION.HEARTS;
                     }
                 }

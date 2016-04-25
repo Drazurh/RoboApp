@@ -383,36 +383,26 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                         //Make the cat mad.
                         kitty.frownedAt();
                     }
-                    if (result.contains("forward")) {
-                        //Make the cat walk forward
-                        Log.d("MOVEMENT", "Call made to forwards motion");
-                    }
-                    if (result.contains("back")) {
-                        //Make the cat walk backward
-                        Log.d("MOVEMENT", "Call made to backwardss motion");
-                    }
-                    if (result.contains("red")) {
-                        //Make the cat detect red
-                    }
-                    if (result.contains("blue")) {
-                        //Make the cat detect blue
-                    }
-                    if (result.contains("green")) {
-                        //Make the cat detect green
-                    }
                     if (result.contains("left")) {
                         //Make the cat head move left
-                        kitty.lookLeft();
                         virtualCat.turnHeadLeft();
                     }
-                    if (result.contains("right")) {
+                    if (result.contains("walk")) {
+                        virtualCat.stepForward();
+                    }
+                    if (result.contains("right") || result.contains("write")) {
                         //Make the cat head move right
-                        kitty.lookRight();
                         virtualCat.turnHeadRight();
                     }
-                    if (result.contains("here") || result.contains("hear")) {
+                    if (result.contains("home")) {
                         virtualCat.resetHead();
                     }
+                    /*if (result.contains("up")) {
+                        virtualCat.turnHeadUp();
+                    }
+                    if (result.contains("down")) {
+                        virtualCat.turnHeadDown();
+                    }*/
                     //Clear the arrayList for the next time a button is pressed.
                     result.clear();
                 }
