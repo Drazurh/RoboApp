@@ -821,7 +821,6 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
     private void reactToGreenObject(Point relGreenObjectPos) {
         if (relGreenObjectPos == null) {
-            virtualCat.stopMovingHead();
             return;
         }
         Log.i(TAG, "green rel pos: " + relGreenObjectPos);

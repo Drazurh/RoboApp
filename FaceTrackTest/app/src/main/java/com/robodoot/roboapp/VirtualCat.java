@@ -53,10 +53,4 @@ public abstract class VirtualCat {
     public abstract void lookAwayFrom(Point relPos);
 
     public abstract void resetHead();
-
-    public abstract void stopMovingHead();
-
-    public abstract void stopLookingLeftRight();
-
-    public abstract void stopLookingUpDown();
 }
