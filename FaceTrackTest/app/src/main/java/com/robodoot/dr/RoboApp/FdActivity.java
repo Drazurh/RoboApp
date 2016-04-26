@@ -269,7 +269,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     public void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_fd);
 
-        debugging = true;
+        //debugging = true;
 
         psswd.add(CHAR.U);
         psswd.add(CHAR.U);
@@ -456,7 +456,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
 
         entry.clear();
-        showVideoFeed();
+        //showVideoFeed();
 
         timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
         imageCaptureDirectory = Environment.getExternalStorageDirectory().getPath() + "/RoboApp/" + timestamp;
