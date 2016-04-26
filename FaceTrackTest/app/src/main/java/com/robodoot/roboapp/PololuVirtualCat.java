@@ -85,33 +85,19 @@ public class PololuVirtualCat extends VirtualCat {
 
     @Override
     public void lookToward(Point relPos) {
-        double len = Math.sqrt(Math.pow(relPos.x, 2) + Math.pow(relPos.y, 2));
-        //Point norm = new Point(relPos.x / len, relPos.y / len);
-        Point norm = relPos;
-        if (Math.abs(norm.x) > 0.08) {
-            /*if (norm.x < 0.0)
-                p.addToYaw(-TURN_SPEED);
-            else
-                p.addToYaw(TURN_SPEED);*/
-            //Log.i(TAG, "setting yaw: " + norm.x);
-
-            p.addToYaw((int)(relPos.x * p.NECK_YAW_SERVO_MAX));
+        int yaw = (int)(relPos.x * p.NECK_YAW_SERVO_MAX * 0.1f);
+        if (Math.abs(yaw) >= 25) {
+            p.addToYaw(yaw);
         }
-
-        if (Math.abs(norm.y) > 0.08) {
-            /*if (norm.y < 0.0)
-                p.addToPitch(-TURN_SPEED);
-            else
-                p.addToPitch(TURN_SPEED);*/
-            //Log.i(TAG, "setting pitch: " + norm.y);
-
-            p.addToPitch((int) (relPos.y * p.NECK_PITCH_SERVO_MAX));
+        int pitch = (int) (relPos.y * p.NECK_PITCH_SERVO_MAX * 0.075f);
+        if (Math.abs(pitch) >= 25) {
+            p.addToPitch(pitch);
         }
     }
 
     @Override
     public void lookAwayFrom(Point relPos) {
-        lookToward(new Point(-relPos.x, -relPos.y));
+        lookToward(new Point(-1.0f / relPos.x, -1.0f / relPos.y));
     }
 
     public void resetHead() {

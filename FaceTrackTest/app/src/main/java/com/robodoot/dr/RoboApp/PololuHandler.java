@@ -30,7 +30,7 @@ public class PololuHandler {
     public static final int NECK_YAW_SERVO_RANGE = 1400;
     public static final int NECK_PITCH_SERVO = 9;
     public static final int NECK_PITCH_SERVO_HOME = 2200;
-    public static final int NECK_PITCH_SERVO_RANGE = 1200;
+    public static final int NECK_PITCH_SERVO_RANGE = 1000;
     public static final int NECK_YAW_SERVO_MIN = NECK_YAW_SERVO_HOME - NECK_YAW_SERVO_RANGE / 2;
     public static final int NECK_PITCH_SERVO_MIN = NECK_PITCH_SERVO_HOME - NECK_PITCH_SERVO_RANGE / 2;
     public static final int NECK_YAW_SERVO_MAX = NECK_YAW_SERVO_HOME + NECK_YAW_SERVO_RANGE / 2;
@@ -135,7 +135,7 @@ public class PololuHandler {
     }
 
     public void addToPitch(int p) {
-        yaw = Util.clamp(pitch + p, NECK_PITCH_SERVO_MIN, NECK_PITCH_SERVO_MAX);
+        pitch = Util.clamp(pitch + p, NECK_PITCH_SERVO_MIN, NECK_PITCH_SERVO_MAX);
         //pitch += p;
         maestro.setTarget(NECK_PITCH_SERVO, pitch);
     }

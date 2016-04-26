@@ -140,6 +140,8 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     double yCenter = -1;
 
     private boolean debugging = false;
+    private boolean trackingGreen = false;
+    private boolean trackingRed = false;
 
     //PololuHandler pololu;
     VirtualCat virtualCat;
@@ -396,6 +398,14 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     }
                     if (result.contains("home")) {
                         virtualCat.resetHead();
+                    }
+                    if (result.contains("green")) {
+                        trackingGreen = true;
+                        trackingRed = false;
+                    }
+                    if (result.contains("red")) {
+                        trackingGreen = false;
+                        trackingRed = true;
                     }
                     /*if (result.contains("up")) {
                         virtualCat.turnHeadUp();
@@ -779,31 +789,27 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         }*/
 
         inputFrame.rgba().copyTo(mRgba);
+        Core.flip(mRgba.t(), mRgba, 0);
 
         //saveMat(imageCaptureDirectory + "/image_" + (frameNumber++) + ".jpg", mRgba);
         //framesForVideo.add(ImageUtil.CopyMatToIplImage(mRgba));
         //framesForVideo.add(ImageUtil.OpenCVMatToJavaCVMat(mRgba));
 
-        /*Point relRedObjectPos = trackColor(inputFrame, redValues);
-        reactToRedObject(relRedObjectPos);*/
-        Point relGreenObjectPos = trackColor(inputFrame, greenValues);
-        reactToGreenObject(relGreenObjectPos);
-        if (relGreenObjectPos != null) {
-            //Imgproc.rectangle(mRgbaForColorTracking, relGreenObjectPos, new Point(relGreenObjectPos.x + 20, relGreenObjectPos.y + 20), new Scalar(255, 255, 255), 5);
-            /*Imgproc.rectangle(mRgbaForColorTracking,
-                    new Point(relGreenObjectPos.x + (mRgbaForColorTracking.width() / 2.0f),
-                            relGreenObjectPos.y + (mRgbaForColorTracking.height() / 2.0f)),
-                    new Point(relGreenObjectPos.x + (mRgbaForColorTracking.width() / 2.0f) + 20,
-                            relGreenObjectPos.y + (mRgbaForColorTracking.height() / 2.0f) + 20),
-                    new Scalar(255, 255, 255), 5);*/
-            double len = Math.sqrt(Math.pow(relGreenObjectPos.x, 2) + Math.pow(relGreenObjectPos.y, 2));
-            if (len == 0.0)
-                return mRgbaForColorTracking;
-            //Point norm = new Point(relGreenObjectPos.x / len, relGreenObjectPos.y / len);
-            Point norm = relGreenObjectPos;
-            setTextFieldText("pX = " + norm.x, debug1);
-            setTextFieldText("pY = " + norm.y, debug2);
-            //Log.i(TAG, "object is " + relGreenObjectPos.x + ", " + relGreenObjectPos.y + " from the center");
+        if (trackingRed) {
+            Point relRedObjectPos = trackColor(inputFrame, redValues);
+            reactToRedObject(relRedObjectPos);
+        }
+        if (trackingGreen) {
+            Point relGreenObjectPos = trackColor(inputFrame, greenValues);
+            reactToGreenObject(relGreenObjectPos);
+//        if (relGreenObjectPos != null) {
+//            double len = Math.sqrt(Math.pow(relGreenObjectPos.x, 2) + Math.pow(relGreenObjectPos.y, 2));
+//            if (len == 0.0) return mRgba;
+//            Point norm = relGreenObjectPos;
+//            setTextFieldText("pX = " + norm.x, debug1);
+//            setTextFieldText("pY = " + norm.y, debug2);
+//            //Log.i(TAG, "object is " + relGreenObjectPos.x + ", " + relGreenObjectPos.y + " from the center");
+//        }
         }
         /*Point relBlueObjectPos = trackColor(inputFrame, blueValues);
         reactToBlueObject(relBlueObjectPos);*/
@@ -812,17 +818,15 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     }
 
     private void reactToRedObject(Point relRedObjectPos) {
-        if (relRedObjectPos == null)
-            return;
+        if (relRedObjectPos == null) return;
 
         Log.i(TAG, "red rel pos: " + relRedObjectPos);
         virtualCat.lookAwayFrom(relRedObjectPos);
     }
 
     private void reactToGreenObject(Point relGreenObjectPos) {
-        if (relGreenObjectPos == null) {
-            return;
-        }
+        if (relGreenObjectPos == null) return;
+
         Log.i(TAG, "green rel pos: " + relGreenObjectPos);
         //virtualCat.lookToward(new Point(relGreenObjectPos.y, relGreenObjectPos.x));
         virtualCat.lookToward(relGreenObjectPos);
