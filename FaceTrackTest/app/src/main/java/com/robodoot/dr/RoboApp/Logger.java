@@ -75,17 +75,23 @@ public class Logger {
                     e.printStackTrace();
                 }
             }
+            BufferedWriter buf = null;
             try {
                 //BufferedWriter for performance, true to set append to file flag
-                BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, append));
+                buf = new BufferedWriter(new FileWriter(logFile, append));
 
                 buf.write(message);
                 //buf.append(message);
                 buf.newLine();
                 buf.flush();
-                buf.close();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            try {
+                if (buf != null) buf.close();
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -112,6 +118,7 @@ public class Logger {
                 while ((line = br.readLine()) != null) {
                     lines.add(line);
                 }
+                br.close();
             } catch (Exception e) {
                 return null;
             }
