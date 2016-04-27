@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by alex on 2/10/16.
+ * An abstract class which specifies a common interface for all "virtual cat" classes. All
+ * activities can be written to operate on a VirtualCat, and the actual implementation of the
+ * cat behavior will be provided by some concrete class that inherits from VirtualCat.
  */
 public abstract class VirtualCat {
     // interface for anyone who wants battery level updates

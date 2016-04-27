@@ -9,7 +9,8 @@ import com.robodoot.dr.RoboApp.PololuHandler;
 import org.opencv.core.Point;
 
 /**
- * Created by alex on 4/10/16.
+ * A concrete implementation of the VirtualCat interface which controls the cat by communicating
+ * only with the Pololu (no Arduino).
  */
 public class PololuVirtualCat extends VirtualCat {
     private static final String TAG = "PololuVirtualCat";

@@ -70,6 +70,10 @@ import java.util.Vector;
 
 import static org.bytedeco.javacpp.opencv_imgcodecs.cvLoadImage;
 
+/**
+ * Behavior mode activity. This is the main activity of the app. It uses OpenCV/JavaCV for face
+ * detection and color tracking. Image processing occurs in the {@link #onCameraFrame} method.
+ */
 public class FdActivity extends Activity implements GestureDetector.OnGestureListener, CvCameraViewListener2 {
     private Logger mFaceRectLogger;
     private Logger mSpeechTextLogger;
@@ -84,14 +88,13 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     private ArrayList<String> result;
     private static final String good = "good";
     private static final String bad = "bad";
-    MediaRecorder mRecorder;
 
     private GestureDetector gDetector;
     public enum CHAR {U, D, L, R}
     private static Vector<CHAR> psswd = new Vector<>();
     public static Vector<CHAR> entry = new Vector<>();
 
-    private static final String TAG = "OCVSample::Activity";
+    private static final String TAG = "FdActivity";
     private static final int JAVA_DETECTOR = 0;
 
     private CatEmotion kitty;
@@ -266,21 +269,19 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         mSpeechTextLogger = new Logger("speech_text_log");
     }
 
-    /** Called when the activity is first created. */
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // ACTIVITY LIFECYCLE METHODS
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_fd);
 
         //debugging = true;
 
-        psswd.add(CHAR.U);
-        psswd.add(CHAR.U);
-        psswd.add(CHAR.D);
-        psswd.add(CHAR.D);
-        psswd.add(CHAR.L);
-        psswd.add(CHAR.R);
-        psswd.add(CHAR.L);
-        psswd.add(CHAR.R);
+        psswd.add(CHAR.U); psswd.add(CHAR.U);  psswd.add(CHAR.D); psswd.add(CHAR.D);
+        psswd.add(CHAR.L);  psswd.add(CHAR.R);  psswd.add(CHAR.L);  psswd.add(CHAR.R);
+
         gDetector = new GestureDetector(getApplicationContext(), this);
         Log.i(TAG, "called onCreate");
         super.onCreate(savedInstanceState);
@@ -330,26 +331,271 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 && lines.length > 0) {
             blueValues = new ColorValues(lines[0]);
         }
-//        ServoText = (EditText)findViewById(R.id.servoField);
-//        SpeedText = (EditText)findViewById(R.id.speedField);
-//        final Button button = (Button)findViewById(R.id.goButton);
-//        button.setOnClickListener(new View.OnClickListener(){
-//            public void onClick(View v){
-//                Random rand = new Random();
-//                int target = Integer.parseInt(SpeedText.getText().toString());
-//                int motor  = Integer.parseInt(ServoText.getText().toString());
-//                pololu.maestro.setTarget(motor,target);
-//                pololu.setSpeedConst((float)motor);
-//                String tempS = motor+""+target;
-//                setTextFieldText(tempS, debug3);
-//
-//            }
-//
-//
-//
-//        });
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mOpenCvCameraView != null)
+            mOpenCvCameraView.disableView();
+        //record(imageCaptureDirectory);
+        frameNumber = 0;
+    }
+
+    @Override
+    public void onResume() {
+        //pololu.onResume(getIntent(), this);
+        virtualCat.onResume(getIntent(), this);
+
+        super.onResume();
+        //pololu.home();
+        virtualCat.resetHead();
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
+
+        entry.clear();
+        //showVideoFeed();
+
+        timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+        imageCaptureDirectory = Environment.getExternalStorageDirectory().getPath() + "/RoboApp/" + timestamp;
+        frameNumber = 0;
+
+        mFaceRectLogger.addRecordToLog("\n" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mOpenCvCameraView.disableView();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // MISC
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public boolean onTouchEvent(MotionEvent me) {
+//        if(me.getAction()==MotionEvent.ACTION_BUTTON_PRESS&&!cameraIsChecked)
+//        {
+//            cameraIsChecked = !cameraIsChecked;
+//            mOpenCvCameraView.setAlpha(0.8f);
+//            mOpenCvCameraView.bringToFront();
+//        }
+//        else if(me.getAction()==MotionEvent.ACTION_BUTTON_RELEASE&&cameraIsChecked)
+//        {
+//            cameraIsChecked = !cameraIsChecked;
+//            mOpenCvCameraView.setAlpha(0f);
+//
+//
+//        }
+
+        return gDetector.onTouchEvent(me);
+    }
+
+    @Override
+    public boolean onDown(MotionEvent arg0) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    private void record(String directory) {
+        opencv_core.Mat[] frames = new opencv_core.Mat[framesForVideo.size()];
+        framesForVideo.toArray(frames);
+
+        String path = directory + "/output" + System.currentTimeMillis() + ".mp4";
+        File file = new File(path).getAbsoluteFile();
+        file.getParentFile().mkdirs();
+
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(path, 200, 150);
+
+        try {
+            recorder.setVideoCodec(13); // CODEC_ID_MPEG4 //CODEC_ID_MPEG1VIDEO
+            // //http://stackoverflow.com/questions/14125758/javacv-ffmpegframerecorder-properties-explanation-needed
+
+            recorder.setFrameRate(10); // This is the frame rate for video. If you really want to have good video quality you need to provide large set of images.
+            recorder.setPixelFormat(0); // PIX_FMT_YUV420P
+
+            recorder.start();
+            OpenCVFrameConverter frameConverter = new OpenCVFrameConverter.ToMat();
+            for (int i = 0; i < frames.length; i++) {
+                Frame f = frameConverter.convert(frames[i]);
+                recorder.record(f);
+            }
+            recorder.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+            for (opencv_core.Mat f : framesForVideo) {
+                f.release();
+            }
+            framesForVideo.clear();
+        }
+
+        for (opencv_core.Mat f : framesForVideo) {
+            f.release();
+        }
+        framesForVideo.clear();
+    }
+
+    private final void saveMat(String path, Mat mat) {
+        File file = new File(path).getAbsoluteFile();
+        file.getParentFile().mkdirs();
+        try {
+            int cols = mat.cols();
+            byte[] data = new byte[(int) mat.total() * mat.channels()];
+            mat.get(0, 0, data);
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path))) {
+                oos.writeObject(cols);
+                oos.writeObject(data);
+                oos.close();
+            }
+        } catch (IOException | ClassCastException ex) {
+            System.err.println("ERROR: Could not save mat to file: " + path);
+        }
+    }
+
+    private void setTextFieldText(String message, TextView field)
+    {
+        tempTextView = field;
+        tempText = message;
+        if(!debugging)return;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tempTextView.setAlpha(1f);
+                tempTextView.setText(tempText);
+                tempTextView.bringToFront();
+            }
+        });
+    }
+
+    private void showVideoFeed()
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mOpenCvCameraView.setAlpha(1.0f);
+                debugging = true;
+            }
+        });
+    }
+
+    private void hideVideoFeed()
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mOpenCvCameraView.setAlpha(0.0f);
+            }
+        });
+    }
+
+    private boolean onSwipe(Direction direction) {
+        if(direction == Direction.right) {
+            entry.add(CHAR.R);
+            //((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.right);
+        }
+        else if(direction == Direction.left) {
+            entry.add(CHAR.L);
+            // ((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.left);
+        }
+        else if(direction == Direction.up) {
+            entry.add(CHAR.U);
+            // ((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.up);
+        }
+        else if(direction == Direction.down) {
+            entry.add(CHAR.D);
+            // ((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.down);
+        }
+
+        if(entry.equals(psswd)) {
+            //((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.enter);
+            //Code to switch activities to open Menu.
+            //Intent intent = new Intent(this, MenuActivity.class);
+            entry.clear();
+            showVideoFeed();
+            Intent intent = new Intent(this, MainActivity.class);
+
+            //intent.putExtra("pololu", pololu);
+
+            startActivity(intent);
+        }
+
+        else if(entry.lastElement() != psswd.elementAt(entry.size()-1)) {
+            entry.clear();
+        }
+
+        if(entry.size()>psswd.size()+2)
+        {
+            entry.clear();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+        /*
+        Grab two events located on the plane at e1=(x1, y1) and e2=(x2, y2)
+        Let e1 be the initial event
+        e2 can be located at 4 different positions, consider the following diagram
+        (Assume that lines are separated by 90 degrees.)
+
+
+        \ A  /
+        \  /
+        D   e1   B
+        /  \
+        / C  \
+
+        So if (x2,y2) falls in region:
+        A => it's an UP swipe
+        B => it's a RIGHT swipe
+        C => it's a DOWN swipe
+        D => it's a LEFT swipe
+
+        */
+
+        float x1 = e1.getX();
+        float y1 = e1.getY();
+
+        float x2 = e2.getX();
+        float y2 = e2.getY();
+
+        Direction direction = Direction.get(x1, y1, x2, y2);
+        return onSwipe(direction);
+    }
+
+    @Override
+    public void onLongPress(MotionEvent arg0) {
+        if(mOpenCvCameraView.getAlpha()>0.5f)
+            mOpenCvCameraView.setAlpha(0.0f);
+        else
+            mOpenCvCameraView.setAlpha(0.80f);
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent arg0, MotionEvent arg1, float arg2, float arg3) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent arg0) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent arg0) {
+        return false;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // SPEECH DETECTION
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Capture speech input from microphone.
+     */
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -421,72 +667,9 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         }
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent me) {
-//        if(me.getAction()==MotionEvent.ACTION_BUTTON_PRESS&&!cameraIsChecked)
-//        {
-//            cameraIsChecked = !cameraIsChecked;
-//            mOpenCvCameraView.setAlpha(0.8f);
-//            mOpenCvCameraView.bringToFront();
-//        }
-//        else if(me.getAction()==MotionEvent.ACTION_BUTTON_RELEASE&&cameraIsChecked)
-//        {
-//            cameraIsChecked = !cameraIsChecked;
-//            mOpenCvCameraView.setAlpha(0f);
-//
-//
-//        }
-
-        return gDetector.onTouchEvent(me);
-    }
-
-    @Override
-    public boolean onDown(MotionEvent arg0) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mOpenCvCameraView != null)
-            mOpenCvCameraView.disableView();
-        //record(imageCaptureDirectory);
-        frameNumber = 0;
-    }
-
-    @Override
-    public void onResume() {
-        //pololu.onResume(getIntent(), this);
-        virtualCat.onResume(getIntent(), this);
-
-        super.onResume();
-        //pololu.home();
-        virtualCat.resetHead();
-        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
-
-        entry.clear();
-        //showVideoFeed();
-
-        timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-        imageCaptureDirectory = Environment.getExternalStorageDirectory().getPath() + "/RoboApp/" + timestamp;
-        frameNumber = 0;
-
-        mFaceRectLogger.addRecordToLog("\n" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()));
-    }
-
-    public double getAmplitude() {
-        if (mRecorder != null)
-            return  (mRecorder.getMaxAmplitude());
-        else
-            return 0;
-
-    }
-
-    public void onDestroy() {
-        super.onDestroy();
-        mOpenCvCameraView.disableView();
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // GENERAL/SHARED OPENCV
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void onCameraViewStarted(int width, int height) {
         TextView loading = (TextView)findViewById(R.id.LoadingText);
@@ -530,120 +713,11 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         for(int i = 0;i<12;i++)FaceMatBuffer[i].release();
     }
 
-    public int checkForRecognition(Mat face)
-    {
-        Random rand = new Random();
-        if (IDcount<=21)return 0;
-        Mat check = face.clone();
-        Imgproc.resize(check, check, stds);
-        opencv_core.Mat temp = ImageUtil.convert(check);
-        int ID = faceRecognizer.predict(temp);
-
-        if(ID>20) {
-            face.copyTo(TrainingSets.get(ID).get(rand.nextInt(TrainingSets.get(ID).size())));
-//            refreshRecognizer++;
-//            if(refreshRecognizer>100){
-//
-//                resetRecognizer();
-//                refreshRecognizer=0;
-//            }
-
-            return ID;
-        }
-        return 0;
-
-    }
-
-    /*private void trackFavFace(Rect faceRect) {
-        mFaceRectLogger.addRecordToLog(faceRect.x + ", " + faceRect.y + ", " + faceRect.width + ", " + faceRect.height);
-
-        int sumX = faceRect.x + faceRect.width / 2;
-        int sumY = faceRect.y + faceRect.height / 2;
-        for (int i = FavFaceLocationBuffer.length - 1; i > 0; i--) {
-
-            FavFaceLocationBuffer[i] = FavFaceLocationBuffer[i - 1];
-            sumX = sumX + FavFaceLocationBuffer[i].x + FavFaceLocationBuffer[i].width / 2;
-            sumY = sumY + FavFaceLocationBuffer[i].y + FavFaceLocationBuffer[i].height / 2;
-
-        }
-
-        FavFaceLocationBuffer[0] = faceRect;
-
-        if (FavFaceLocationBuffer[FavFaceLocationBuffer.length - 1].size().area() < 2) return;
-        int AvgX = sumX / FavFaceLocationBuffer.length;
-        int AvgY = sumY / FavFaceLocationBuffer.length;
-
-        double pX = (double) AvgX / (double) mRgba.width();
-        double pY = (double) AvgY / (double) mRgba.height();
-
-        if (pX < 0.42) pololu.cameraYawSpeed(0.5f - (float) pX);
-        else if (pY < 0.42) pololu.cameraPitchSpeed(-0.5f + (float)pY);
-        else if (pX > 0.58) pololu.cameraYawSpeed(0.5f - (float)pX);
-        else if (pY > 0.58) pololu.cameraPitchSpeed(-0.5f + (float) pY);
-
-        setTextFieldText("pX = " + pX + "   " + (0.5f - (float) pX), debug1);
-        setTextFieldText("pY = " + pY + "   " + (0.5f - (float) pY), debug2);
-        //else pololu.stopNeckMotors();
-    }*/
-
-    public boolean adjustFaceBuffer(Rect faceRect)
-    {
-        int sumX = faceRect.x+faceRect.width/2;
-        int sumY = faceRect.y+faceRect.height/2;
-        int sumA = (int)faceRect.size().area();
-        for(int i=FaceLocationBuffer.length-1;i>0;i--)
-        {
-            FaceMatBuffer[i - 1].copyTo(FaceMatBuffer[i]);
-            FaceLocationBuffer[i]= FaceLocationBuffer[i-1];
-            sumX = sumX + FaceLocationBuffer[i].x+FaceLocationBuffer[i].width/2;
-            sumY = sumY + FaceLocationBuffer[i].y+FaceLocationBuffer[i].height/2;
-            sumA = sumA + (int)FaceLocationBuffer[i].size().area();
-        }
-
-        FaceLocationBuffer[0]=faceRect;
-        mRgba.submat(faceRect).copyTo(FaceMatBuffer[0]);
-        Imgproc.cvtColor(FaceMatBuffer[0], FaceMatBuffer[0], Imgproc.COLOR_RGB2GRAY);
-
-        if(FaceLocationBuffer[FaceLocationBuffer.length-1].size().area()<2)return false;
-        int AvgX = sumX/ FaceLocationBuffer.length;
-        int AvgY = sumY/ FaceLocationBuffer.length;
-        int AvgA = sumA/ FaceLocationBuffer.length;
-
-        int count = 0;
-        for(int i=0;i< FaceLocationBuffer.length;i++)
-        {
-            double dist = Math.sqrt(Math.pow(FaceLocationBuffer[i].x+FaceLocationBuffer[i].width/2-AvgX,2)+Math.pow(FaceLocationBuffer[i].y+FaceLocationBuffer[i].height/2-AvgY,2));
-            if (dist<20) {
-                double areaChange = Math.abs(FaceLocationBuffer[i].size().area() / AvgA - 1);
-                if (areaChange < 0.15)
-                    count++;
-            }
-        }
-
-        int j=0;
-        if (count>=EigenMats.length) {
-            for (int i = 0; i < FaceLocationBuffer.length; i++) {
-                if (j>=EigenMats.length) break;
-                if (Math.sqrt(Math.pow(FaceLocationBuffer[i].x+FaceLocationBuffer[i].width/2 - AvgX, 2) + Math.pow(FaceLocationBuffer[i].y+FaceLocationBuffer[i].height/2 - AvgY, 2)) < 20)
-                    if (Math.abs(FaceLocationBuffer[i].size().area() / AvgA - 1) < 0.15) {
-                        FaceMatBuffer[i].copyTo(EigenMats[j]);
-                        j++;
-                    }
-            }
-
-            for(int i = 0;i<FaceLocationBuffer.length;i++)
-            {
-                FaceMatBuffer[i].release();
-                FaceMatBuffer[i]=new Mat();
-                FaceLocationBuffer[i]=new Rect(new Point(0,0),new Size(1,1));
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
+    /**
+     * Process a video frame (do face detection, color tracking)
+     * @param inputFrame the image to process
+     * @return a possibly modified inputFrame to be displayed
+     */
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         /*peopleThisCameraFrame.clear();
 
@@ -817,6 +891,14 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         return mRgba;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // COLOR TRACKING
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Make the cat react to a red object.
+     * @param relRedObjectPos The relative position of the red object.
+     */
     private void reactToRedObject(Point relRedObjectPos) {
         if (relRedObjectPos == null) return;
 
@@ -824,6 +906,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         virtualCat.lookAwayFrom(relRedObjectPos);
     }
 
+    /**
+     * Make the cat react to a green object.
+     * @param relGreenObjectPos The relative position of the green object.
+     */
     private void reactToGreenObject(Point relGreenObjectPos) {
         if (relGreenObjectPos == null) return;
 
@@ -832,8 +918,12 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         virtualCat.lookToward(relGreenObjectPos);
     }
 
-    /* returns a Point position of object or null if no object found
-     * normalized to range [-0.5, 0.5]  */
+    /**
+     * Track an object by color.
+     * @param inputFrame The image to process.
+     * @param cv The min/max HSV values to see.
+     * @return a Point position of object or null if no object found normalized to range [-0.5, 0.5]
+     */
     private Point trackColor(CameraBridgeViewBase.CvCameraViewFrame inputFrame, ColorValues cv) {
         if (cv == null)
             return null;
@@ -906,97 +996,155 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         return objectCoords;
     }
 
-    private void record(String directory) {
-        opencv_core.Mat[] frames = new opencv_core.Mat[framesForVideo.size()];
-        framesForVideo.toArray(frames);
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // FACE DETECTION
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-        String path = directory + "/output" + System.currentTimeMillis() + ".mp4";
-        File file = new File(path).getAbsoluteFile();
-        file.getParentFile().mkdirs();
+    public int checkForRecognition(Mat face)
+    {
+        Random rand = new Random();
+        if (IDcount<=21)return 0;
+        Mat check = face.clone();
+        Imgproc.resize(check, check, stds);
+        opencv_core.Mat temp = ImageUtil.convert(check);
+        int ID = faceRecognizer.predict(temp);
 
-        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(path, 200, 150);
+        if(ID>20) {
+            face.copyTo(TrainingSets.get(ID).get(rand.nextInt(TrainingSets.get(ID).size())));
+//            refreshRecognizer++;
+//            if(refreshRecognizer>100){
+//
+//                resetRecognizer();
+//                refreshRecognizer=0;
+//            }
 
-        try {
-            recorder.setVideoCodec(13); // CODEC_ID_MPEG4 //CODEC_ID_MPEG1VIDEO
-            // //http://stackoverflow.com/questions/14125758/javacv-ffmpegframerecorder-properties-explanation-needed
+            return ID;
+        }
+        return 0;
 
-            recorder.setFrameRate(10); // This is the frame rate for video. If you really want to have good video quality you need to provide large set of images.
-            recorder.setPixelFormat(0); // PIX_FMT_YUV420P
+    }
 
-            recorder.start();
-            OpenCVFrameConverter frameConverter = new OpenCVFrameConverter.ToMat();
-            for (int i = 0; i < frames.length; i++) {
-                Frame f = frameConverter.convert(frames[i]);
-                recorder.record(f);
-            }
-            recorder.stop();
-        } catch (Exception e) {
-            e.printStackTrace();
-            for (opencv_core.Mat f : framesForVideo) {
-                f.release();
-            }
-            framesForVideo.clear();
+    /*private void trackFavFace(Rect faceRect) {
+        mFaceRectLogger.addRecordToLog(faceRect.x + ", " + faceRect.y + ", " + faceRect.width + ", " + faceRect.height);
+
+        int sumX = faceRect.x + faceRect.width / 2;
+        int sumY = faceRect.y + faceRect.height / 2;
+        for (int i = FavFaceLocationBuffer.length - 1; i > 0; i--) {
+
+            FavFaceLocationBuffer[i] = FavFaceLocationBuffer[i - 1];
+            sumX = sumX + FavFaceLocationBuffer[i].x + FavFaceLocationBuffer[i].width / 2;
+            sumY = sumY + FavFaceLocationBuffer[i].y + FavFaceLocationBuffer[i].height / 2;
+
         }
 
-        for (opencv_core.Mat f : framesForVideo) {
-            f.release();
+        FavFaceLocationBuffer[0] = faceRect;
+
+        if (FavFaceLocationBuffer[FavFaceLocationBuffer.length - 1].size().area() < 2) return;
+        int AvgX = sumX / FavFaceLocationBuffer.length;
+        int AvgY = sumY / FavFaceLocationBuffer.length;
+
+        double pX = (double) AvgX / (double) mRgba.width();
+        double pY = (double) AvgY / (double) mRgba.height();
+
+        if (pX < 0.42) pololu.cameraYawSpeed(0.5f - (float) pX);
+        else if (pY < 0.42) pololu.cameraPitchSpeed(-0.5f + (float)pY);
+        else if (pX > 0.58) pololu.cameraYawSpeed(0.5f - (float)pX);
+        else if (pY > 0.58) pololu.cameraPitchSpeed(-0.5f + (float) pY);
+
+        setTextFieldText("pX = " + pX + "   " + (0.5f - (float) pX), debug1);
+        setTextFieldText("pY = " + pY + "   " + (0.5f - (float) pY), debug2);
+        //else pololu.stopNeckMotors();
+    }*/
+
+    public boolean adjustFaceBuffer(Rect faceRect)
+    {
+        int sumX = faceRect.x+faceRect.width/2;
+        int sumY = faceRect.y+faceRect.height/2;
+        int sumA = (int)faceRect.size().area();
+        for(int i=FaceLocationBuffer.length-1;i>0;i--)
+        {
+            FaceMatBuffer[i - 1].copyTo(FaceMatBuffer[i]);
+            FaceLocationBuffer[i]= FaceLocationBuffer[i-1];
+            sumX = sumX + FaceLocationBuffer[i].x+FaceLocationBuffer[i].width/2;
+            sumY = sumY + FaceLocationBuffer[i].y+FaceLocationBuffer[i].height/2;
+            sumA = sumA + (int)FaceLocationBuffer[i].size().area();
         }
-        framesForVideo.clear();
-    }
 
-    private final void saveMat(String path, Mat mat) {
-        File file = new File(path).getAbsoluteFile();
-        file.getParentFile().mkdirs();
-        try {
-            int cols = mat.cols();
-            byte[] data = new byte[(int) mat.total() * mat.channels()];
-            mat.get(0, 0, data);
-            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path))) {
-                oos.writeObject(cols);
-                oos.writeObject(data);
-                oos.close();
+        FaceLocationBuffer[0]=faceRect;
+        mRgba.submat(faceRect).copyTo(FaceMatBuffer[0]);
+        Imgproc.cvtColor(FaceMatBuffer[0], FaceMatBuffer[0], Imgproc.COLOR_RGB2GRAY);
+
+        if(FaceLocationBuffer[FaceLocationBuffer.length-1].size().area()<2)return false;
+        int AvgX = sumX/ FaceLocationBuffer.length;
+        int AvgY = sumY/ FaceLocationBuffer.length;
+        int AvgA = sumA/ FaceLocationBuffer.length;
+
+        int count = 0;
+        for(int i=0;i< FaceLocationBuffer.length;i++)
+        {
+            double dist = Math.sqrt(Math.pow(FaceLocationBuffer[i].x+FaceLocationBuffer[i].width/2-AvgX,2)+Math.pow(FaceLocationBuffer[i].y+FaceLocationBuffer[i].height/2-AvgY,2));
+            if (dist<20) {
+                double areaChange = Math.abs(FaceLocationBuffer[i].size().area() / AvgA - 1);
+                if (areaChange < 0.15)
+                    count++;
             }
-        } catch (IOException | ClassCastException ex) {
-            System.err.println("ERROR: Could not save mat to file: " + path);
         }
+
+        int j=0;
+        if (count>=EigenMats.length) {
+            for (int i = 0; i < FaceLocationBuffer.length; i++) {
+                if (j>=EigenMats.length) break;
+                if (Math.sqrt(Math.pow(FaceLocationBuffer[i].x+FaceLocationBuffer[i].width/2 - AvgX, 2) + Math.pow(FaceLocationBuffer[i].y+FaceLocationBuffer[i].height/2 - AvgY, 2)) < 20)
+                    if (Math.abs(FaceLocationBuffer[i].size().area() / AvgA - 1) < 0.15) {
+                        FaceMatBuffer[i].copyTo(EigenMats[j]);
+                        j++;
+                    }
+            }
+
+            for(int i = 0;i<FaceLocationBuffer.length;i++)
+            {
+                FaceMatBuffer[i].release();
+                FaceMatBuffer[i]=new Mat();
+                FaceLocationBuffer[i]=new Rect(new Point(0,0),new Size(1,1));
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
-    private void setTextFieldText(String message, TextView field)
+    /*public void turnCamera(Directions d)
     {
-        tempTextView = field;
-        tempText = message;
-        if(!debugging)return;
-
-        runOnUiThread(new Runnable() {
+        dir = d;
+        this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tempTextView.setAlpha(1f);
-                tempTextView.setText(tempText);
-                tempTextView.bringToFront();
-            }
-        });
-    }
+                for(int i=0;i<4;i++)arrows[i].setVisibility(View.INVISIBLE);
 
-    private void showVideoFeed()
-    {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mOpenCvCameraView.setAlpha(1.0f);
-                debugging = true;
+                switch (dir) {
+                    case UP:
+                        arrows[0].setVisibility(View.VISIBLE);
+                        pololu.cameraPitchSpeed(0.05f);
+                        break;
+                    case RIGHT:
+                        pololu.cameraYawSpeed(-0.05f);
+                        arrows[1].setVisibility(View.VISIBLE);
+                        break;
+                    case DOWN:
+                        pololu.cameraPitchSpeed(-0.05f);
+                        arrows[2].setVisibility(View.VISIBLE);
+                        break;
+                    case LEFT:
+                        pololu.cameraYawSpeed(0.05f);
+                        arrows[3].setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        pololu.stopNeckMotors();
+                }
             }
         });
-    }
-
-    private void hideVideoFeed()
-    {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mOpenCvCameraView.setAlpha(0.0f);
-            }
-        });
-    }
+    }*/
 
     private void addNewUser() {
         Random rand = new Random();
@@ -1108,136 +1256,4 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             IDcount++;
         }
     }
-
-    private boolean onSwipe(Direction direction) {
-        if(direction == Direction.right) {
-            entry.add(CHAR.R);
-            //((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.right);
-        }
-        else if(direction == Direction.left) {
-            entry.add(CHAR.L);
-            // ((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.left);
-        }
-        else if(direction == Direction.up) {
-            entry.add(CHAR.U);
-            // ((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.up);
-        }
-        else if(direction == Direction.down) {
-            entry.add(CHAR.D);
-            // ((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.down);
-        }
-
-        if(entry.equals(psswd)) {
-            //((ImageView)findViewById(R.id.image_place_holder)).setImageResource(R.drawable.enter);
-            //Code to switch activities to open Menu.
-            //Intent intent = new Intent(this, MenuActivity.class);
-            entry.clear();
-            showVideoFeed();
-            Intent intent = new Intent(this, MainActivity.class);
-
-            //intent.putExtra("pololu", pololu);
-
-            startActivity(intent);
-        }
-
-        else if(entry.lastElement() != psswd.elementAt(entry.size()-1)) {
-            entry.clear();
-        }
-
-        if(entry.size()>psswd.size()+2)
-        {
-            entry.clear();
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
-        /*
-        Grab two events located on the plane at e1=(x1, y1) and e2=(x2, y2)
-        Let e1 be the initial event
-        e2 can be located at 4 different positions, consider the following diagram
-        (Assume that lines are separated by 90 degrees.)
-
-
-        \ A  /
-        \  /
-        D   e1   B
-        /  \
-        / C  \
-
-        So if (x2,y2) falls in region:
-        A => it's an UP swipe
-        B => it's a RIGHT swipe
-        C => it's a DOWN swipe
-        D => it's a LEFT swipe
-
-        */
-
-        float x1 = e1.getX();
-        float y1 = e1.getY();
-
-        float x2 = e2.getX();
-        float y2 = e2.getY();
-
-        Direction direction = Direction.get(x1, y1, x2, y2);
-        return onSwipe(direction);
-    }
-
-    @Override
-    public void onLongPress(MotionEvent arg0) {
-        if(mOpenCvCameraView.getAlpha()>0.5f)
-            mOpenCvCameraView.setAlpha(0.0f);
-        else
-            mOpenCvCameraView.setAlpha(0.80f);
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent arg0, MotionEvent arg1, float arg2, float arg3) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent arg0) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent arg0) {
-        return false;
-    }
-
-    /*public void turnCamera(Directions d)
-    {
-        dir = d;
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                for(int i=0;i<4;i++)arrows[i].setVisibility(View.INVISIBLE);
-
-                switch (dir) {
-                    case UP:
-                        arrows[0].setVisibility(View.VISIBLE);
-                        pololu.cameraPitchSpeed(0.05f);
-                        break;
-                    case RIGHT:
-                        pololu.cameraYawSpeed(-0.05f);
-                        arrows[1].setVisibility(View.VISIBLE);
-                        break;
-                    case DOWN:
-                        pololu.cameraPitchSpeed(-0.05f);
-                        arrows[2].setVisibility(View.VISIBLE);
-                        break;
-                    case LEFT:
-                        pololu.cameraYawSpeed(0.05f);
-                        arrows[3].setVisibility(View.VISIBLE);
-                        break;
-                    default:
-                        pololu.stopNeckMotors();
-                }
-            }
-        });
-    }*/
 }

@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by alex on 2/10/16.
+ * A concrete implementation of the VirtualCat interface. It is a dummy implementation that just
+ * logs everything that happens. It is meant to be used when the actual cat isn't available.
  */
 public class MockVirtualCat extends VirtualCat {
     private static final String TAG = "MockVirtualCat";

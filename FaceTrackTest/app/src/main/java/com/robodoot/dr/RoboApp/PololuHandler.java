@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 /**
- * Created by Joel on 12/7/2015.
+ * A low-level (compared to PololuVirtualCat) class for interacting with the Pololu. Uses a
+ * MaestroSSC object to send commands.
  */
 public class PololuHandler {
 
