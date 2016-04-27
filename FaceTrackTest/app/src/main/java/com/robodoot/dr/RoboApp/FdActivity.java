@@ -977,6 +977,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                 if (posX >= 0 && posY >= 0) {
                     // compute relative position of the object
                     objectCoords = new Point();
+                    // all weird because the image is transposed and resized
                     objectCoords.y = -(posX - mRgbaForColorTracking.width() / 4.0f) / (mRgbaForColorTracking.width() / 2.0f);
                     objectCoords.x = -(posY - mRgbaForColorTracking.height() / 2.0f) /  mRgbaForColorTracking.height();
 

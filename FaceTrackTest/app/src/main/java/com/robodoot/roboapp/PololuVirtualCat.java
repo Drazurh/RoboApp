@@ -84,8 +84,16 @@ public class PololuVirtualCat extends VirtualCat {
         p.addToPitch(-30);
     }
 
+    /**
+     * Make the cat look toward a point relative to the center of the camera's view.
+     * @param relPos Expects a value in the range [-0.5, 0.5]
+     */
     @Override
     public void lookToward(Point relPos) {
+        // maybe should do this
+        //relPos.x = Util.clamp(relPos.x, -0.5, 0.5);
+        //relPos.x = Util.clamp(relPos.y, -0.5, 0.5);
+
         // maybe something like this
         //int yaw = (int)(relPos.x * p.NECK_YAW_SERVO_RANGE / 2.0f);
         int yaw = (int)(relPos.x * p.NECK_YAW_SERVO_MAX * 0.1f);
@@ -99,9 +107,20 @@ public class PololuVirtualCat extends VirtualCat {
         }
     }
 
+    /**
+     * Make the cat look away from a point relative to the center of the camera's view.
+     * @param relPos Expects a value in the range [-0.5, 0.5]
+     */
     @Override
     public void lookAwayFrom(Point relPos) {
-        lookToward(new Point(-1.0f / relPos.x, -1.0f / relPos.y));
+        // maybe should do this
+        //relPos.x = Util.clamp(relPos.x, -0.5, 0.5);
+        //relPos.x = Util.clamp(relPos.y, -0.5, 0.5);
+
+        Point p = new Point();
+        p.x = -(relPos.x > 0 ? 0.5f - relPos.x : -0.5f + relPos.x);
+        p.y = -(relPos.y > 0 ? 0.5f - relPos.y : -0.5f + relPos.y);
+        lookToward(p);
     }
 
     public void resetHead() {
