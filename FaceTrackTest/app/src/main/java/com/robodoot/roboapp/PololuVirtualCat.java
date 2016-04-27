@@ -86,10 +86,13 @@ public class PololuVirtualCat extends VirtualCat {
 
     @Override
     public void lookToward(Point relPos) {
+        // maybe something like this
+        //int yaw = (int)(relPos.x * p.NECK_YAW_SERVO_RANGE / 2.0f);
         int yaw = (int)(relPos.x * p.NECK_YAW_SERVO_MAX * 0.1f);
         if (Math.abs(yaw) >= 25) {
             p.addToYaw(yaw);
         }
+        //int pitch = (int)(relPos.y * p.NECK_PITCH_SERVO_MAX / 2.0f);
         int pitch = (int) (relPos.y * p.NECK_PITCH_SERVO_MAX * 0.075f);
         if (Math.abs(pitch) >= 25) {
             p.addToPitch(pitch);
