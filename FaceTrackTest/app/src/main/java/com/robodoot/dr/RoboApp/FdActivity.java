@@ -77,6 +77,7 @@ import static org.bytedeco.javacpp.opencv_imgcodecs.cvLoadImage;
 public class FdActivity extends Activity implements GestureDetector.OnGestureListener, CvCameraViewListener2 {
     private Logger mFaceRectLogger;
     private Logger mSpeechTextLogger;
+    boolean initialized = false;
 
     private ArrayList<opencv_core.Mat> framesForVideo = new ArrayList<opencv_core.Mat>();
     private int frameNumber;
@@ -349,7 +350,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
 
         super.onResume();
         //pololu.home();
-        virtualCat.resetHead();
+        if (!initialized) {
+            initialized = true;
+            virtualCat.resetHead();
+        }
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
 
         entry.clear();
@@ -652,6 +656,9 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     if (result.contains("red")) {
                         trackingGreen = false;
                         trackingRed = true;
+                    }
+                    if (result.contains("blue")) {
+                        trackingGreen = trackingRed = false;
                     }
                     /*if (result.contains("up")) {
                         virtualCat.turnHeadUp();

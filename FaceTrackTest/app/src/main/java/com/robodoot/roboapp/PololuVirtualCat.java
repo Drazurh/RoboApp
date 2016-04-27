@@ -63,25 +63,25 @@ public class PololuVirtualCat extends VirtualCat {
     @Override
     public void turnHeadDown() {
         //p.cameraPitchSpeed(-0.3f);
-        p.addToPitch(30);
+        p.addToPitch(200);
     }
 
     @Override
     public void turnHeadLeft() {
         //p.cameraYawSpeed(0.3f);
-        p.addToYaw(-50);
+        p.addToYaw((int)(-p.NECK_YAW_SERVO_RANGE / 2.0f));
     }
 
     @Override
     public void turnHeadRight() {
-        p.addToYaw(50);
+        p.addToYaw((int)(p.NECK_YAW_SERVO_RANGE / 2.0f));
         //p.cameraYawSpeed(-0.3f);
     }
 
     @Override
     public void turnHeadUp() {
         //p.cameraPitchSpeed(-0.3f);
-        p.addToPitch(-30);
+        p.addToPitch(-200);
     }
 
     /**
@@ -91,17 +91,17 @@ public class PololuVirtualCat extends VirtualCat {
     @Override
     public void lookToward(Point relPos) {
         // maybe should do this
-        //relPos.x = Util.clamp(relPos.x, -0.5, 0.5);
-        //relPos.x = Util.clamp(relPos.y, -0.5, 0.5);
+        relPos.x = Util.clamp(relPos.x, -0.5, 0.5);
+        relPos.y = Util.clamp(relPos.y, -0.5, 0.5);
 
         // maybe something like this
-        //int yaw = (int)(relPos.x * p.NECK_YAW_SERVO_RANGE / 2.0f);
-        int yaw = (int)(relPos.x * p.NECK_YAW_SERVO_MAX * 0.1f);
+        int yaw = (int)(relPos.x * p.NECK_YAW_SERVO_RANGE / 8.0f);
+        //int yaw = (int)(relPos.x * p.NECK_YAW_SERVO_MAX * 0.1f);
         if (Math.abs(yaw) >= 25) {
             p.addToYaw(yaw);
         }
-        //int pitch = (int)(relPos.y * p.NECK_PITCH_SERVO_MAX / 2.0f);
-        int pitch = (int) (relPos.y * p.NECK_PITCH_SERVO_MAX * 0.075f);
+        int pitch = (int)(relPos.y * p.NECK_PITCH_SERVO_MAX / 10.0f);
+        //int pitch = (int) (relPos.y * p.NECK_PITCH_SERVO_MAX * 0.075f);
         if (Math.abs(pitch) >= 25) {
             p.addToPitch(pitch);
         }
@@ -114,8 +114,8 @@ public class PololuVirtualCat extends VirtualCat {
     @Override
     public void lookAwayFrom(Point relPos) {
         // maybe should do this
-        //relPos.x = Util.clamp(relPos.x, -0.5, 0.5);
-        //relPos.x = Util.clamp(relPos.y, -0.5, 0.5);
+        relPos.x = Util.clamp(relPos.x, -0.5, 0.5);
+        relPos.y = Util.clamp(relPos.y, -0.5, 0.5);
 
         Point p = new Point();
         p.x = -(relPos.x > 0 ? 0.5f - relPos.x : -0.5f + relPos.x);
