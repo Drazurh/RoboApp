@@ -4,6 +4,7 @@ import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 import android.content.ActivityNotFoundException;
 import android.os.Environment;
@@ -653,7 +654,9 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     if (result.contains("walk")||result.contains("walking") || result.contains("come")) {
                         virtualCat.stepForward();
                     }
-                    if (result.contains("right") || result.contains("write")) {
+                    //if (result.contains("right") || result.contains("write")) {
+                    // does this work? we'll see
+                    if (!Collections.disjoint(result, Arrays.asList("right", "write"))) {
                         //Make the cat head move right
                         virtualCat.turnHeadRight();
                     }
