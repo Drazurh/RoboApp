@@ -21,11 +21,7 @@ public class PololuVirtualCat extends VirtualCat {
 
     // DEFAULT CONSTRUCTOR
     public PololuVirtualCat() {
-        new Thread(new Runnable() {
-            public void run() {
-                p = new PololuHandler();
-            }
-        }).start();
+        p = new PololuHandler();
     }
 
     public void UpdateObjectPosition(int relX, int relY) {
@@ -34,7 +30,7 @@ public class PololuVirtualCat extends VirtualCat {
 
     public void onResume(Intent intent, Activity parent) {
         p.onResume(intent, parent);
-        Log.i(TAG, "IN ONRESUME");
+        Log.w(TAG, "IN ONRESUME");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,25 +59,25 @@ public class PololuVirtualCat extends VirtualCat {
     @Override
     public void turnHeadDown() {
         //p.cameraPitchSpeed(-0.3f);
-        p.addToPitch(200);
+        p.addToPitch((int)(p.NECK_PITCH_SERVO_RANGE));
     }
 
     @Override
     public void turnHeadLeft() {
         //p.cameraYawSpeed(0.3f);
-        p.addToYaw((int)(-p.NECK_YAW_SERVO_RANGE / 2.0f));
+        p.addToYaw((int)(p.NECK_YAW_SERVO_RANGE));
     }
 
     @Override
     public void turnHeadRight() {
-        p.addToYaw((int)(p.NECK_YAW_SERVO_RANGE / 2.0f));
+        p.addToYaw((int)(-p.NECK_YAW_SERVO_RANGE));
         //p.cameraYawSpeed(-0.3f);
     }
 
     @Override
     public void turnHeadUp() {
         //p.cameraPitchSpeed(-0.3f);
-        p.addToPitch(-200);
+        p.addToPitch((int)(-p.NECK_PITCH_SERVO_RANGE));
     }
 
     /**

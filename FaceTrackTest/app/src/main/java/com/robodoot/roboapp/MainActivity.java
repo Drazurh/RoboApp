@@ -7,25 +7,18 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-import com.robodoot.roboapp.ConsoleFragment;
 
-import com.robodoot.dr.RoboApp.PololuHandler;
 import com.robodoot.dr.facetracktest.R;
 
 public class MainActivity extends FragmentActivity implements
         NavigationDrawerCallbacks, HomeFragment.OnFragmentInteractionListener,
         ReadmeFragment.OnFragmentInteractionListener,
-        ServoControlFragment.OnFragmentInteractionListener,
         CompTestFragment.OnFragmentInteractionListener,
         ConsoleFragment.OnFragmentInteractionListener{
 
@@ -34,7 +27,6 @@ public class MainActivity extends FragmentActivity implements
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private Toolbar mToolbar;
-    public PololuHandler pololu;
 
     public static int log_count = 0;
     public static final int LOG_SIZE = 100;
@@ -46,9 +38,6 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
-        pololu = new PololuHandler();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -68,10 +57,7 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     public void onResume() {
-        pololu.onResume(getIntent(), this);
-
         super.onResume();
-        pololu.home();
     }
 
     @Override
@@ -85,11 +71,7 @@ public class MainActivity extends FragmentActivity implements
         Intent intent = null;
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         switch(position) {
-            /*case 0:
-                fragment = new ServoControlFragment();
-                Toast.makeText(this, "Servo Control", Toast.LENGTH_SHORT).show();
-                break;
-            case 1:
+            /*case 1:
                 fragment = new CompTestFragment();
                 Toast.makeText(this, "Unit Testing", Toast.LENGTH_SHORT).show();
                 break;*/
@@ -101,7 +83,7 @@ public class MainActivity extends FragmentActivity implements
                 //Toast.makeText(this, "Console", Toast.LENGTH_SHORT).show();
                 break;
             case 1:
-                intent = new Intent("com.robodoot.dr.RoboApp.FdActivity");
+                this.finish();
                 break;
             case 2:
                 intent = new Intent("com.robodoot.dr.RoboApp.ColorTrackingActivity");
@@ -109,10 +91,6 @@ public class MainActivity extends FragmentActivity implements
             case 3:
                 log_console("Readme Displayed");
                 fragment = new ReadmeFragment();
-                break;
-            case 4:
-
-                intent = new Intent("com.robodoot.dr.RoboApp.WalkingActivity");
                 break;
             //case 5:
               //  intent = new Intent("com.robodoot.dr.RoboApp.Readme");
@@ -131,7 +109,7 @@ public class MainActivity extends FragmentActivity implements
             transaction.commit();
         }
         else {
-            Toast.makeText(this, "No associated fragment for the selected menu item.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "No associated fragment for the selected menu item.", Toast.LENGTH_SHORT).show();
         }
 
     }

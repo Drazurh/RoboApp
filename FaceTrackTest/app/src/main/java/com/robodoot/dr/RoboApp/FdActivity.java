@@ -3,6 +3,7 @@ package com.robodoot.dr.RoboApp;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 import android.content.ActivityNotFoundException;
 import android.os.Environment;
@@ -516,7 +517,7 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
             //Code to switch activities to open Menu.
             //Intent intent = new Intent(this, MenuActivity.class);
             entry.clear();
-            showVideoFeed();
+            //showVideoFeed();
             Intent intent = new Intent(this, MainActivity.class);
 
             //intent.putExtra("pololu", pololu);
@@ -622,16 +623,26 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     //Insert ArrayList stuff
                     result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     mSpeechTextLogger.addRecordToLog(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()));
+                    ArrayList<String> tmpList = new ArrayList<>();
                     for (int i=0; i< result.size(); i++) {
-                        //Log.d("WORDS", result.get(i));
+                        String tmp = result.get(i);
+                        Log.w("WORDS1", tmp);
+                        if(tmp.contains(" ")) {
+                            tmpList.addAll(Arrays.asList(tmp.split(" ")));
+                        }
                         mSpeechTextLogger.addRecordToLog(result.get(i));
                     }
+                    result.addAll(tmpList);
+                    for (int i=0; i<result.size(); i++) {
+                        String tmp = result.get(i);
+                        Log.w("WORDS2", tmp);
+                    }
                     //Make a call to analyze the words and update cat's mood.
-                    if (result.contains(good)) {
+                    if (result.contains("good")) {
                         //Make the cat happy.
                         kitty.smiledAt();
                     }
-                    if (result.contains(bad)) {
+                    if (result.contains("bad")) {
                         //Make the cat mad.
                         kitty.frownedAt();
                     }
@@ -639,14 +650,14 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                         //Make the cat head move left
                         virtualCat.turnHeadLeft();
                     }
-                    if (result.contains("walk")) {
+                    if (result.contains("walk")||result.contains("walking") || result.contains("come")) {
                         virtualCat.stepForward();
                     }
                     if (result.contains("right") || result.contains("write")) {
                         //Make the cat head move right
                         virtualCat.turnHeadRight();
                     }
-                    if (result.contains("home")) {
+                    if (result.contains("home") || result.contains("straight")) {
                         virtualCat.resetHead();
                     }
                     if (result.contains("green")) {
@@ -660,12 +671,19 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     if (result.contains("blue")) {
                         trackingGreen = trackingRed = false;
                     }
-                    /*if (result.contains("up")) {
+                    if (result.contains("up")) {
                         virtualCat.turnHeadUp();
                     }
                     if (result.contains("down")) {
                         virtualCat.turnHeadDown();
-                    }*/
+                    }
+                    if (result.contains("menu")) {
+                        entry.clear();
+                        //showVideoFeed();
+                        Intent intent = new Intent(this, MainActivity.class);
+
+                        startActivity(intent);
+                    }
                     //Clear the arrayList for the next time a button is pressed.
                     result.clear();
                 }

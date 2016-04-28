@@ -15,17 +15,14 @@ import com.robodoot.dr.facetracktest.R;
 import com.robodoot.roboapp.BatteryView;
 import com.robodoot.roboapp.CatCameraView;
 import com.robodoot.roboapp.ColorValues;
-import com.robodoot.roboapp.MockVirtualCat;
 import com.robodoot.roboapp.VirtualCat;
 
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_imgproc;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -49,8 +46,6 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
     private Mat mGray;
 
     private boolean mShowThreshold;
-
-    VirtualCat mVirtualCat = new MockVirtualCat();
 
     private Logger mRedLogger;
     private Logger mGreenLogger;
@@ -86,8 +81,6 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         mSeekBarHighS = (SeekBar) findViewById(R.id.seek_bar_high_s);
         mSeekBarLowV = (SeekBar) findViewById(R.id.seek_bar_low_v);
         mSeekBarHighV = (SeekBar) findViewById(R.id.seek_bar_high_v);
-
-        mVirtualCat.AddBatteryListener(this);
 
         mRedLogger = new Logger("red_color_values", false);
         mGreenLogger = new Logger("green_color_values", false);

@@ -98,8 +98,9 @@ public class PololuHandler {
         String action = intent.getAction();
         Log.d("POLOLU HANDLER", "action: " + action);
         Log.d("POLOLU", intent.toString());
+        if(isConnected) return;
         isConnected = false;
-        Log.d("POLOLUHANDLER", "IN ON RESUME");
+        Log.w("POLOLUHANDLER", "IN ON RESUME");
         if (action.equals("android.hardware.usb.action.USB_DEVICE_ATTACHED")) {
             UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
             if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {

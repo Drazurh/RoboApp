@@ -406,14 +406,14 @@ public class CatEmotion {
     }
 
     public void frownedAt() {
-        scale-=50;
+        scale-=75;
         reCalcFace();
     }
 
     public void smiledAt()
     {
 
-        scale+=50;
+        scale+=55;
         reCalcFace();
     }
 

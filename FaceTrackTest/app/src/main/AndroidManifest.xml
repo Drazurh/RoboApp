@@ -13,19 +13,20 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.robodoot.dr.RoboApp.FdActivity"
             android:label="@string/title_activity_fd"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
                 <action android:name="com.robodoot.dr.RoboApp.FdActivity" />
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
             <meta-data
@@ -34,11 +35,12 @@
         </activity>
         <activity
             android:name="com.robodoot.roboapp.MainActivity"
-            android:label="Settings" >
+            android:parentActivityName="com.robodoot.dr.RoboApp.FdActivity"
+            android:label="Menu" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <meta-data
@@ -48,40 +50,15 @@
         <activity
             android:name="com.robodoot.dr.RoboApp.ColorTrackingActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName="com.robodoot.roboapp.MainActivity"
             android:label="@string/title_activity_color_tracking"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme" >
             <intent-filter>
-                >
                 <action android:name="com.robodoot.dr.RoboApp.ColorTrackingActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="com.robodoot.roboapp.Readme"
-            android:label="@string/title_activity_readme"
-            android:theme="@style/AppTheme" >
-            <intent-filter>
-
-                <action android:name="com.robodoot.dr.RoboApp.Readme" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.robodoot.dr.RoboApp.WalkingActivity"
-            android:label="@string/title_activity_walking" >
-
-            <intent-filter>
-                <action android:name="com.robodoot.dr.RoboApp.WalkingActivity" />
-                <!--<action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />-->
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter" />
         </activity>
     </application>
 
