@@ -69,11 +69,11 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
 
         ((Switch)findViewById(R.id.switch_threshold)).setOnCheckedChangeListener(this);
         ((Switch)findViewById(R.id.switch_camera)).setOnCheckedChangeListener(this);
-        ((Switch)findViewById(R.id.switch_battery)).setOnCheckedChangeListener(this);;
+        //((Switch)findViewById(R.id.switch_battery)).setOnCheckedChangeListener(this);;
 
-        mBatteryView = (BatteryView) findViewById(R.id.battery_view);
+        /*mBatteryView = (BatteryView) findViewById(R.id.battery_view);
         mBatteryView.setConnected(true);
-        mBatteryView.setAlpha(0.0f); // hide initially
+        mBatteryView.setAlpha(0.0f); // hide initially*/
 
         mSeekBarLowH = (SeekBar) findViewById(R.id.seek_bar_low_h);
         mSeekBarHighH = (SeekBar) findViewById(R.id.seek_bar_high_h);
@@ -143,9 +143,9 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
             case R.id.switch_threshold:
                 mShowThreshold = isChecked;
                 break;
-            case R.id.switch_battery:
+            /*case R.id.switch_battery:
                 mBatteryView.setAlpha(isChecked ? 1.0f : 0.0f);
-                break;
+                break;*/
         }
     }
 
@@ -297,19 +297,19 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
             .show();
     }
 
-    /*public void loadColor(View view) {
+    public void loadColor(View view) {
         final int button_id = view.getId();
         String[] lines = null;
         switch (button_id) {
-            case R.id.button_save_red:
+            case R.id.button_load_red:
                 Log.i(TAG, "load red");
                 lines = new Logger("red_color_values", false).ReadLines();
                 break;
-            case R.id.button_save_green:
+            case R.id.button_load_green:
                 Log.i(TAG, "load green");
                 lines = new Logger("green_color_values", false).ReadLines();
                 break;
-            case R.id.button_save_blue:
+            case R.id.button_load_blue:
                 Log.i(TAG, "load blue");
                 lines = new Logger("blue_color_values", false).ReadLines();
                 break;
@@ -326,5 +326,5 @@ public class ColorTrackingActivity extends Activity implements CameraBridgeViewB
         mSeekBarHighS.setProgress(cv.highS);
         mSeekBarLowV.setProgress(cv.lowV);
         mSeekBarHighV.setProgress(cv.highV);
-    }*/
+    }
 }

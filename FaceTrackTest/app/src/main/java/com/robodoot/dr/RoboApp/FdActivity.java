@@ -639,6 +639,9 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                         Log.w("WORDS2", tmp);
                     }
                     //Make a call to analyze the words and update cat's mood.
+                    if (result.contains("home") || result.contains("straight")) {
+                        virtualCat.resetHead();
+                    }
                     if (result.contains("good")) {
                         //Make the cat happy.
                         kitty.smiledAt();
@@ -656,12 +659,9 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     }
                     //if (result.contains("right") || result.contains("write")) {
                     // does this work? we'll see
-                    if (!Collections.disjoint(result, Arrays.asList("right", "write"))) {
+                    if (!Collections.disjoint(result, Arrays.asList("right", "write", "white"))) {
                         //Make the cat head move right
                         virtualCat.turnHeadRight();
-                    }
-                    if (result.contains("home") || result.contains("straight")) {
-                        virtualCat.resetHead();
                     }
                     if (result.contains("green")) {
                         trackingGreen = true;

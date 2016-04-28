@@ -70,7 +70,7 @@ public class PololuVirtualCat extends VirtualCat {
 
     @Override
     public void turnHeadRight() {
-        p.addToYaw((int)(-p.NECK_YAW_SERVO_RANGE));
+        p.addToYaw((int)(-p.NECK_YAW_SERVO_RANGE * 0.9f));
         //p.cameraYawSpeed(-0.3f);
     }
 

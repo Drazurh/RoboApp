@@ -26,7 +26,7 @@
             android:layout_weight=".33"
             android:orientation="vertical">
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -45,7 +45,7 @@
                     app:batteryShowPercent="true"
                     android:id="@+id/battery_view" />
 
-            </LinearLayout>
+            </LinearLayout>-->
 
             <SeekBar
                 android:layout_width="match_parent"
@@ -164,6 +164,37 @@
                     android:id="@+id/button_save_blue"
                     android:layout_weight=".33"
                     android:onClick="setColor" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Load Red"
+                    android:id="@+id/button_load_red"
+                    android:layout_weight=".33"
+                    android:onClick="loadColor" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Load Green"
+                    android:id="@+id/button_load_green"
+                    android:layout_weight=".33"
+                    android:onClick="loadColor" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Load Blue"
+                    android:id="@+id/button_load_blue"
+                    android:layout_weight=".33"
+                    android:onClick="loadColor" />
             </LinearLayout>
 
         </LinearLayout>
