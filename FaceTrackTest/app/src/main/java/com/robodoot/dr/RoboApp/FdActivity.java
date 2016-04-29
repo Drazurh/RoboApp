@@ -664,12 +664,12 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
                     if (result.contains("blue")) {
                         trackingGreen = trackingRed = false;
                     }
-                    /*if (result.contains("up")) {
+                    if (result.contains("up")) {
                         virtualCat.turnHeadUp();
                     }
                     if (result.contains("down")) {
                         virtualCat.turnHeadDown();
-                    }*/
+                    }
                     //Clear the arrayList for the next time a button is pressed.
                     result.clear();
                 }

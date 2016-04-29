@@ -63,25 +63,27 @@ public class PololuVirtualCat extends VirtualCat {
     @Override
     public void turnHeadDown() {
         //p.cameraPitchSpeed(-0.3f);
-        p.addToPitch(200);
+        //p.addToPitch(200);
+        p.addToPitch((int)(-p.NECK_PITCH_SERVO_RANGE / 2.0f));
     }
 
     @Override
     public void turnHeadLeft() {
         //p.cameraYawSpeed(0.3f);
-        p.addToYaw((int)(-p.NECK_YAW_SERVO_RANGE / 2.0f));
+        p.addToYaw((int)(p.NECK_YAW_SERVO_RANGE / 2.0f));
     }
 
     @Override
     public void turnHeadRight() {
-        p.addToYaw((int)(p.NECK_YAW_SERVO_RANGE / 2.0f));
+        p.addToYaw((int)(-p.NECK_YAW_SERVO_RANGE / 2.0f));
         //p.cameraYawSpeed(-0.3f);
     }
 
     @Override
     public void turnHeadUp() {
         //p.cameraPitchSpeed(-0.3f);
-        p.addToPitch(-200);
+        //p.addToPitch(-200);
+        p.addToPitch((int)(p.NECK_PITCH_SERVO_RANGE / 2.0f));
     }
 
     /**
