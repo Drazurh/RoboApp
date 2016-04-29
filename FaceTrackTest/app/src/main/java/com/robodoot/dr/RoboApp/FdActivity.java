@@ -614,6 +614,10 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
         }
     }
 
+    /**
+     * This is called after speech recognition. The recognized words come in as a list of strings
+     * and are processed to make the cat perform actions or change emotion state.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -699,6 +703,9 @@ public class FdActivity extends Activity implements GestureDetector.OnGestureLis
     // GENERAL/SHARED OPENCV
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * initialize stuff related to opencv
+     */
     public void onCameraViewStarted(int width, int height) {
         TextView loading = (TextView)findViewById(R.id.LoadingText);
         loading.setAlpha(1.0f);
